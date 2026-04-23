@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>국립중앙과학관 해커톤 PoC 제안서</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #475569;
+      --accent: #2563eb;
+      --line: #dbe3ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 28px auto;
+      padding: 0 16px;
+    }
+    .hero, .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #0f172a;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+    }
+    p { margin: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .chip {
+      background: #eef4ff;
+      border: 1px solid #cddfff;
+      color: #1e40af;
+      border-radius: 999px;
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    li { margin: 6px 0; }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .table th, .table td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .table th {
+      width: 22%;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .diagram-box {
+      margin-top: 12px;
+      border: 1px dashed #c7d5ea;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fcfdff;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>국립중앙과학관 해커톤 PoC 프로젝트 제안</h1>
+      <p class="subtitle">시민 체감형 정서·소통 지원 서비스 제안서</p>
+    </section>
+
+    <section class="section">
+      <span class="chip">아이디어명</span>
+      <h2>함께 말하고, 함께 회복하는 마음안전 네비게이터</h2>
+      <p>
+        시민이 일상에서 겪는 대화 불안과 감정 과부하 상황을, 한 화면에서 안내·연습·안정까지 연결해
+        스스로 회복 경로를 찾도록 돕는 체감형 공공 서비스 PoC입니다.
+      </p>
+    </section>
+
+    <section class="section">
+      <span class="chip">아이디어 요약</span>
+      <h2>문제정의-개발동기-해결방식</h2>
+      <table class="table">
+        <tr>
+          <th>문제 정의</th>
+          <td>감정조절, 사회적 대화 연습, 안정 루틴이 분리되어 있어 시민이 실제 상황에서 즉시 활용하기 어렵습니다.</td>
+        </tr>
+        <tr>
+          <th>개발 동기</th>
+          <td>정책·교육 현장에서 강조되는 정신건강 예방적 접근을, 시민이 스스로 체감할 수 있는 인터랙션으로 구현하고자 했습니다.</td>
+        </tr>
+        <tr>
+          <th>해결 방식</th>
+          <td>상황 제시(Social Stories) → 감정 선택(CBT) → 안정 모드(호흡/명상/사운드) → 대화 연습을 단일 흐름으로 제공합니다.</td>
+        </tr>
+      </table>
+      <div class="diagram-box">
+        <div class="mermaid">
+graph LR
+  A[사용자 입력<br/>텍스트·음성] --> B[전처리 계층<br/>전사·명령 파싱]
+  B --> C[LLM 추론]
+  B --> D[규칙 기반 라우팅]
+  C --> E[서비스 응답 생성]
+  D --> E
+  E --> F[모바일 UI 렌더링]
+
+  subgraph STACK[기술 스택]
+    S1[Frontend<br/>HTML/CSS/Vanilla JS]
+    S2[Audio<br/>MediaRecorder/WebAudio]
+    S3[Character<br/>lottie-web + SVG]
+    S4[Backend(Optional)<br/>Flask Proxy]
+  end
+
+  F --- S1
+  B --- S2
+  F --- S3
+  C --- S4
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <span class="chip">기획배경</span>
+      <h2>정책 방향과 시민 경험을 연결하는 디지털 실험</h2>
+      <ul>
+        <li>미래사회에서 정서적 회복탄력성은 개인 역량을 넘어 공공 서비스 품질의 핵심 지표가 되고 있습니다.</li>
+        <li>시민은 “지금 당장 쓸 수 있는” 쉬운 도구를 원하지만, 기존 서비스는 기능 단절로 사용 지속성이 낮습니다.</li>
+        <li>해당 PoC는 과학기술을 통해 시민이 스스로 문제를 인식하고 행동을 연습하는 참여형 경험을 목표로 합니다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <span class="chip">아이디어 주요 내용</span>
+      <h2>핵심 구조·기능·실행 전략</h2>
+      <table class="table">
+        <tr>
+          <th>핵심 구조</th>
+          <td>하단 대화창 고정 + 배경/콘텐츠 전환형 단일 화면 UI + 자연어 명령 기반 툴 이동</td>
+        </tr>
+        <tr>
+          <th>핵심 기능</th>
+          <td>
+            Social Stories(상황 제시), 감정선택(CBT), 안정 모드(호흡/명상/사운드), 사회성 연습(페르소나 대화),
+            번호/연령 자연어 진입, 랜덤 상황 진입
+          </td>
+        </tr>
+        <tr>
+          <th>실행 전략</th>
+          <td>
+            1) 시민이 이해하기 쉬운 문장 중심 흐름 설계
+            2) 입력 부담 최소화(음성/텍스트 동시 지원)
+            3) 반복 사용을 유도하는 마이크로 인터랙션(즉시 피드백/부드러운 전환)
+          </td>
+        </tr>
+      </table>
+      <div class="diagram-box">
+        <div class="mermaid">
+flowchart TB
+  U[시민 사용자] --> C1[데이터 수집<br/>텍스트/음성 입력]
+  C1 --> C2[전처리<br/>STT·명령 파싱·컨텍스트 정리]
+  C2 --> C3[모델 학습 단계<br/>PoC: 사전학습 모델 활용]
+  C3 --> C4[추론<br/>LLM 응답 생성/스트리밍]
+  C4 --> C5[서비스 UI<br/>메인·타로·사회성·CBT·안정모드]
+
+  AI1[[AI 개입 지점]]
+  H1[[인간 판단 지점]]
+
+  AI1 --> C2
+  AI1 --> C4
+  H1 --> P1[시나리오/정책 문구 설계]
+  H1 --> P2[안전 가드레일 설정]
+  H1 --> P3[기능 우선순위·운영 판단]
+
+  P1 -.반영.-> C5
+  P2 -.반영.-> C4
+  P3 -.반영.-> C5
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <span class="chip">6 현장 개발 계획</span>
+      <h2>대회 기간 내 구현 범위·R&amp;R·MVP 정의</h2>
+      <table class="table">
+        <tr>
+          <th>w 대회 기간 내 구현 범위 명시</th>
+          <td>
+            <ul>
+              <li>모바일 단일 화면 기준으로 홈/타로/사회성/감정선택/안정 모드 전환 UX 완성</li>
+              <li>자연어 명령(예: 성인, 1번, 랜덤 상황) 기반 시나리오 이동 및 대화 루프 구현</li>
+              <li>텍스트/음성 입력 공통 파이프라인과 시연 안정화(핵심 오류 처리 포함)</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>w 팀원별 역할 분담(R&amp;R)</th>
+          <td>
+            <ul>
+              <li><strong>기획·정책 연계</strong>: 시민경험 시나리오 설계, 정책 메시지 정합성 검토</li>
+              <li><strong>AI/대화 설계</strong>: 프롬프트 구조, 페르소나 제어, 안전 가드레일 설정</li>
+              <li><strong>프론트엔드 개발</strong>: UI 구현, 전환 애니메이션, 툴 라우팅 및 입력 처리</li>
+              <li><strong>테스트·발표 운영</strong>: 통합 점검, 데모 시나리오 리허설, 본선 시연 진행</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>w 우선 구현 기능(MVP) 정의</th>
+          <td>
+            <ul>
+              <li>MVP-1: 사회성 연습(연령 선택 → 상황 선택 → 페르소나 대화 → 피드백)</li>
+              <li>MVP-2: 감정선택(CBT) 및 안정 모드(호흡/명상/사운드) 즉시 진입</li>
+              <li>MVP-3: 하단 대화창 고정 + 자연어 기반 툴 전환</li>
+              <li>MVP-4: 청소년/성인 대표 시나리오 각 1종 이상 본선 데모 패키지 완성</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <span class="chip">4 AI 모델 및 기술 스택</span>
+      <h2>AI 알고리즘·개발 환경·데이터셋 활용</h2>
+      <table class="table">
+        <tr>
+          <th>w 사용할 AI 알고리즘</th>
+          <td>
+            <ul>
+              <li><strong>LLM</strong>: 사용자 발화 이해, 상황별 대화 생성, 피드백 생성</li>
+              <li><strong>음성 처리 모델(STT)</strong>: 음성 입력을 텍스트로 전사하여 동일한 대화 파이프라인에 연결</li>
+              <li><strong>규칙 기반 라우팅</strong>: “성인 1번”, “사회성 연습” 등의 자연어 명령을 시나리오 선택으로 매핑</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>w 프레임워크 및 개발 환경</th>
+          <td>
+            <ul>
+              <li>프론트엔드: HTML/CSS/Vanilla JavaScript (모바일 우선 단일 페이지 UI)</li>
+              <li>음성 처리: Web Audio API, MediaRecorder</li>
+              <li>캐릭터 렌더링: lottie-web + SVG 폴백</li>
+              <li>백엔드(옵션): Python Flask 프록시 (API 연계 안정화)</li>
+              <li>개발 환경: 로컬 브라우저 기반 PoC, API 키 기반 외부 모델 연동</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>w 데이터셋 출처 및 활용 방식</th>
+          <td>
+            <ul>
+              <li>서비스 내 시나리오/대화 데이터: 팀이 기획한 사회적 상황 템플릿 + 런타임 생성 대화 로그</li>
+              <li>타로 데이터: 공개 API(tarotapi.dev) 카드 메타데이터 + 로컬 카드 이미지 리소스</li>
+              <li>활용 방식: 세션 단위 맥락 메모리(사용자 최근 발화, 턴 히스토리)로 응답 일관성 강화</li>
+              <li>개인정보 최소화: PoC 단계에서는 민감정보 저장을 지양하고, 즉시 상호작용 중심으로 운용</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <span class="chip">5 시스템 아키텍처</span>
+      <h2>전체 흐름 및 AI/인간 판단 지점</h2>
+      <table class="table">
+        <tr>
+          <th>w End-to-End 흐름</th>
+          <td>
+            <strong>데이터 수집</strong> (텍스트/음성 입력) →
+            <strong>전처리</strong> (음성 전사, 명령 파싱, 세션 컨텍스트 정리) →
+            <strong>모델 학습</strong> (해커톤 PoC에서는 별도 재학습 없이 사전학습 모델 활용) →
+            <strong>추론</strong> (LLM 응답 생성/스트리밍) →
+            <strong>서비스 UI</strong> (메인/타로/사회성/CBT/안정 모드 화면 반영)
+          </td>
+        </tr>
+        <tr>
+          <th>w AI 개입 지점</th>
+          <td>
+            <ul>
+              <li>의도 해석 보조: 사용자 자연어를 상황/도구 흐름으로 변환</li>
+              <li>대화 생성: 페르소나 응답, 피드백 문구, 정서 지원 문장 생성</li>
+              <li>음성 전사: 음성 입력을 텍스트로 변환해 동일 UX 제공</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>w 인간 판단 지점</th>
+          <td>
+            <ul>
+              <li>시나리오/정책 문구 설계: 어떤 상황을 어떤 어조로 제시할지 기획자가 통제</li>
+              <li>안전 가드레일: 부적절 응답 필터링 기준 및 운영 정책 수립</li>
+              <li>최종 서비스 판단: 시민 피드백 기반으로 기능 채택/개선 우선순위 결정</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <span class="chip">기대효과</span>
+      <h2>사회적 효과·정책 시사점·시민 인식 변화</h2>
+      <ul>
+        <li><strong>사회적 효과:</strong> 정서적 어려움 대응을 “치료 이후”가 아닌 “일상 예방” 관점으로 확장</li>
+        <li><strong>정책적 시사점:</strong> 공공기관이 제공할 수 있는 시민 체감형 AI 정서지원 서비스 모델 제시</li>
+        <li><strong>시민 인식 변화:</strong> 감정관리/대화연습을 특별한 일이 아닌 생활 루틴으로 인식하도록 전환</li>
+        <li><strong>확장 가능성:</strong> 과학관 전시, 청소년 프로그램, 지역 정신건강 연계 서비스로의 발전 기반 확보</li>
+      </ul>
+    </section>
+  </main>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "default" });
+  </script>
+</body>
+</html>
