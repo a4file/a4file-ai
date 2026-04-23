@@ -2057,9 +2057,18 @@
 /* ============================================================
    춘직이 AI 아바타 — Kanana-o 연동
 ============================================================ */
-const API_URL = (location.protocol === 'http:' || location.protocol === 'https:') && location.host
-  ? '/v1/chat/completions'
-  : 'https://kanana-o.a2s-endpoint.kr-central-2.kakaocloud.com/v1/chat/completions';
+const PROXY_BASE_STORAGE_KEY = 'chunjik.proxyBase';
+const query = new URLSearchParams(location.search);
+const queryProxyBase = query.get('proxyBase') || '';
+if (queryProxyBase) localStorage.setItem(PROXY_BASE_STORAGE_KEY, queryProxyBase);
+const savedProxyBase = localStorage.getItem(PROXY_BASE_STORAGE_KEY) || '';
+const configuredProxyBase = String(window.CHUNJIK_PROXY_BASE || queryProxyBase || savedProxyBase || '').trim().replace(/\/+$/, '');
+const isHttpContext = (location.protocol === 'http:' || location.protocol === 'https:') && location.host;
+const API_URL = configuredProxyBase
+  ? `${configuredProxyBase}/v1/chat/completions`
+  : (isHttpContext
+      ? '/v1/chat/completions'
+      : 'https://kanana-o.a2s-endpoint.kr-central-2.kakaocloud.com/v1/chat/completions');
 const SAMPLE_RATE = 24000;
 
 const avatarSvg = document.getElementById('avatar');
@@ -2683,7 +2692,10 @@ function mergePcmWavs(b64s) {
 /* ============================================================
    🔮 타로 기능 (tarotapi.dev)
 ============================================================ */
-const TAROT_API = 'https://tarotapi.dev/api/v1/cards/random';
+const TAROT_API = configuredProxyBase
+  ? `${configuredProxyBase}/tarot/random`
+  : 'https://tarotapi.dev/api/v1/cards/random';
+const TAROT_PROXY_API = configuredProxyBase ? `${configuredProxyBase}/tarot/random` : '/tarot/random';
 
 /* 카드별 이모지 매핑 (시각적 표현용) */
 const TAROT_ICONS = {
@@ -2920,12 +2932,12 @@ async function drawCards(n, spreadLabel) {
   } catch (e) {
     // 2차: 서버 프록시 경유 (CORS 대비)
     try {
-      const res = await fetch(`/tarot/random?n=${n}`, { cache: 'no-store' });
+      const res = await fetch(`${TAROT_PROXY_API}?n=${n}`, { cache: 'no-store' });
       if (!res.ok) throw new Error('Proxy ' + res.status);
       const data = await res.json();
       cards = data.cards || [];
     } catch (e2) {
-      tarotSubtitle.textContent = '⚠️ 카드를 불러올 수 없어요. 네트워크를 확인하거나 server.py를 실행해주세요.';
+      tarotSubtitle.textContent = '⚠️ 카드를 불러올 수 없어요. 네트워크 또는 프록시 URL(server.py/Cloudflare Worker)을 확인해주세요.';
       spreadPicker.style.display = 'flex';
       tarotCardsEl.style.display = 'none';
       return;

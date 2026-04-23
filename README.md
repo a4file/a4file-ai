@@ -134,6 +134,11 @@ python server.py
 - 입력한 키는 브라우저 `localStorage`에 저장되어 다음 접속 시 자동 복원
 - `저장` 버튼 또는 엔터로 저장, `삭제` 버튼으로 브라우저 저장값 제거
 
+## 프록시 URL 설정 (Cloudflare Worker 등)
+- 기본값은 현재 호스트의 `/v1/chat/completions`, `/tarot/random` 경로를 사용
+- 별도 프록시를 쓸 때는 URL에 `?proxyBase=https://<your-worker-domain>` 추가
+- 한 번 지정하면 브라우저 `localStorage`에 저장되어 다음 접속에도 유지
+
 ## Lottie 커스터마이징
 1. 원하는 Lottie JSON 파일명을 `character.json`으로 변경
 2. `index.html`과 같은 폴더에 배치
@@ -148,6 +153,7 @@ python server.py
 - `server.py`: 로컬 프록시/정적 서빙(사용 시)
 - `requirements.txt`: Python 의존성(배포/로컬 공용)
 - `Procfile`: PaaS 실행 명령(`gunicorn server:app`)
+- `cloudflare-worker/`: Cloudflare Worker 프록시(`wrangler.toml`, `src/worker.js`)
 - `JPG/`: 타로 카드 이미지 폴더(파일명 규칙 준수)
 
 ---
@@ -181,6 +187,7 @@ python server.py
 
 ### 추천 플랫폼
 - **Render / Railway 권장**: 현재 구조가 Flask 프록시(`server.py`)를 포함하므로 서버 런타임이 필요한 배포에 적합
+- **Cloudflare Pages + Workers**: 정적 페이지 + 프록시 분리 배포에 적합
 - **Vercel / Netlify**: 정적 호스팅에는 강점이 있지만, 현재 Flask 라우트를 그대로 쓰려면 추가 서버리스 마이그레이션 필요
 
 ### Render/Railway 공통 설정
@@ -188,6 +195,17 @@ python server.py
 2. 빌드 명령: `pip install -r requirements.txt`
 3. 시작 명령: `gunicorn server:app --bind 0.0.0.0:$PORT`
 4. 헬스체크: `/health`
+
+### Cloudflare Workers 배포
+1. `cloudflare-worker` 폴더로 이동
+2. Wrangler 로그인 후 배포:
+   ```bash
+   npx wrangler login
+   npx wrangler deploy
+   ```
+3. 출력된 Worker 도메인을 복사 (예: `https://chunjik-proxy.<subdomain>.workers.dev`)
+4. 프론트 접속 URL에 `?proxyBase=<WorkerURL>` 추가
+   - 예: `https://<pages-domain>/?proxyBase=https://chunjik-proxy.<subdomain>.workers.dev`
 
 ### 배포 전 체크리스트
 - 하드코딩된 API 키가 없는지 확인 (`index.html`의 `value="KC_IS_..."` 금지)
