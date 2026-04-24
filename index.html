@@ -643,6 +643,117 @@
     background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248, 252, 255, 0.98) 45%, rgba(241, 250, 255, 0.99) 100%);
     border: 1px solid rgba(133, 174, 224, 0.24);
   }
+  .support-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background:
+      radial-gradient(ellipse 130% 90% at 50% -20%, rgba(65, 145, 255, 0.24) 0%, transparent 55%),
+      radial-gradient(ellipse at center, #f2f8ff 0%, #e8f3ff 100%);
+  }
+  .support-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .support-overlay.show .overlay-shell { transform: translateY(0); }
+  .support-shell {
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(242,249,255,0.99) 60%, rgba(235,245,255,0.99) 100%);
+    border: 1px solid rgba(103, 157, 214, 0.24);
+  }
+  .support-top { padding: 10px 16px 0; text-align: center; }
+  .support-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .support-title { font-size: 17px; font-weight: 800; color: #0d3f70; text-align: left; flex: 1; }
+  .support-close {
+    width: 30px; height: 30px; border-radius: 999px; border: 1px solid rgba(13, 63, 112, 0.24);
+    background: #fff; color: #0d3f70; cursor: pointer; font-size: 17px; font-weight: 800; line-height: 1;
+  }
+  .support-subtitle { font-size: 12px; color: #4f77a6; margin-bottom: 10px; }
+  .support-scroll { flex: 1; overflow-y: auto; padding: 0 14px 12px; }
+  .support-section {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(130, 173, 216, 0.28);
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .support-section h4 { margin: 0 0 8px; font-size: 13px; color: #0d3f70; }
+  .support-help { margin: 0 0 8px; font-size: 11.5px; color: #5c7ea8; }
+  .pic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .pic-btn {
+    border: 1px solid rgba(118, 168, 216, 0.4);
+    border-radius: 12px;
+    background: #fff;
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f467d;
+    cursor: pointer;
+  }
+  .pic-btn .emoji { display: block; font-size: 18px; margin-bottom: 4px; }
+  .reg-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .reg-state-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .reg-state-btn {
+    border: 1px solid rgba(118, 168, 216, 0.42);
+    border-radius: 10px;
+    background: #fff;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #13497d;
+    cursor: pointer;
+  }
+  .reg-state-btn.active {
+    background: #e8f4ff;
+    border-color: rgba(55, 135, 214, 0.65);
+    color: #0e3e6e;
+  }
+  .reg-btn {
+    border: 1px solid rgba(118, 168, 216, 0.4);
+    border-radius: 10px;
+    background: #f8fcff;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #124a80;
+    cursor: pointer;
+  }
+  .reg-status {
+    margin-top: 8px;
+    background: #ffffff;
+    border: 1px dashed rgba(118, 168, 216, 0.5);
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 12px;
+    color: #2f5f91;
+  }
+  .routine-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .routine-row input {
+    flex: 1; border: 1px solid rgba(118, 168, 216, 0.4); border-radius: 10px; padding: 8px 10px; font-size: 12px;
+  }
+  .routine-row button {
+    border: 1px solid rgba(118, 168, 216, 0.4); border-radius: 10px; background: #fff; padding: 8px 10px; font-size: 12px; font-weight: 700; color: #124a80; cursor: pointer;
+  }
+  .routine-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .routine-item {
+    display: flex; align-items: center; gap: 8px; border: 1px solid rgba(118, 168, 216, 0.35);
+    border-radius: 10px; background: #fff; padding: 7px 8px; font-size: 12px; color: #13497d;
+  }
+  .routine-item.done .label { text-decoration: line-through; opacity: 0.6; }
+  .routine-item .label { flex: 1; }
+  .routine-item .del {
+    border: none; background: transparent; color: #bf3e3e; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
   .tool-mascot {
     margin: 2px auto 8px;
     display: inline-flex;
@@ -2016,6 +2127,7 @@
             <button type="button" class="fab-menu-item" id="fabMenuHome" role="menuitem">홈으로</button>
             <button type="button" class="fab-menu-item" id="fabMenuTarot" role="menuitem">타로 보기</button>
             <button type="button" class="fab-menu-item" id="fabMenuSocial" role="menuitem">사회성 연습</button>
+            <button type="button" class="fab-menu-item" id="fabMenuSupport" role="menuitem">지원 도구</button>
           </div>
         </div>
         <div class="input-pill">
@@ -2041,6 +2153,64 @@
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
         </svg>
       </button>
+    </div>
+
+    <div class="support-overlay" id="supportOverlay">
+      <div class="overlay-shell support-shell">
+        <div class="support-top">
+          <div class="support-header">
+            <div class="support-title">🧩 지원 도구</div>
+            <button type="button" class="support-close" id="supportClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+          </div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 생활 지원 코치</span></div>
+          <div class="support-subtitle">그림 소통 · 멜트다운/불안 조절 · 루틴 관리</div>
+        </div>
+        <div class="support-scroll">
+          <section class="support-section">
+            <h4>🗣️ 비언어 아동용 그림 말하기 버튼</h4>
+            <p class="support-help">버튼을 누르면 문장을 소리로 읽어줘요.</p>
+            <div class="pic-grid" id="picGrid"></div>
+          </section>
+          <section class="support-section">
+            <h4>🫁 멜트다운·과민·불안 행동 조절</h4>
+            <p class="support-help">빠른 안정 문구, 4-4-6 호흡, 5-4-3-2-1 그라운딩</p>
+            <div class="reg-state-grid" id="regStateGrid">
+              <button type="button" class="reg-state-btn active" data-state="sensory">감각 과민</button>
+              <button type="button" class="reg-state-btn" data-state="anxiety">불안</button>
+              <button type="button" class="reg-state-btn" data-state="anger">분노/폭발 직전</button>
+              <button type="button" class="reg-state-btn" data-state="shutdown">다운됨/무기력</button>
+            </div>
+            <div class="reg-actions">
+              <button type="button" class="reg-btn" id="calmPhraseBtn">안정 문구 읽기</button>
+              <button type="button" class="reg-btn" id="breathStartBtn">호흡 시작 (4-4-6)</button>
+              <button type="button" class="reg-btn" id="groundingBtn">5-4-3-2-1 가이드</button>
+              <button type="button" class="reg-btn" id="sensoryTipBtn">감각 과민 대처 팁</button>
+            </div>
+            <div class="routine-row" style="margin-top:8px;">
+              <button type="button" id="regCoachBtn" style="width:100%;">🐈‍⬛ 지금 상태 맞춤 코칭</button>
+            </div>
+            <div class="routine-row" style="margin-top:8px;">
+              <button type="button" id="regReportBtn" style="width:100%;">📊 오늘 상태 리포트</button>
+            </div>
+            <div class="routine-row" style="margin-top:8px;">
+              <button type="button" id="regResetBtn" style="width:100%;">🧹 오늘 기록 초기화</button>
+            </div>
+            <div class="reg-status" id="regStatus">준비되면 버튼을 눌러 시작해요.</div>
+          </section>
+          <section class="support-section">
+            <h4>📅 일정 관리와 루틴</h4>
+            <p class="support-help">오늘 해야 할 루틴을 추가하고 완료 표시해요.</p>
+            <div class="routine-row">
+              <input type="text" id="routineInput" placeholder="예: 8시 아침 식사, 9시 등원 준비" />
+              <button type="button" id="routineAddBtn">추가</button>
+            </div>
+            <ul class="routine-list" id="routineList"></ul>
+            <div class="routine-row" style="margin-top:8px;">
+              <button type="button" id="routineCoachBtn" style="width:100%;">🐈‍⬛ 춘직이 코칭 받기</button>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
 
     <!-- API 설정 (우측 상단 API 키로 토글) -->
@@ -2095,10 +2265,13 @@ const fabPlusBtn = document.getElementById('fabPlusBtn');
 const fabMenuHome = document.getElementById('fabMenuHome');
 const fabMenuTarot = document.getElementById('fabMenuTarot');
 const fabMenuSocial = document.getElementById('fabMenuSocial');
+const fabMenuSupport = document.getElementById('fabMenuSupport');
 let characterAnimationDataCache = null;
 let socialCoachLottieInstance = null;
 let tarotCoachLottieInstance = null;
 const API_KEY_STORAGE_KEY = 'chunjik.apiKey';
+const SUPPORT_ROUTINES_STORAGE_KEY = 'chunjik.support.routines';
+const SUPPORT_REG_LOG_STORAGE_KEY = 'chunjik.support.regulationLog';
 
 function getApiKey() {
   return apiKeyInput?.value?.trim() || '';
@@ -2295,6 +2468,11 @@ fabMenuSocial?.addEventListener('click', (e) => {
   closeFabPlusMenu();
   openSocial();
 });
+fabMenuSupport?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openSupport();
+});
 document.addEventListener('click', () => {
   if (fabPlusWrap?.classList.contains('menu-open')) closeFabPlusMenu();
 });
@@ -2338,6 +2516,7 @@ function detectToolIntent(raw) {
   if (/(사회성|대화\s*연습|대화연습|롤\s*플레이|롤플레이|역할극|소통\s*연습|사교\s*연습|말하기\s*연습|티키타카)/.test(t)) return 'social';
   if (/(연습하자|연습\s*하자)/.test(t) && /(대화|소통|말하기|사회|역할)/.test(t)) return 'social';
   if (/사회성연습/.test(c)) return 'social';
+  if (/(지원\s*도구|그림\s*버튼|그림\s*말하기|비언어|멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|일정\s*관리|루틴)/.test(t)) return 'support';
 
   return null;
 }
@@ -2383,6 +2562,15 @@ function tryRouteToolIntent(text) {
     openSocial(socialNav || null);
     return true;
   }
+  if (mode === 'support') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('지원 도구로 이동할게!', 2200);
+    openSupport();
+    return true;
+  }
 
   if (socialNav) {
     if (socialOverlay?.classList.contains('show')) {
@@ -2410,6 +2598,12 @@ function tryRouteToolIntent(text) {
 
 /* ===== 녹음 ===== */
 let mediaRecorder = null, audioChunks = [], isRecording = false;
+const STT_DEBUG = true;
+
+function logSttDebug(message) {
+  if (!STT_DEBUG) return;
+  addMessage(`[STT 디버그] ${message}`, 'assistant');
+}
 
 micBtn.addEventListener('click', async () => {
   if (isRecording) { mediaRecorder.stop(); return; }
@@ -2424,11 +2618,20 @@ micBtn.addEventListener('click', async () => {
       isRecording = false;
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
       try {
+        logSttDebug(`녹음 완료 (webm ${Math.round(blob.size / 1024)}KB)`);
         const wavBlob = await convertToWav(blob);
+        logSttDebug(`WAV 변환 완료 (${Math.round(wavBlob.size / 1024)}KB)`);
         const b64 = await blobToBase64(wavBlob);
         setState('thinking', '말을 글로 옮기는 중…');
         let line = '';
-        try { line = (await transcribeWavToText(b64)).trim(); } catch (_) { line = ''; }
+        try {
+          line = (await transcribeWavToText(b64)).trim();
+        } catch (err) {
+          logSttDebug(`전사 실패: ${err?.message || 'unknown error'}`);
+          line = '';
+        }
+        if (line) logSttDebug(`전사 성공: "${line}"`);
+        else logSttDebug('전사 결과가 비어있어 오디오 직접 전송으로 fallback');
         if (line && tryRouteToolIntent(line)) return;
         if (line && socialOverlay?.classList.contains('show') && socialState?.active) {
           await handleRpSendWithText(line);
@@ -2501,6 +2704,7 @@ function extractAssistantMessageText(msg) {
 async function transcribeWavToText(b64) {
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) throw new Error('API Key가 필요해요');
+  if (!b64 || b64.length < 200) throw new Error('오디오 데이터가 너무 짧아요');
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
@@ -2885,6 +3089,7 @@ function openTarot() {
   socialOverlay?.classList.remove('show');
   socialState.active = false;
   setSocialCoachLottieState('');
+  closeSupport();
   if (characterAnimationDataCache && !tarotCoachLottieInstance) {
     initTarotCoachLottie(characterAnimationDataCache);
   }
@@ -3246,6 +3451,12 @@ const SOCIAL_SCENARIOS = {
         title: '직장 동료와 스몰토크',
         goal: 'TMI 없이 가볍게 관계 형성하기',
         persona: { name: '서지윤 대리', emoji: '👩‍💼', role: '옆자리 동료' },
+        personaGuide: {
+          difficulty: 2,
+          style: '친절하고 여유 있는 편, 기본적으로 호의적',
+          tone: '부드러운 존댓말',
+          pressure: '대답이 어색해도 기다려주고 대화를 살짝 도와줌',
+        },
         opening: '주말에 뭐 하셨어요? 저는 그냥 집에서 쉬었어요.',
         hints: [
           '너무 깊은 사적 정보는 생략해요',
@@ -3258,7 +3469,13 @@ const SOCIAL_SCENARIOS = {
         emoji: '🧑‍💼',
         title: '상사의 부정적 피드백 수용하기',
         goal: '방어하지 않고 개선점을 명확히 질문하기',
-        persona: { name: '박 팀장', emoji: '🧑‍💼', role: '당신의 직속 상사' },
+        persona: { name: '박부장', emoji: '🧑‍💼', role: '성과 중심의 직속 상사' },
+        personaGuide: {
+          difficulty: 5,
+          style: '직설적이고 무뚝뚝함, 성격이 급하고 타협이 적음',
+          tone: '짧고 단호한 업무체, 공감 표현 적음',
+          pressure: '질문을 되묻거나 성과·기한을 압박해 소셜 스킬을 더 요구함',
+        },
         opening: '○○ 님, 이번 보고서는 기대보다 아쉬웠어요. 구조가 정리가 안 되어 보이던데.',
         hints: [
           '"네, 알겠습니다"로 먼저 받아요',
@@ -3272,6 +3489,12 @@ const SOCIAL_SCENARIOS = {
         title: '내 필요 정중하게 말하기 (자기 옹호)',
         goal: '업무 조정이나 편의 요청을 명확하게 전달하기',
         persona: { name: '이 매니저', emoji: '👨‍💼', role: '직속 매니저' },
+        personaGuide: {
+          difficulty: 3,
+          style: '정중하고 합리적이며 경청하는 편',
+          tone: '예의 있는 존댓말, 논리 중심 질문',
+          pressure: '요청 근거를 물어보지만 대화는 협의적으로 진행',
+        },
         opening: '요즘 업무량 어때요? 프로젝트 하나 더 맡을 수 있을까요?',
         hints: [
           '현재 상황을 사실 중심으로 말해요',
@@ -3285,6 +3508,12 @@ const SOCIAL_SCENARIOS = {
         title: '호감 있는 사람에게 데이트 신청',
         goal: '부담 없이 명확하게 제안하고 거절 수용하기',
         persona: { name: '하윤', emoji: '🙂', role: '취미 모임에서 만난 사람' },
+        personaGuide: {
+          difficulty: 3,
+          style: '상대 반응을 보며 조심스럽게 대화함',
+          tone: '부담 주지 않는 편안한 말투',
+          pressure: '애매한 답으로 반응해 사용자의 명확한 표현을 유도',
+        },
         opening: '저번에 얘기한 그 전시회, 저도 가보고 싶더라고요.',
         hints: [
           '구체적인 활동을 제안해요 — "이번 주 토요일에 같이 갈래요?"',
@@ -3341,6 +3570,7 @@ socialClose?.addEventListener('click', closeSocial);
 function openSocial(initialSelection = null) {
   tarotOverlay?.classList.remove('show');
   closeTcardLightbox();
+  closeSupport();
   resetSocial();
   socialOverlay.classList.add('show');
   if (characterAnimationDataCache && !socialCoachLottieInstance) {
@@ -3353,6 +3583,379 @@ function closeSocial() {
   socialState.active = false;
   setSocialCoachLottieState('');
 }
+
+const supportOverlay = document.getElementById('supportOverlay');
+const supportClose = document.getElementById('supportClose');
+const picGrid = document.getElementById('picGrid');
+const regStatus = document.getElementById('regStatus');
+const regStateGrid = document.getElementById('regStateGrid');
+const regCoachBtn = document.getElementById('regCoachBtn');
+const regReportBtn = document.getElementById('regReportBtn');
+const regResetBtn = document.getElementById('regResetBtn');
+const calmPhraseBtn = document.getElementById('calmPhraseBtn');
+const breathStartBtn = document.getElementById('breathStartBtn');
+const groundingBtn = document.getElementById('groundingBtn');
+const sensoryTipBtn = document.getElementById('sensoryTipBtn');
+const routineInput = document.getElementById('routineInput');
+const routineAddBtn = document.getElementById('routineAddBtn');
+const routineList = document.getElementById('routineList');
+const routineCoachBtn = document.getElementById('routineCoachBtn');
+
+const PICTURE_PHRASES = [
+  { emoji: '💧', text: '물 마시고 싶어요' },
+  { emoji: '🚽', text: '화장실 가고 싶어요' },
+  { emoji: '😴', text: '쉬고 싶어요' },
+  { emoji: '🍽️', text: '배고파요' },
+  { emoji: '🙅', text: '싫어요, 멈춰주세요' },
+  { emoji: '🧸', text: '도와주세요' },
+];
+const REG_STATE_PRESETS = {
+  sensory: {
+    label: '감각 과민',
+    localGuide: '소리와 빛을 줄이고, 조용한 곳으로 이동해요. 귀를 감싸거나 압박감 있는 물건으로 몸을 안정시켜요.',
+  },
+  anxiety: {
+    label: '불안',
+    localGuide: '지금 당장 할 수 있는 가장 작은 행동 하나를 정해요. 숨을 천천히 쉬고, 몸의 감각을 확인해요.',
+  },
+  anger: {
+    label: '분노/폭발 직전',
+    localGuide: '말하기 전에 10초 멈추고 물 한 모금 마셔요. 몸을 뒤로 한 걸음 빼고 짧게 필요를 말해요.',
+  },
+  shutdown: {
+    label: '다운됨/무기력',
+    localGuide: '눈앞의 일 하나만 정하고 3분만 해봐요. 끝나면 쉬어도 괜찮아요.',
+  },
+};
+let regulationState = 'sensory';
+
+function getTodayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function loadRegulationLog() {
+  try { return JSON.parse(localStorage.getItem(SUPPORT_REG_LOG_STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveRegulationLog(log) {
+  localStorage.setItem(SUPPORT_REG_LOG_STORAGE_KEY, JSON.stringify(log));
+}
+function logRegulationEvent(actionType) {
+  const log = loadRegulationLog();
+  log.push({
+    date: getTodayKey(),
+    ts: Date.now(),
+    state: regulationState,
+    actionType,
+  });
+  while (log.length > 300) log.shift();
+  saveRegulationLog(log);
+}
+
+function speakKorean(text) {
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = 0.96;
+  u.pitch = 1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+function openSupport() {
+  closeTarot();
+  closeSocial();
+  supportOverlay?.classList.add('show');
+}
+function closeSupport() {
+  supportOverlay?.classList.remove('show');
+}
+supportClose?.addEventListener('click', closeSupport);
+
+function initPicturePhrases() {
+  if (!picGrid) return;
+  picGrid.innerHTML = '';
+  PICTURE_PHRASES.forEach(({ emoji, text }) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pic-btn';
+    btn.innerHTML = `<span class="emoji">${emoji}</span><span>${escapeHtml(text)}</span>`;
+    btn.addEventListener('click', () => {
+      speakKorean(text);
+      if (regStatus) regStatus.textContent = `읽어줌: ${text}`;
+    });
+    picGrid.appendChild(btn);
+  });
+}
+
+let breathingTimer = null;
+function startBreathingRoutine() {
+  if (breathingTimer) clearInterval(breathingTimer);
+  const steps = [
+    { label: '들이마시기', sec: 4 },
+    { label: '멈추기', sec: 4 },
+    { label: '내쉬기', sec: 6 },
+  ];
+  let cycle = 1;
+  let stepIndex = 0;
+  let left = steps[0].sec;
+  if (regStatus) regStatus.textContent = `호흡 시작: ${cycle}/3 | ${steps[0].label} ${left}초`;
+  breathingTimer = setInterval(() => {
+    left -= 1;
+    if (left > 0) {
+      if (regStatus) regStatus.textContent = `호흡 ${cycle}/3 | ${steps[stepIndex].label} ${left}초`;
+      return;
+    }
+    stepIndex += 1;
+    if (stepIndex >= steps.length) {
+      cycle += 1;
+      stepIndex = 0;
+    }
+    if (cycle > 3) {
+      clearInterval(breathingTimer);
+      breathingTimer = null;
+      if (regStatus) regStatus.textContent = '호흡 완료. 몸의 긴장이 조금 내려갔는지 확인해봐요.';
+      speakKorean('호흡이 끝났어요. 지금 느낌을 한 단어로 말해볼까요?');
+      return;
+    }
+    left = steps[stepIndex].sec;
+    if (regStatus) regStatus.textContent = `호흡 ${cycle}/3 | ${steps[stepIndex].label} ${left}초`;
+  }, 1000);
+}
+
+calmPhraseBtn?.addEventListener('click', () => {
+  const line = '지금은 안전해요. 천천히 숨 쉬고, 한 가지씩만 해도 괜찮아요.';
+  logRegulationEvent('calm-phrase');
+  if (regStatus) regStatus.textContent = line;
+  speakKorean(line);
+});
+breathStartBtn?.addEventListener('click', () => {
+  logRegulationEvent('breathing');
+  startBreathingRoutine();
+});
+groundingBtn?.addEventListener('click', () => {
+  const line = '보이는 것 5개, 만져지는 것 4개, 들리는 소리 3개, 냄새 2개, 맛 1개를 찾아봐요.';
+  logRegulationEvent('grounding');
+  if (regStatus) regStatus.textContent = line;
+  speakKorean(line);
+});
+sensoryTipBtn?.addEventListener('click', () => {
+  const line = '빛과 소리를 줄이고, 조용한 공간으로 이동해요. 손으로 귀를 감싸거나 압박감을 주는 물건을 사용해도 좋아요.';
+  logRegulationEvent('sensory-tip');
+  if (regStatus) regStatus.textContent = line;
+  speakKorean(line);
+});
+regStateGrid?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.reg-state-btn');
+  if (!btn) return;
+  const state = btn.dataset.state;
+  if (!REG_STATE_PRESETS[state]) return;
+  regulationState = state;
+  regStateGrid.querySelectorAll('.reg-state-btn').forEach((el) => {
+    el.classList.toggle('active', el === btn);
+  });
+  const msg = `선택됨: ${REG_STATE_PRESETS[state].label}`;
+  if (regStatus) regStatus.textContent = msg;
+});
+
+async function coachRegulationState() {
+  const preset = REG_STATE_PRESETS[regulationState] || REG_STATE_PRESETS.sensory;
+  const fallback = `${preset.label} 상태일 때는: ${preset.localGuide}`;
+  logRegulationEvent('state-coaching');
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    if (regStatus) regStatus.textContent = fallback;
+    speakKorean(fallback);
+    return;
+  }
+  try {
+    if (regStatus) regStatus.textContent = '춘직이가 지금 상태에 맞는 코칭을 만들고 있어…';
+    const prompt = [
+      '너는 자폐 친화적 정서 조절 코치다.',
+      `현재 상태: ${preset.label}`,
+      `기본 가이드: ${preset.localGuide}`,
+      '출력 형식: 2문장 이내. 1) 지금 할 행동 1개 2) 바로 이어서 할 행동 1개.',
+      '명령조 금지, 따뜻하고 짧게. 이모지 금지.',
+    ].join('\n');
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'kanana-o',
+        stream: false,
+        messages: [
+          { role: 'system', content: '정서 조절을 돕는 코치다. 짧고 구체적으로 안내한다.' },
+          { role: 'user', content: [{ type: 'text', text: prompt }] },
+        ],
+        modalities: ['text'],
+        temperature: 0.35,
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    let text = extractAssistantMessageText(j.choices?.[0]?.message).trim();
+    if (!text) text = fallback;
+    if (regStatus) regStatus.textContent = text;
+    speakKorean(text);
+  } catch (_) {
+    if (regStatus) regStatus.textContent = fallback;
+    speakKorean(fallback);
+  }
+}
+regCoachBtn?.addEventListener('click', coachRegulationState);
+regReportBtn?.addEventListener('click', () => {
+  const today = getTodayKey();
+  const log = loadRegulationLog().filter((x) => x.date === today);
+  if (!log.length) {
+    const line = '오늘 기록이 아직 없어요. 상태 선택 후 코칭 버튼을 눌러 시작해봐요.';
+    if (regStatus) regStatus.textContent = line;
+    speakKorean(line);
+    return;
+  }
+  const stateCount = { sensory: 0, anxiety: 0, anger: 0, shutdown: 0 };
+  for (const item of log) if (stateCount[item.state] !== undefined) stateCount[item.state] += 1;
+  const sorted = Object.entries(stateCount).sort((a, b) => b[1] - a[1]);
+  const [topState, topCount] = sorted[0];
+  const total = log.length;
+  const stateLabel = REG_STATE_PRESETS[topState]?.label || topState;
+  const line = `오늘 조절 기록 ${total}회. 가장 많았던 상태는 ${stateLabel}(${topCount}회). 다음엔 초반 신호가 오면 4-4-6 호흡을 먼저 시작해봐요.`;
+  if (regStatus) regStatus.textContent = line;
+  speakKorean(line);
+});
+regResetBtn?.addEventListener('click', () => {
+  const today = getTodayKey();
+  const next = loadRegulationLog().filter((x) => x.date !== today);
+  saveRegulationLog(next);
+  const line = '오늘 상태 기록을 초기화했어요. 다시 시작해볼까요?';
+  if (regStatus) regStatus.textContent = line;
+  speakKorean(line);
+});
+
+function loadRoutines() {
+  try { return JSON.parse(localStorage.getItem(SUPPORT_ROUTINES_STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveRoutines(list) {
+  localStorage.setItem(SUPPORT_ROUTINES_STORAGE_KEY, JSON.stringify(list));
+}
+function renderRoutines() {
+  if (!routineList) return;
+  const items = loadRoutines();
+  routineList.innerHTML = '';
+  if (!items.length) {
+    routineList.innerHTML = '<li class="routine-item"><span class="label">아직 루틴이 없어요. 하나 추가해볼까요?</span></li>';
+    return;
+  }
+  items.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.className = `routine-item${item.done ? ' done' : ''}`;
+    li.innerHTML = `
+      <input type="checkbox" ${item.done ? 'checked' : ''} aria-label="루틴 완료 체크">
+      <span class="label">${escapeHtml(item.text)}</span>
+      <button type="button" class="del">삭제</button>
+    `;
+    const ck = li.querySelector('input');
+    const del = li.querySelector('.del');
+    ck?.addEventListener('change', () => {
+      const next = loadRoutines();
+      if (!next[index]) return;
+      next[index].done = !!ck.checked;
+      saveRoutines(next);
+      renderRoutines();
+    });
+    del?.addEventListener('click', () => {
+      const next = loadRoutines();
+      next.splice(index, 1);
+      saveRoutines(next);
+      renderRoutines();
+    });
+    routineList.appendChild(li);
+  });
+}
+function addRoutine() {
+  const t = routineInput?.value?.trim();
+  if (!t) return;
+  const next = loadRoutines();
+  next.push({ text: t, done: false });
+  saveRoutines(next);
+  routineInput.value = '';
+  renderRoutines();
+}
+
+async function coachRoutineProgress() {
+  const routines = loadRoutines();
+  const total = routines.length;
+  const done = routines.filter(r => r.done).length;
+  const pending = routines.filter(r => !r.done).slice(0, 3).map(r => r.text);
+
+  if (!total) {
+    const line = '아직 루틴이 없어요. 오늘 꼭 필요한 한 가지부터 같이 정해볼까요?';
+    if (regStatus) regStatus.textContent = line;
+    speakKorean(line);
+    return;
+  }
+
+  const fallback = done === total
+    ? `멋져요! ${total}개 루틴을 모두 끝냈어요. 오늘은 충분히 잘했어요.`
+    : `좋아요. ${total}개 중 ${done}개를 끝냈어요. 다음 한 가지는 "${pending[0] || '남은 루틴'}" 어때요?`;
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    if (regStatus) regStatus.textContent = fallback;
+    speakKorean(fallback);
+    return;
+  }
+
+  try {
+    if (regStatus) regStatus.textContent = '춘직이가 루틴 코칭 문장을 만드는 중…';
+    const prompt = [
+      '너는 자폐 친화적 생활 코치 춘직이다.',
+      '아래 루틴 진행 상황을 보고, 비판 없이 짧고 구체적으로 코칭해라.',
+      '출력 형식: 2문장 이내. 1) 인정/격려 2) 다음 한 단계 제안.',
+      '이모지, 과장된 표현, 장문 금지.',
+      `전체 루틴 수: ${total}, 완료 수: ${done}`,
+      `남은 루틴(최대3): ${pending.join(' | ') || '없음'}`,
+    ].join('\n');
+
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'kanana-o',
+        stream: false,
+        messages: [
+          { role: 'system', content: '생활 루틴 코칭 전문가로서 짧고 따뜻하게 말해.' },
+          { role: 'user', content: [{ type: 'text', text: prompt }] },
+        ],
+        modalities: ['text'],
+        temperature: 0.4,
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    let text = extractAssistantMessageText(j.choices?.[0]?.message).trim();
+    if (!text) text = fallback;
+    if (regStatus) regStatus.textContent = text;
+    speakKorean(text);
+  } catch (_) {
+    if (regStatus) regStatus.textContent = fallback;
+    speakKorean(fallback);
+  }
+}
+
+routineAddBtn?.addEventListener('click', addRoutine);
+routineInput?.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  addRoutine();
+});
+routineCoachBtn?.addEventListener('click', coachRoutineProgress);
+
+initPicturePhrases();
+renderRoutines();
 
 function resetSocial() {
   socialState.age = null;
@@ -3470,6 +4073,7 @@ function startRolePlay(scenario) {
       </div>
     </div>
     <div><span class="rp-label">상황</span>${escapeHtml(scenario.persona.role)}</div>
+    ${scenario.personaGuide?.difficulty ? `<div><span class="rp-label">난이도</span>${scenario.personaGuide.difficulty}/5</div>` : ''}
     <div class="rp-goal">🎯 <strong>목표</strong> — ${escapeHtml(scenario.goal)}</div>
   `;
 
@@ -3629,16 +4233,22 @@ async function askPersonaReply() {
     `상황: ${scenario.title} — ${scenario.goal}`,
     `상황 시작 대사(고정): ${scenario.opening}`,
     `말투: ${group.tone}.`,
+    scenario.personaGuide?.difficulty ? `인물 난이도: ${scenario.personaGuide.difficulty}/5` : '',
+    scenario.personaGuide?.style ? `인물 성격: ${scenario.personaGuide.style}` : '',
+    scenario.personaGuide?.tone ? `인물 화법: ${scenario.personaGuide.tone}` : '',
+    scenario.personaGuide?.pressure ? `인물 반응 패턴: ${scenario.personaGuide.pressure}` : '',
     `길이·호흡(매우 중요):`,
     `- 한 턴에 원칙적으로 문장 하나만. 꼭 필요할 때만 짧은 문장 두 개까지. 그 이상·긴 독백·설명·심리 묘사·나레이션(괄호 묘사만 길게) 금지.`,
     `- 질문은 한 턴에 하나만.`,
     `- 상대가 한두 마디로 짧게 말하면, 너도 그보다 짧거나 비슷한 길이로 받아쳐.`,
+    `- 상대가 방금 한 말의 핵심(감정/요청/사실) 중 최소 하나에 반드시 반응해. 대화가 끊기지 않게 이어가.`,
     `기억·연속성:`,
     `- 이 채팅에서 assistant 역할로 이미 나온 말은 전부 네가 한 말이다. 그 내용을 잊은 척 하거나 반대로 말하지 마.`,
     `- 바로 직전 주제에 이어가고, 갑자기 다른 화제로 튀지 마.`,
     `- 사용자가 이전에 한 말(감정, 요청, 거절, 약속)을 기억하고 다음 말에서 반영해.`,
     `연기:`,
     `- AI라고 밝히지 말고 ${scenario.persona.name}처럼만 말해.`,
+    `- "도와드릴게요", "좋은 질문이에요", "정리하면" 같은 상담사/LLM 메타 표현을 쓰지 마.`,
     `- 같은 문장·문단을 두 번 출력하지 마. 응답이 끝나면 거기서 멈춰.`,
     `- 사용자를 판단·설교·코칭하지 마.`,
     `- 이모지(그림 문자)나 ^^, :) 같은 꾸밈 이모티콘은 쓰지 마.`,

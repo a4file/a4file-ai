@@ -13,7 +13,6 @@ function withCors(response) {
   Object.entries(CORS_HEADERS).forEach(([key, value]) => headers.set(key, value));
   return new Response(response.body, {
     status: response.status,
-    statusText: response.statusText,
     headers,
   });
 }

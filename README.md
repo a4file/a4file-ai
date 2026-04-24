@@ -8,8 +8,8 @@
 ## 개요
 
 - **대화 인터페이스**: 텍스트/음성 입력, 스트리밍 응답, 음성 재생
-- **도구 인터페이스**: `+` 버튼 메뉴로 타로/사회성 연습 진입
-- **자연어 도구 라우팅**: `"타로 봐줘"`, `"사회성 연습하자"` 같은 입력으로 자동 도구 전환
+- **도구 인터페이스**: `+` 버튼 메뉴로 타로/사회성 연습/지원 도구 진입
+- **자연어 도구 라우팅**: `"타로 봐줘"`, `"사회성 연습하자"`, `"지원 도구 열어줘"` 같은 입력으로 자동 전환
 - **캐릭터 렌더링**: Lottie 우선, 실패 시 SVG 폴백
 - **모바일 레이아웃**: 하단 입력바 고정, 본문 스크롤 분리
 
@@ -23,6 +23,7 @@
   - 기본 대화 상태
   - 타로 오버레이 상태
   - 사회성 연습(연령/상황/롤플레이/피드백) 상태
+  - 지원 도구(그림 버튼/TTS, 행동 조절, 루틴 코칭) 상태
 
 ### 2) AI 호출 경로
 - 기본 모델 엔드포인트: `API_URL` (`/v1/chat/completions` 또는 원격 URL)
@@ -57,8 +58,9 @@
 - 하단 왼쪽 `+` 버튼 메뉴:
   - `타로 보기`
   - `사회성 연습`
+  - `지원 도구`
 - 문장 의도 기반 자동 라우팅:
-  - 예: `타로 봐줘`, `운세`, `사회성 연습하자`, `롤플레이`
+  - 예: `타로 봐줘`, `운세`, `사회성 연습하자`, `롤플레이`, `멜트다운`, `루틴 관리`
   - 텍스트 입력과 음성 전사 결과 모두 라우팅
 
 ## 타로 리딩
@@ -73,11 +75,19 @@
 ## 사회성 연습
 - 연령대별 시나리오(미취학/청소년/성인)
 - 상황별 고정 페르소나 롤플레이
+- 인물별 난이도/성격/말투 반영(`personaGuide`)
 - 힌트 보기 / 연습 종료 후 피드백 생성
 - 맥락 유지 강화:
   - 페르소나 고정 규칙(시나리오 잠금)
   - 최근 사용자 발화 메모리 반영
   - 최근 대화 흐름(window) 반영
+
+## 지원 도구 (비언어·정서조절·루틴)
+- 그림 말하기 버튼(TTS): 비언어 아동용 핵심 요청 문장을 버튼으로 즉시 음성 출력
+- 행동 조절: 감각 과민/불안/분노/다운 상태 선택 후 안정문구, 호흡(4-4-6), 그라운딩(5-4-3-2-1), 감각 팁 제공
+- 상태 맞춤 코칭: 선택 상태에 따라 LLM 또는 로컬 fallback으로 2문장 코칭
+- 일정/루틴 관리: 루틴 추가·완료 체크·삭제 + 진행률 기반 코칭
+- 오늘 리포트: 상태 조절 사용 로그를 일자 단위로 집계해 요약 제공(로컬 저장)
 
 ## 캐릭터 렌더링
 - `character.json` 존재 시 Lottie 사용
@@ -96,6 +106,7 @@
 ## 대화
 - CORS 가능성 메시지 안내(`server.py` 실행 유도)
 - 음성 전사 실패 시 텍스트 입력 유도 또는 오디오 경로 fallback
+- STT 디버그 메시지(`[STT 디버그]`)로 녹음/변환/전사 상태를 채팅창에 출력
 
 ## 타로
 - 카드 API 1차 실패 시 `/tarot/random` 프록시 재시도
@@ -151,9 +162,11 @@ python server.py
 - `index.html`: UI/스타일/로직 전체
 - `README.md`: 프로젝트 문서
 - `server.py`: 로컬 프록시/정적 서빙(사용 시)
+- `api/index.py`: Vercel 서버리스용 Flask 엔트리
 - `requirements.txt`: Python 의존성(배포/로컬 공용)
 - `Procfile`: PaaS 실행 명령(`gunicorn server:app`)
 - `cloudflare-worker/`: Cloudflare Worker 프록시(`wrangler.toml`, `src/worker.js`)
+- `vercel.json`: Vercel 라우팅(`/v1/chat/completions`, `/tarot/random`, `/health`)
 - `JPG/`: 타로 카드 이미지 폴더(파일명 규칙 준수)
 
 ---
@@ -187,8 +200,9 @@ python server.py
 
 ### 추천 플랫폼
 - **Render / Railway 권장**: 현재 구조가 Flask 프록시(`server.py`)를 포함하므로 서버 런타임이 필요한 배포에 적합
+- **Vercel (현재 지원)**: 정적 프론트 + `api/index.py` Flask 서버리스 경로로 바로 배포 가능
 - **Cloudflare Pages + Workers**: 정적 페이지 + 프록시 분리 배포에 적합
-- **Vercel / Netlify**: 정적 호스팅에는 강점이 있지만, 현재 Flask 라우트를 그대로 쓰려면 추가 서버리스 마이그레이션 필요
+- **Netlify**: 정적 호스팅에는 강점이 있지만, 현재 Flask 라우트를 그대로 쓰려면 추가 서버리스 마이그레이션 필요
 
 ### Render/Railway 공통 설정
 1. 저장소 연결
@@ -206,6 +220,17 @@ python server.py
 3. 출력된 Worker 도메인을 복사 (예: `https://chunjik-proxy.<subdomain>.workers.dev`)
 4. 프론트 접속 URL에 `?proxyBase=<WorkerURL>` 추가
    - 예: `https://<pages-domain>/?proxyBase=https://chunjik-proxy.<subdomain>.workers.dev`
+
+### Vercel 배포
+1. Vercel에서 `a4file/chunjik` 저장소 Import
+2. Framework Preset은 `Other`(자동)
+3. Build Command 비워둠 (정적 + Python serverless 자동 감지)
+4. Deploy 실행
+5. 배포 후 확인
+   - `https://<vercel-domain>/health`
+   - 앱에서 채팅/타로 요청이 `/v1/chat/completions`, `/tarot/random`으로 정상 동작하는지 확인
+
+선택: Vercel 환경변수 `KANANA_SERVER_API_KEY`를 설정하면, 클라이언트 Authorization 헤더 없이도 서버측 키로 동작할 수 있습니다.
 
 ### 배포 전 체크리스트
 - 하드코딩된 API 키가 없는지 확인 (`index.html`의 `value="KC_IS_..."` 금지)
