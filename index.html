@@ -684,6 +684,7 @@
     gap: 6px;
     margin-bottom: 10px;
   }
+  .support-tabs.hidden { display: none; }
   .support-tab {
     border: 1px solid rgba(103, 157, 214, 0.35);
     border-radius: 9px;
@@ -2193,7 +2194,10 @@
             <button type="button" class="fab-menu-item" id="fabMenuHome" role="menuitem">홈으로</button>
             <button type="button" class="fab-menu-item" id="fabMenuTarot" role="menuitem">타로 보기</button>
             <button type="button" class="fab-menu-item" id="fabMenuSocial" role="menuitem">사회성 연습</button>
-            <button type="button" class="fab-menu-item" id="fabMenuSupport" role="menuitem">지원 도구</button>
+            <button type="button" class="fab-menu-item" id="fabMenuPicture" role="menuitem">그림 말하기</button>
+            <button type="button" class="fab-menu-item" id="fabMenuRegulation" role="menuitem">행동 조절</button>
+            <button type="button" class="fab-menu-item" id="fabMenuRoutine" role="menuitem">루틴 관리</button>
+            <button type="button" class="fab-menu-item" id="fabMenuGames" role="menuitem">미니게임</button>
           </div>
         </div>
         <div class="input-pill">
@@ -2221,32 +2225,38 @@
       </button>
     </div>
 
-    <div class="support-overlay" id="supportOverlay">
+    <div class="support-overlay" id="pictureOverlay">
       <div class="overlay-shell support-shell">
         <div class="support-top">
           <div class="support-header">
-            <div class="support-title">🧩 지원 도구</div>
-            <button type="button" class="support-close" id="supportClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+            <div class="support-title">그림 말하기</div>
+            <button type="button" class="support-close" id="pictureClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
-          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 생활 지원 코치</span></div>
-          <div class="support-subtitle">그림 소통 · 행동 조절 · 루틴 · 미니게임</div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 그림 의사소통 코치</span></div>
+          <div class="support-subtitle">버튼을 눌러 원하는 말을 소리로 표현해요.</div>
         </div>
         <div class="support-scroll">
-          <div class="support-tabs" id="supportTabs">
-            <button type="button" class="support-tab active" data-section="picture"><span aria-hidden="true">🗣️</span> 그림말하기</button>
-            <button type="button" class="support-tab" data-section="regulation"><span aria-hidden="true">🫁</span> 행동조절</button>
-            <button type="button" class="support-tab" data-section="routine"><span aria-hidden="true">📅</span> 루틴</button>
-            <button type="button" class="support-tab" data-section="games"><span aria-hidden="true">🎮</span> 미니게임</button>
-          </div>
-
-          <section class="support-section" data-support-section="picture">
+          <section class="support-section">
             <h4><span aria-hidden="true">🗣️</span> 비언어 아동용 그림 말하기 버튼</h4>
-            <p class="support-help">버튼을 누르면 문장을 소리로 읽어줘요.</p>
             <div class="pic-grid" id="picGrid"></div>
           </section>
-          <section class="support-section" data-support-section="regulation" hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-overlay" id="regulationOverlay">
+      <div class="overlay-shell support-shell">
+        <div class="support-top">
+          <div class="support-header">
+            <div class="support-title">행동 조절</div>
+            <button type="button" class="support-close" id="regulationClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+          </div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 정서 조절 코치</span></div>
+          <div class="support-subtitle">지금 상태에 맞는 안정 도구를 선택해요.</div>
+        </div>
+        <div class="support-scroll">
+          <section class="support-section">
             <h4><span aria-hidden="true">🫁</span> 멜트다운·과민·불안 행동 조절</h4>
-            <p class="support-help">빠른 안정 문구, 4-4-6 호흡, 5-4-3-2-1 그라운딩</p>
             <div class="reg-state-grid" id="regStateGrid">
               <button type="button" class="reg-state-btn active" data-state="sensory">감각 과민</button>
               <button type="button" class="reg-state-btn" data-state="anxiety">불안</button>
@@ -2270,9 +2280,23 @@
             </div>
             <div class="reg-status" id="regStatus">준비되면 버튼을 눌러 시작해요.</div>
           </section>
-          <section class="support-section" data-support-section="routine" hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-overlay" id="routineOverlay">
+      <div class="overlay-shell support-shell">
+        <div class="support-top">
+          <div class="support-header">
+            <div class="support-title">루틴 관리</div>
+            <button type="button" class="support-close" id="routineClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+          </div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 생활 루틴 코치</span></div>
+          <div class="support-subtitle">오늘 루틴을 하나씩 완료해요.</div>
+        </div>
+        <div class="support-scroll">
+          <section class="support-section">
             <h4><span aria-hidden="true">📅</span> 일정 관리와 루틴</h4>
-            <p class="support-help">오늘 해야 할 루틴을 추가하고 완료 표시해요.</p>
             <div class="routine-row">
               <input type="text" id="routineInput" placeholder="예: 8시 아침 식사, 9시 등원 준비" />
               <button type="button" id="routineAddBtn">추가</button>
@@ -2282,7 +2306,22 @@
               <button type="button" id="routineCoachBtn" style="width:100%;"><span aria-hidden="true">🐈‍⬛</span> 춘직이 코칭 받기</button>
             </div>
           </section>
-          <section class="support-section" data-support-section="games" hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-overlay" id="gamesOverlay">
+      <div class="overlay-shell support-shell">
+        <div class="support-top">
+          <div class="support-header">
+            <div class="support-title">미니게임</div>
+            <button type="button" class="support-close" id="gamesClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+          </div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 스트레스 완화 게임</span></div>
+          <div class="support-subtitle">부담 없이 짧게 긴장을 푸는 게임들이에요.</div>
+        </div>
+        <div class="support-scroll">
+          <section class="support-section">
             <h4><span aria-hidden="true">🎮</span> 스트레스 완화 미니게임</h4>
             <div class="game-card">
               <p class="game-title"><span aria-hidden="true">🫧</span> 뽁뽁이 터트리기</p>
@@ -2358,7 +2397,10 @@ const fabPlusBtn = document.getElementById('fabPlusBtn');
 const fabMenuHome = document.getElementById('fabMenuHome');
 const fabMenuTarot = document.getElementById('fabMenuTarot');
 const fabMenuSocial = document.getElementById('fabMenuSocial');
-const fabMenuSupport = document.getElementById('fabMenuSupport');
+const fabMenuPicture = document.getElementById('fabMenuPicture');
+const fabMenuRegulation = document.getElementById('fabMenuRegulation');
+const fabMenuRoutine = document.getElementById('fabMenuRoutine');
+const fabMenuGames = document.getElementById('fabMenuGames');
 let characterAnimationDataCache = null;
 let socialCoachLottieInstance = null;
 let tarotCoachLottieInstance = null;
@@ -2562,10 +2604,25 @@ fabMenuSocial?.addEventListener('click', (e) => {
   closeFabPlusMenu();
   openSocial();
 });
-fabMenuSupport?.addEventListener('click', (e) => {
+fabMenuPicture?.addEventListener('click', (e) => {
   e.stopPropagation();
   closeFabPlusMenu();
-  openSupport();
+  openSupportSection('picture');
+});
+fabMenuRegulation?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openSupportSection('regulation');
+});
+fabMenuRoutine?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openSupportSection('routine');
+});
+fabMenuGames?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openSupportSection('games');
 });
 document.addEventListener('click', () => {
   if (fabPlusWrap?.classList.contains('menu-open')) closeFabPlusMenu();
@@ -2610,7 +2667,10 @@ function detectToolIntent(raw) {
   if (/(사회성|대화\s*연습|대화연습|롤\s*플레이|롤플레이|역할극|소통\s*연습|사교\s*연습|말하기\s*연습|티키타카)/.test(t)) return 'social';
   if (/(연습하자|연습\s*하자)/.test(t) && /(대화|소통|말하기|사회|역할)/.test(t)) return 'social';
   if (/사회성연습/.test(c)) return 'social';
-  if (/(지원\s*도구|지원툴|그림\s*버튼|그림\s*말하기|비언어|멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|일정\s*관리|루틴|미니게임|뽁뽁이|원\s*그리기)/.test(t)) return 'support';
+  if (/(그림\s*버튼|그림\s*말하기|비언어|의사소통\s*버튼|말하기\s*버튼)/.test(t)) return 'picture';
+  if (/(멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|감각\s*조절)/.test(t)) return 'regulation';
+  if (/(일정\s*관리|루틴|체크리스트|할\s*일)/.test(t)) return 'routine';
+  if (/(미니게임|뽁뽁이|원\s*그리기|게임)/.test(t)) return 'games';
 
   return null;
 }
@@ -2656,13 +2716,40 @@ function tryRouteToolIntent(text) {
     openSocial(socialNav || null);
     return true;
   }
-  if (mode === 'support') {
+  if (mode === 'picture') {
     addMessage(text, 'user');
     closeFabPlusMenu();
     hideStatus();
     setState('', '');
-    showStatus('지원 도구로 이동할게!', 2200);
-    openSupport();
+    showStatus('그림 말하기로 이동할게!', 2200);
+    openSupportSection('picture');
+    return true;
+  }
+  if (mode === 'regulation') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('행동 조절 화면으로 이동할게!', 2200);
+    openSupportSection('regulation');
+    return true;
+  }
+  if (mode === 'routine') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('루틴 관리로 이동할게!', 2200);
+    openSupportSection('routine');
+    return true;
+  }
+  if (mode === 'games') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('미니게임으로 이동할게!', 2200);
+    openSupportSection('games');
     return true;
   }
 
@@ -3678,9 +3765,14 @@ function closeSocial() {
   setSocialCoachLottieState('');
 }
 
-const supportOverlay = document.getElementById('supportOverlay');
-const supportTabs = document.getElementById('supportTabs');
-const supportClose = document.getElementById('supportClose');
+const pictureOverlay = document.getElementById('pictureOverlay');
+const pictureClose = document.getElementById('pictureClose');
+const regulationOverlay = document.getElementById('regulationOverlay');
+const regulationClose = document.getElementById('regulationClose');
+const routineOverlay = document.getElementById('routineOverlay');
+const routineClose = document.getElementById('routineClose');
+const gamesOverlay = document.getElementById('gamesOverlay');
+const gamesClose = document.getElementById('gamesClose');
 const picGrid = document.getElementById('picGrid');
 const regStatus = document.getElementById('regStatus');
 const regStateGrid = document.getElementById('regStateGrid');
@@ -3765,24 +3857,25 @@ function speakKorean(text) {
   window.speechSynthesis.speak(u);
 }
 
-function openSupport() {
+function openSupportSection(section = 'picture') {
   closeTarot();
   closeSocial();
-  supportOverlay?.classList.add('show');
+  closeSupport();
+  if (section === 'picture') pictureOverlay?.classList.add('show');
+  if (section === 'regulation') regulationOverlay?.classList.add('show');
+  if (section === 'routine') routineOverlay?.classList.add('show');
+  if (section === 'games') gamesOverlay?.classList.add('show');
 }
 function closeSupport() {
-  supportOverlay?.classList.remove('show');
+  pictureOverlay?.classList.remove('show');
+  regulationOverlay?.classList.remove('show');
+  routineOverlay?.classList.remove('show');
+  gamesOverlay?.classList.remove('show');
 }
-supportClose?.addEventListener('click', closeSupport);
-supportTabs?.addEventListener('click', (e) => {
-  const btn = e.target.closest('.support-tab');
-  if (!btn) return;
-  const section = btn.dataset.section;
-  supportTabs.querySelectorAll('.support-tab').forEach((el) => el.classList.toggle('active', el === btn));
-  document.querySelectorAll('[data-support-section]').forEach((el) => {
-    el.hidden = el.getAttribute('data-support-section') !== section;
-  });
-});
+pictureClose?.addEventListener('click', closeSupport);
+regulationClose?.addEventListener('click', closeSupport);
+routineClose?.addEventListener('click', closeSupport);
+gamesClose?.addEventListener('click', closeSupport);
 
 function initPicturePhrases() {
   if (!picGrid) return;
