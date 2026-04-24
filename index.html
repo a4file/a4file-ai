@@ -145,15 +145,6 @@
     z-index: 2;
     pointer-events: none;
   }
-  .chunjik {
-    position: relative;
-    top: 0;
-    z-index: 2;
-    width: 210px;
-    height: 240px;
-    animation: idle-bob 2.6s ease-in-out infinite;
-    transform-origin: center bottom;
-  }
   /* Lottie 컨테이너 (캔버스 비율 280:200에 맞춤) */
   .chunjik-lottie {
     position: relative;
@@ -168,11 +159,7 @@
   .chunjik-lottie.listening { animation: wiggle 0.85s ease-in-out infinite; }
   .chunjik-lottie.speaking  { animation: speak-bounce 0.5s ease-in-out infinite; }
   .chunjik-lottie.thinking  { animation: think-tilt 1.6s ease-in-out infinite; }
-  .chunjik-lottie.active + .chunjik { display: none; }
   .chunjik-lottie.active { display: block; }
-  .chunjik.listening { animation: wiggle 0.85s ease-in-out infinite; }
-  .chunjik.speaking  { animation: speak-bounce 0.5s ease-in-out infinite; }
-  .chunjik.thinking  { animation: think-tilt 1.6s ease-in-out infinite; }
 
   @keyframes idle-bob {
     0%,100% { transform: translateY(0) rotate(-1deg); }
@@ -189,47 +176,6 @@
   @keyframes think-tilt {
     0%,100% { transform: rotate(0); }
     50%     { transform: rotate(-8deg); }
-  }
-
-  /* 손/팔 흔들기 */
-  .arm-right-group { transform-origin: 62% 42%; animation: wave 2.4s ease-in-out infinite; }
-  @keyframes wave {
-    0%, 60%, 100% { transform: rotate(0deg); }
-    20% { transform: rotate(-25deg); }
-    40% { transform: rotate(-10deg); }
-  }
-
-  /* 다리 움직임 */
-  .leg-left-group  { transform-origin: 46% 80%; animation: leg-sway-l 2.6s ease-in-out infinite; }
-  .leg-right-group { transform-origin: 54% 80%; animation: leg-sway-r 2.6s ease-in-out infinite; }
-  @keyframes leg-sway-l {
-    0%,100% { transform: rotate(-2deg); }
-    50%     { transform: rotate(2deg); }
-  }
-  @keyframes leg-sway-r {
-    0%,100% { transform: rotate(2deg); }
-    50%     { transform: rotate(-2deg); }
-  }
-
-  /* 꼬리 살랑 */
-  .tail { transform-origin: 50% 100%; animation: tail-wag 1.2s ease-in-out infinite; }
-  @keyframes tail-wag {
-    0%,100% { transform: rotate(-15deg); }
-    50%     { transform: rotate(15deg); }
-  }
-
-  /* 눈 깜빡임 */
-  .eye { transform-box: fill-box; transform-origin: center; transition: transform 0.12s; }
-  .eye.closed { transform: scaleY(0.08); }
-
-  /* 입 전환 */
-  .mouth-open { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity 0.08s; }
-  .mouth-closed { opacity: 1; transition: opacity 0.08s; }
-  .speaking .mouth-closed { opacity: 0; }
-  .speaking .mouth-open { opacity: 1; animation: mouth-talk 0.26s ease-in-out infinite; }
-  @keyframes mouth-talk {
-    0%,100% { transform: scaleY(0.4); }
-    50%     { transform: scaleY(1); }
   }
 
   /* ========= 대화 박스 ========= */
@@ -784,8 +730,179 @@
     padding: 8px;
     margin-bottom: 8px;
   }
+  .game-sectors {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .game-sector-btn {
+    flex: 1 1 calc(33.33% - 6px);
+    border: 1px solid rgba(103, 157, 214, 0.35);
+    border-radius: 10px;
+    background: #f5f9ff;
+    color: #2c5e91;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 6px;
+    cursor: pointer;
+  }
+  .game-sector-btn.active {
+    border-color: #2f78c5;
+    background: linear-gradient(180deg, #dff0ff 0%, #eef6ff 100%);
+    color: #114575;
+  }
+  .game-card[hidden] { display: none; }
   .game-title { font-size: 12px; font-weight: 800; color: #154d82; margin: 0 0 6px; }
   .game-help { font-size: 11px; color: #5d7fa7; margin: 0 0 8px; }
+  .game-status {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #40678e;
+    background: #eef6ff;
+    border: 1px solid #d5e8fb;
+    border-radius: 10px;
+    padding: 6px 8px;
+  }
+  .game-toolbar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .game-toolbar button {
+    border: 1px solid rgba(118, 168, 216, 0.4);
+    border-radius: 10px;
+    background: #fff;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #124a80;
+    cursor: pointer;
+  }
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pattern-cell {
+    height: 54px;
+    border: none;
+    border-radius: 12px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pattern-cell.active {
+    opacity: 1;
+    transform: scale(1.03);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.7) inset;
+  }
+  .sort-play {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sort-pool, .sort-bins { display: grid; gap: 8px; }
+  .sort-item {
+    border-radius: 10px;
+    border: 1px solid #cfe2f7;
+    background: #fff;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .sort-item.selected { border-color: #2f78c5; box-shadow: 0 0 0 2px rgba(47,120,197,0.16); }
+  .sort-bin {
+    min-height: 62px;
+    border: 1px dashed #a8c8e7;
+    border-radius: 10px;
+    background: #f7fbff;
+    padding: 6px;
+    font-size: 11px;
+    color: #3d6389;
+  }
+  .rhythm-lane {
+    height: 58px;
+    border-radius: 12px;
+    border: 1px solid #cfe2f7;
+    background: linear-gradient(90deg, #f8fcff 0%, #eef6ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .rhythm-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #9cc7ec;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  .rhythm-dot.active { background: #5aa0dc; transform: scale(1.3); }
+  .diff-boards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .diff-board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .diff-cell {
+    border: 1px solid #d2e4f6;
+    border-radius: 8px;
+    background: #fff;
+    min-height: 34px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .diff-cell.found { background: #def2ff; border-color: #85bce8; }
+  .loop-stage {
+    min-height: 84px;
+    border: 1px solid #cfe2f7;
+    border-radius: 12px;
+    background: #f8fcff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .loop-shape {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: #78b2e3;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .safe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .safe-cell {
+    border: 1px solid #d2e4f6;
+    border-radius: 999px;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+  }
+  .emotion-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .emotion-card {
+    border: 1px solid #d2e4f6;
+    border-radius: 10px;
+    min-height: 44px;
+    background: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .emotion-card.done { background: #e8f5ff; border-color: #8dc3ed; }
   .bubble-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1870,112 +1987,6 @@
       <div class="avatar-dock">
         <!-- Lottie 컨테이너 (character.json 있으면 여기 렌더) -->
         <div class="chunjik-lottie" id="avatarLottie"></div>
-
-        <!-- 폴백 SVG 춘직이 -->
-        <svg class="chunjik" id="avatar" viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="bodyGrad" cx="35%" cy="28%" r="80%">
-            <stop offset="0%"  stop-color="#4a4a4a"/>
-            <stop offset="55%" stop-color="#1c1c1c"/>
-            <stop offset="100%" stop-color="#070707"/>
-          </radialGradient>
-          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.18"/>
-          </filter>
-        </defs>
-
-        <!-- 꼬리 (몸 뒤) -->
-        <g class="tail">
-          <path d="M 230,240 Q 275,220 272,180 Q 270,160 258,165 Q 260,185 240,205 Q 225,220 230,240 Z"
-                fill="url(#bodyGrad)" stroke="#000" stroke-width="3.5" stroke-linejoin="round"/>
-        </g>
-
-        <!-- 왼쪽 다리 -->
-        <g class="leg-left-group">
-          <ellipse cx="120" cy="290" rx="26" ry="32" fill="#1a1a1a" stroke="#000" stroke-width="4"/>
-          <!-- 발바닥 핑크 패드 -->
-          <ellipse cx="120" cy="308" rx="18" ry="8" fill="#ff9eb5"/>
-        </g>
-        <!-- 오른쪽 다리 -->
-        <g class="leg-right-group">
-          <ellipse cx="180" cy="290" rx="26" ry="32" fill="#1a1a1a" stroke="#000" stroke-width="4"/>
-          <ellipse cx="180" cy="308" rx="18" ry="8" fill="#ff9eb5"/>
-        </g>
-
-        <!-- 몸통 -->
-        <ellipse cx="150" cy="240" rx="68" ry="52"
-                 fill="url(#bodyGrad)" stroke="#000" stroke-width="4" filter="url(#softShadow)"/>
-
-        <!-- 배 (살짝 밝은 영역) -->
-        <ellipse cx="150" cy="250" rx="34" ry="28" fill="rgba(255,255,255,0.06)"/>
-
-        <!-- 왼쪽 팔 (몸에 붙어있음) -->
-        <g>
-          <ellipse cx="78" cy="225" rx="20" ry="32" fill="#1a1a1a" stroke="#000" stroke-width="4" transform="rotate(15 78 225)"/>
-          <!-- 손 -->
-          <circle cx="70" cy="252" r="14" fill="#1a1a1a" stroke="#000" stroke-width="3.5"/>
-        </g>
-
-        <!-- 오른쪽 팔 (흔드는 팔) -->
-        <g class="arm-right-group">
-          <ellipse cx="222" cy="225" rx="20" ry="32" fill="#1a1a1a" stroke="#000" stroke-width="4" transform="rotate(-15 222 225)"/>
-          <circle cx="232" cy="252" r="14" fill="#1a1a1a" stroke="#000" stroke-width="3.5"/>
-          <!-- 손 안에 살짝 핑크 -->
-          <ellipse cx="234" cy="253" rx="6" ry="4" fill="#ff9eb5" opacity="0.6"/>
-        </g>
-
-        <!-- ===== 머리 영역 ===== -->
-        <!-- 귀 (머리 뒤) -->
-        <path d="M 78,90 Q 65,45 98,42 Q 115,60 108,95 Z"
-              fill="#1a1a1a" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
-        <path d="M 222,90 Q 235,45 202,42 Q 185,60 192,95 Z"
-              fill="#1a1a1a" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
-        <!-- 귀 안쪽 핑크 -->
-        <path d="M 86,80 Q 82,55 98,55 Q 104,75 98,88 Z" fill="#ff9eb5" opacity="0.6"/>
-        <path d="M 214,80 Q 218,55 202,55 Q 196,75 202,88 Z" fill="#ff9eb5" opacity="0.6"/>
-
-        <!-- 머리 (큰 감자) -->
-        <ellipse cx="150" cy="140" rx="98" ry="92"
-                 fill="url(#bodyGrad)" stroke="#000" stroke-width="5" filter="url(#softShadow)"/>
-
-        <!-- 분홍 볼 -->
-        <ellipse cx="68"  cy="168" rx="18" ry="12" fill="#ff9eb5" opacity="0.9"/>
-        <ellipse cx="232" cy="168" rx="18" ry="12" fill="#ff9eb5" opacity="0.9"/>
-
-        <!-- 눈 -->
-        <ellipse class="eye" id="eyeLeft"  cx="114" cy="138" rx="9" ry="12" fill="#000"/>
-        <ellipse class="eye" id="eyeRight" cx="186" cy="138" rx="9" ry="12" fill="#000"/>
-        <circle cx="117" cy="133" r="2.8" fill="#fff"/>
-        <circle cx="189" cy="133" r="2.8" fill="#fff"/>
-
-        <!-- 흰 주둥이 (춘식이 시그니처) -->
-        <path d="M 118,168
-                 Q 118,150 150,150
-                 Q 182,150 182,168
-                 Q 182,198 150,198
-                 Q 118,198 118,168 Z"
-              fill="#fff8ee" stroke="#000" stroke-width="3.5"/>
-
-        <!-- 코 -->
-        <ellipse cx="150" cy="166" rx="7" ry="5" fill="#000"/>
-        <!-- 코 밑 세로선 -->
-        <line x1="150" y1="171" x2="150" y2="180" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-
-        <!-- 입 (닫힘 M자) -->
-        <g class="mouth-closed">
-          <path d="M 136,182 Q 143,192 150,182 Q 157,192 164,182"
-                fill="none" stroke="#000" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-        <!-- 입 (열림) -->
-        <g class="mouth-open">
-          <ellipse cx="150" cy="186" rx="9" ry="8" fill="#ff5b6e" stroke="#000" stroke-width="2.5"/>
-          <ellipse cx="150" cy="190" rx="5" ry="3" fill="#ff2e4a"/>
-        </g>
-
-        <!-- 이마 하이라이트 (반짝) -->
-        <ellipse cx="110" cy="85" rx="20" ry="10" fill="rgba(255,255,255,0.15)" transform="rotate(-20 110 85)"/>
-        </svg>
       </div>
     </div>
 
@@ -2323,7 +2334,22 @@
         <div class="support-scroll">
           <section class="support-section">
             <h4><span aria-hidden="true">🎮</span> 스트레스 완화 미니게임</h4>
-            <div class="game-card">
+            <div class="game-sectors" id="gameSectors">
+              <button type="button" class="game-sector-btn active" data-game-section="bubble">뽁뽁이</button>
+              <button type="button" class="game-sector-btn" data-game-section="circle">원 그리기</button>
+              <button type="button" class="game-sector-btn" data-game-section="pattern">패턴 따라하기</button>
+              <button type="button" class="game-sector-btn" data-game-section="sort">정렬 힐링</button>
+              <button type="button" class="game-sector-btn" data-game-section="rhythm">리듬 탭</button>
+              <button type="button" class="game-sector-btn" data-game-section="difference">차이 찾기</button>
+              <button type="button" class="game-sector-btn" data-game-section="loop">루프 만들기</button>
+              <button type="button" class="game-sector-btn" data-game-section="safe">안전 클릭</button>
+              <button type="button" class="game-sector-btn" data-game-section="emotion">감정 매칭</button>
+            </div>
+            <div class="routine-row" style="margin:0 0 8px;">
+              <button type="button" id="gameSoundToggleBtn" style="width:100%;">사운드: ON</button>
+            </div>
+            <div class="game-card" data-game-card="bubble">
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 뽁뽁이를 터트려요.</p>
               <p class="game-title"><span aria-hidden="true">🫧</span> 뽁뽁이 터트리기</p>
               <p class="game-help">동그라미를 눌러서 편하게 터트려봐요.</p>
               <div class="bubble-grid" id="bubbleGrid"></div>
@@ -2331,7 +2357,8 @@
                 <button type="button" id="bubbleResetBtn" style="width:100%;">다시 채우기</button>
               </div>
             </div>
-            <div class="game-card">
+            <div class="game-card" data-game-card="circle" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 천천히 원을 그려요.</p>
               <p class="game-title"><span aria-hidden="true">⭕</span> 원 그리기 게임</p>
               <p class="game-help">점을 중심으로 천천히 원을 그려봐요. 완벽하지 않아도 괜찮아요.</p>
               <div class="circle-wrap">
@@ -2339,6 +2366,91 @@
                 <p class="support-help" id="circleScore">원 정확도: -</p>
                 <button type="button" id="circleResetBtn">다시 그리기</button>
               </div>
+            </div>
+            <div class="game-card" data-game-card="pattern" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 순서를 따라 눌러봐요.</p>
+              <p class="game-title">Pattern Echo</p>
+              <p class="game-help">깜빡이는 순서를 그대로 눌러요. 길이만 천천히 늘어나요.</p>
+              <div class="game-toolbar">
+                <button type="button" id="patternStartBtn">시작/다음 패턴</button>
+                <button type="button" id="patternReplayBtn">다시 보여줘</button>
+              </div>
+              <div class="pattern-grid" id="patternGrid"></div>
+              <div class="game-status" id="patternStatus">준비되면 시작 버튼을 눌러요.</div>
+            </div>
+            <div class="game-card" data-game-card="sort" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 같은 것끼리 모아봐요.</p>
+              <p class="game-title">Sort & Calm</p>
+              <p class="game-help">시간 제한 없이 같은 색끼리 정리해요.</p>
+              <div class="game-toolbar">
+                <button type="button" id="sortResetBtn">새로 섞기</button>
+              </div>
+              <div class="sort-play">
+                <div class="sort-pool" id="sortPool"></div>
+                <div class="sort-bins">
+                  <button type="button" class="sort-bin" id="sortBinBlue">파랑 바구니</button>
+                  <button type="button" class="sort-bin" id="sortBinPeach">피치 바구니</button>
+                </div>
+              </div>
+              <div class="game-status" id="sortStatus">아이템을 선택한 뒤 바구니를 눌러요.</div>
+            </div>
+            <div class="game-card" data-game-card="rhythm" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 일정한 박자로 탭해요.</p>
+              <p class="game-title">Soft Rhythm Tap</p>
+              <p class="game-help">항상 같은 간격으로 점이 빛나요. 부담 없이 맞춰요.</p>
+              <div class="rhythm-lane"><div class="rhythm-dot" id="rhythmDot"></div></div>
+              <div class="game-toolbar">
+                <button type="button" id="rhythmStartBtn">리듬 시작/정지</button>
+                <button type="button" id="rhythmTapBtn">지금 탭</button>
+              </div>
+              <div class="game-status" id="rhythmStatus">리듬을 시작하면 같은 템포로 반복돼요.</div>
+            </div>
+            <div class="game-card" data-game-card="difference" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 천천히 다른 칸을 찾아요.</p>
+              <p class="game-title">Low Stimulus Spot the Difference</p>
+              <p class="game-help">두 화면의 차이 1~3개를 찾아 터치해요.</p>
+              <div class="game-toolbar">
+                <button type="button" id="diffResetBtn">새 문제</button>
+              </div>
+              <div class="diff-boards">
+                <div class="diff-board" id="diffLeft"></div>
+                <div class="diff-board" id="diffRight"></div>
+              </div>
+              <div class="game-status" id="diffStatus">왼쪽/오른쪽 아무 쪽이나 눌러도 돼요.</div>
+            </div>
+            <div class="game-card" data-game-card="loop" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 규칙적인 루프를 만들어요.</p>
+              <p class="game-title">Loop Builder</p>
+              <p class="game-help">움직임 규칙을 쌓아 나만의 반복 애니메이션을 만들어요.</p>
+              <div class="loop-stage"><div class="loop-shape" id="loopShape"></div></div>
+              <div class="game-toolbar">
+                <button type="button" data-loop-action="left">왼쪽</button>
+                <button type="button" data-loop-action="right">오른쪽</button>
+                <button type="button" data-loop-action="up">위</button>
+                <button type="button" data-loop-action="pulse">펄스</button>
+                <button type="button" id="loopClearBtn">초기화</button>
+              </div>
+              <div class="game-status" id="loopStatus">버튼을 눌러 규칙을 추가해보세요.</div>
+            </div>
+            <div class="game-card" data-game-card="safe" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 목표 색만 눌러요.</p>
+              <p class="game-title">Safe Click</p>
+              <p class="game-help">실수해도 괜찮아요. 목표 색만 다시 찾아 누르면 돼요.</p>
+              <div class="game-toolbar">
+                <button type="button" id="safeResetBtn">새 판</button>
+              </div>
+              <div class="safe-grid" id="safeGrid"></div>
+              <div class="game-status" id="safeStatus">목표 색: -</div>
+            </div>
+            <div class="game-card" data-game-card="emotion" hidden>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 같은 감정을 짝지어요.</p>
+              <p class="game-title">Emotion Match</p>
+              <p class="game-help">같은 표정을 두 장 맞추는 가벼운 카드 매칭이에요.</p>
+              <div class="game-toolbar">
+                <button type="button" id="emotionNextBtn">종류 늘리기</button>
+              </div>
+              <div class="emotion-grid" id="emotionGrid"></div>
+              <div class="game-status" id="emotionStatus">감정 쌍을 찾아보세요.</div>
             </div>
           </section>
         </div>
@@ -2373,9 +2485,8 @@ const API_URL = configuredProxyBase
       : 'https://kanana-o.a2s-endpoint.kr-central-2.kakaocloud.com/v1/chat/completions');
 const SAMPLE_RATE = 24000;
 
-const avatarSvg = document.getElementById('avatar');
 const avatarLottieEl = document.getElementById('avatarLottie');
-let avatar = avatarSvg;        // 상태 클래스 적용 대상 (Lottie 로드 성공 시 교체)
+let avatar = avatarLottieEl;
 let lottieInstance = null;
 
 const statusChip = document.getElementById('statusChip');
@@ -2385,8 +2496,6 @@ const sendBtn = document.getElementById('sendBtn');
 const micBtn = document.getElementById('micBtn');
 const apiKeyInput = document.getElementById('apiKey');
 const audioPlayer = document.getElementById('audioPlayer');
-const eyeLeft = document.getElementById('eyeLeft');
-const eyeRight = document.getElementById('eyeRight');
 const apiKeyToggle = document.getElementById('apiKeyToggle');
 const apiSetting = document.getElementById('apiSetting');
 const apiKeySaveBtn = document.getElementById('apiKeySaveBtn');
@@ -2485,7 +2594,6 @@ function setSocialCoachLottieState(state) {
 /* ============================================================
    Lottie 로드 — 1순위: window.CHARACTER_ANIMATION_DATA (character.js)
               2순위: fetch('./character.json') (http 경로일 때만 작동)
-   둘 다 실패하면 SVG 춘직이가 폴백
 ============================================================ */
 (async function loadLottie() {
   if (!window.lottie) { console.warn('lottie 라이브러리 로드 실패'); return; }
@@ -2500,7 +2608,7 @@ function setSocialCoachLottieState(state) {
   }
 
   if (!animationData) {
-    console.log('ⓘ character 데이터 없음 → 기본 SVG 춘직이 사용');
+    console.log('ⓘ character 데이터 없음');
     return;
   }
   characterAnimationDataCache = animationData;
@@ -2514,7 +2622,6 @@ function setSocialCoachLottieState(state) {
       animationData,
     });
     avatarLottieEl.classList.add('active');
-    avatarSvg.style.display = 'none';
     avatar = avatarLottieEl;
     initSocialCoachLottie(animationData);
     initTarotCoachLottie(animationData);
@@ -2557,8 +2664,8 @@ refreshBtn.addEventListener('click', () => { chatBox.innerHTML = ''; showStatus(
 /* 상태 관리 */
 let statusTimer = null;
 function setState(state, msg, duration = 0) {
-  avatar.classList.remove('listening','speaking','thinking');
-  if (state) avatar.classList.add(state);
+  avatar?.classList.remove('listening','speaking','thinking');
+  if (state) avatar?.classList.add(state);
   syncLottieSpeed(state);
   if (msg !== undefined) showStatus(msg, duration);
 }
@@ -2631,13 +2738,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeFabPlusMenu();
 });
 
-/* 눈 깜빡임 */
-function blink() {
-  eyeLeft.classList.add('closed'); eyeRight.classList.add('closed');
-  setTimeout(()=>{ eyeLeft.classList.remove('closed'); eyeRight.classList.remove('closed'); }, 140);
-}
-setInterval(blink, 3800);
-
 /* 첫 인사 */
 setTimeout(() => showStatus('말 걸어봐! 🐾', 3500), 600);
 
@@ -2670,6 +2770,13 @@ function detectToolIntent(raw) {
   if (/(그림\s*버튼|그림\s*말하기|비언어|의사소통\s*버튼|말하기\s*버튼)/.test(t)) return 'picture';
   if (/(멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|감각\s*조절)/.test(t)) return 'regulation';
   if (/(일정\s*관리|루틴|체크리스트|할\s*일)/.test(t)) return 'routine';
+  if (/(패턴|패턴게임|패턴\s*따라|pattern)/i.test(t)) return 'game-pattern';
+  if (/(정렬|정리\s*게임|sort)/i.test(t)) return 'game-sort';
+  if (/(리듬|박자|rhythm)/i.test(t)) return 'game-rhythm';
+  if (/(차이\s*찾기|다른\s*그림|difference|spot)/i.test(t)) return 'game-difference';
+  if (/(루프|반복\s*애니|loop)/i.test(t)) return 'game-loop';
+  if (/(안전\s*클릭|특정\s*색|safe\s*click)/i.test(t)) return 'game-safe';
+  if (/(감정\s*매칭|표정\s*매칭|emotion)/i.test(t)) return 'game-emotion';
   if (/(미니게임|뽁뽁이|원\s*그리기|게임)/.test(t)) return 'games';
 
   return null;
@@ -2741,6 +2848,76 @@ function tryRouteToolIntent(text) {
     setState('', '');
     showStatus('루틴 관리로 이동할게!', 2200);
     openSupportSection('routine');
+    return true;
+  }
+  if (mode === 'game-pattern') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('패턴 따라하기로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('pattern');
+    return true;
+  }
+  if (mode === 'game-sort') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('정렬 힐링 게임으로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('sort');
+    return true;
+  }
+  if (mode === 'game-rhythm') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('리듬 탭으로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('rhythm');
+    return true;
+  }
+  if (mode === 'game-difference') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('차이 찾기로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('difference');
+    return true;
+  }
+  if (mode === 'game-loop') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('루프 만들기로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('loop');
+    return true;
+  }
+  if (mode === 'game-safe') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('안전 클릭 게임으로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('safe');
+    return true;
+  }
+  if (mode === 'game-emotion') {
+    addMessage(text, 'user');
+    closeFabPlusMenu();
+    hideStatus();
+    setState('', '');
+    showStatus('감정 매칭으로 이동할게!', 2200);
+    openSupportSection('games');
+    openGameSection('emotion');
     return true;
   }
   if (mode === 'games') {
@@ -3792,6 +3969,34 @@ const bubbleResetBtn = document.getElementById('bubbleResetBtn');
 const circleCanvas = document.getElementById('circleCanvas');
 const circleScore = document.getElementById('circleScore');
 const circleResetBtn = document.getElementById('circleResetBtn');
+const gameSectors = document.getElementById('gameSectors');
+const gameSoundToggleBtn = document.getElementById('gameSoundToggleBtn');
+const patternGrid = document.getElementById('patternGrid');
+const patternStartBtn = document.getElementById('patternStartBtn');
+const patternReplayBtn = document.getElementById('patternReplayBtn');
+const patternStatus = document.getElementById('patternStatus');
+const sortPool = document.getElementById('sortPool');
+const sortBinBlue = document.getElementById('sortBinBlue');
+const sortBinPeach = document.getElementById('sortBinPeach');
+const sortResetBtn = document.getElementById('sortResetBtn');
+const sortStatus = document.getElementById('sortStatus');
+const rhythmDot = document.getElementById('rhythmDot');
+const rhythmStartBtn = document.getElementById('rhythmStartBtn');
+const rhythmTapBtn = document.getElementById('rhythmTapBtn');
+const rhythmStatus = document.getElementById('rhythmStatus');
+const diffLeft = document.getElementById('diffLeft');
+const diffRight = document.getElementById('diffRight');
+const diffResetBtn = document.getElementById('diffResetBtn');
+const diffStatus = document.getElementById('diffStatus');
+const loopShape = document.getElementById('loopShape');
+const loopClearBtn = document.getElementById('loopClearBtn');
+const loopStatus = document.getElementById('loopStatus');
+const safeGrid = document.getElementById('safeGrid');
+const safeResetBtn = document.getElementById('safeResetBtn');
+const safeStatus = document.getElementById('safeStatus');
+const emotionGrid = document.getElementById('emotionGrid');
+const emotionNextBtn = document.getElementById('emotionNextBtn');
+const emotionStatus = document.getElementById('emotionStatus');
 
 const PICTURE_PHRASES = [
   { emoji: '💧', text: '물 마시고 싶어요' },
@@ -3820,6 +4025,7 @@ const REG_STATE_PRESETS = {
   },
 };
 let regulationState = 'sensory';
+let gameSoundOn = true;
 
 function getTodayKey() {
   const d = new Date();
@@ -3866,6 +4072,15 @@ function openSupportSection(section = 'picture') {
   if (section === 'routine') routineOverlay?.classList.add('show');
   if (section === 'games') gamesOverlay?.classList.add('show');
 }
+function openGameSection(section = 'bubble') {
+  if (!gameSectors) return;
+  const targetBtn = gameSectors.querySelector(`.game-sector-btn[data-game-section="${section}"]`);
+  if (!targetBtn) return;
+  gameSectors.querySelectorAll('.game-sector-btn').forEach((el) => el.classList.toggle('active', el === targetBtn));
+  document.querySelectorAll('[data-game-card]').forEach((card) => {
+    card.hidden = card.getAttribute('data-game-card') !== section;
+  });
+}
 function closeSupport() {
   pictureOverlay?.classList.remove('show');
   regulationOverlay?.classList.remove('show');
@@ -3876,6 +4091,15 @@ pictureClose?.addEventListener('click', closeSupport);
 regulationClose?.addEventListener('click', closeSupport);
 routineClose?.addEventListener('click', closeSupport);
 gamesClose?.addEventListener('click', closeSupport);
+gameSectors?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.game-sector-btn');
+  if (!btn) return;
+  const section = btn.dataset.gameSection;
+  gameSectors.querySelectorAll('.game-sector-btn').forEach((el) => el.classList.toggle('active', el === btn));
+  document.querySelectorAll('[data-game-card]').forEach((card) => {
+    card.hidden = card.getAttribute('data-game-card') !== section;
+  });
+});
 
 function initPicturePhrases() {
   if (!picGrid) return;
@@ -3910,6 +4134,15 @@ function seedBubbleGame() {
   }
 }
 bubbleResetBtn?.addEventListener('click', seedBubbleGame);
+
+function gameSpeak(text) {
+  if (!gameSoundOn) return;
+  speakKorean(text);
+}
+gameSoundToggleBtn?.addEventListener('click', () => {
+  gameSoundOn = !gameSoundOn;
+  gameSoundToggleBtn.textContent = `사운드: ${gameSoundOn ? 'ON' : 'OFF'}`;
+});
 
 function initCircleGame() {
   if (!circleCanvas) return;
@@ -3986,6 +4219,303 @@ function initCircleGame() {
   });
   renderGuide();
 }
+
+const PATTERN_COLORS = ['#9ec9f0', '#f7b7c9', '#bfe5c2', '#ffe3a6'];
+const patternState = { pattern: [], userInput: [], playing: false };
+let patternFlashTimer = null;
+function initPatternGame() {
+  if (!patternGrid) return;
+  patternGrid.innerHTML = '';
+  PATTERN_COLORS.forEach((color, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pattern-cell';
+    btn.style.background = color;
+    btn.addEventListener('click', () => onPatternInput(idx));
+    patternGrid.appendChild(btn);
+  });
+}
+function flashPatternCell(idx, duration = 320) {
+  const cell = patternGrid?.children?.[idx];
+  if (!cell) return;
+  cell.classList.add('active');
+  setTimeout(() => cell.classList.remove('active'), duration);
+}
+function playPatternSequence() {
+  if (!patternState.pattern.length) return;
+  patternState.playing = true;
+  patternState.userInput = [];
+  let i = 0;
+  const run = () => {
+    if (i >= patternState.pattern.length) {
+      patternState.playing = false;
+      if (patternStatus) patternStatus.textContent = `레벨 ${patternState.pattern.length}: 이제 따라 눌러요.`;
+      return;
+    }
+    flashPatternCell(patternState.pattern[i]);
+    i += 1;
+    patternFlashTimer = setTimeout(run, 500);
+  };
+  if (patternStatus) patternStatus.textContent = `레벨 ${patternState.pattern.length}: 패턴 재생 중...`;
+  run();
+}
+function nextPatternRound() {
+  if (patternFlashTimer) clearTimeout(patternFlashTimer);
+  patternState.pattern.push(Math.floor(Math.random() * 4));
+  playPatternSequence();
+}
+function onPatternInput(idx) {
+  if (patternState.playing || !patternState.pattern.length) return;
+  flashPatternCell(idx, 180);
+  patternState.userInput.push(idx);
+  const pos = patternState.userInput.length - 1;
+  if (patternState.pattern[pos] !== idx) {
+    if (patternStatus) patternStatus.textContent = '괜찮아요. 다시 보여줄게요.';
+    gameSpeak('괜찮아요. 다시 해봐요.');
+    setTimeout(playPatternSequence, 450);
+    return;
+  }
+  if (patternState.userInput.length === patternState.pattern.length) {
+    if (patternStatus) patternStatus.textContent = `성공! 다음은 길이가 ${patternState.pattern.length + 1}이에요.`;
+    gameSpeak('좋아요');
+  }
+}
+patternStartBtn?.addEventListener('click', nextPatternRound);
+patternReplayBtn?.addEventListener('click', playPatternSequence);
+
+let sortSelected = null;
+let sortItems = [];
+function renderSortPool(items) {
+  if (!sortPool) return;
+  sortPool.innerHTML = '';
+  items.forEach((item, idx) => {
+    if (item.placed) return;
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = `sort-item${sortSelected === idx ? ' selected' : ''}`;
+    el.dataset.index = String(idx);
+    el.innerHTML = `<span style="font-size:18px;" aria-hidden="true">${item.shape}</span> <span>${item.color === 'blue' ? '파랑' : '피치'}</span>`;
+    el.addEventListener('click', () => {
+      sortSelected = idx;
+      renderSortPool(items);
+    });
+    sortPool.appendChild(el);
+  });
+  const blueCount = items.filter((x) => x.placed === 'blue').length;
+  const peachCount = items.filter((x) => x.placed === 'peach').length;
+  if (sortBinBlue) sortBinBlue.textContent = `파랑 바구니 (${blueCount})`;
+  if (sortBinPeach) sortBinPeach.textContent = `피치 바구니 (${peachCount})`;
+}
+function initSortGame() {
+  const shapes = ['●','■','▲','◆','★','⬟','⬢','⬤'];
+  sortItems = shapes.map((shape, i) => ({ shape, color: i % 2 === 0 ? 'blue' : 'peach', placed: null }));
+  for (let i = sortItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sortItems[i], sortItems[j]] = [sortItems[j], sortItems[i]];
+  }
+  sortSelected = null;
+  renderSortPool(sortItems);
+  if (sortStatus) sortStatus.textContent = '아이템을 선택한 뒤 바구니를 눌러요.';
+}
+function placeSortItem(color) {
+  if (sortSelected === null) {
+    if (sortStatus) sortStatus.textContent = '먼저 왼쪽 아이템을 하나 선택해요.';
+    return;
+  }
+  sortItems[sortSelected].placed = color;
+  sortSelected = null;
+  renderSortPool(sortItems);
+  const done = sortItems.every((x) => x.placed === x.color);
+  if (sortStatus) sortStatus.textContent = done ? '완료! 정돈된 화면이 마음을 편하게 해줘요.' : '좋아요. 천천히 같은 색끼리 모아봐요.';
+}
+sortBinBlue?.addEventListener('click', () => placeSortItem('blue'));
+sortBinPeach?.addEventListener('click', () => placeSortItem('peach'));
+sortResetBtn?.addEventListener('click', initSortGame);
+
+let rhythmTimer = null;
+let rhythmBeatTs = 0;
+function toggleRhythm() {
+  if (rhythmTimer) {
+    clearInterval(rhythmTimer);
+    rhythmTimer = null;
+    rhythmDot?.classList.remove('active');
+    if (rhythmStatus) rhythmStatus.textContent = '리듬을 멈췄어요.';
+    return;
+  }
+  const interval = 900;
+  rhythmTimer = setInterval(() => {
+    rhythmBeatTs = Date.now();
+    rhythmDot?.classList.add('active');
+    setTimeout(() => rhythmDot?.classList.remove('active'), 180);
+  }, interval);
+  if (rhythmStatus) rhythmStatus.textContent = '같은 박자로 반복 중. 타이밍에 맞춰 눌러보세요.';
+}
+function tapRhythm() {
+  if (!rhythmTimer) {
+    if (rhythmStatus) rhythmStatus.textContent = '먼저 리듬 시작 버튼을 눌러요.';
+    return;
+  }
+  const delta = Math.abs(Date.now() - rhythmBeatTs);
+  if (delta < 220) {
+    if (rhythmStatus) rhythmStatus.textContent = '정확해요! 좋은 템포예요.';
+    gameSpeak('좋아요');
+  } else {
+    if (rhythmStatus) rhythmStatus.textContent = '조금 벗어났지만 괜찮아요. 다음 박자에 다시 맞춰요.';
+  }
+}
+rhythmStartBtn?.addEventListener('click', toggleRhythm);
+rhythmTapBtn?.addEventListener('click', tapRhythm);
+
+const DIFF_BASE = ['🍪','🍪','🫖','🫖','🪴','🪴','📘','📘','🕯️'];
+const DIFF_ALT = ['🍩','🧁','🧸','🎈','🧃','🫐','📗','🧸','🎀'];
+let diffAnswer = new Set();
+function buildDiffBoard(el, arr) {
+  if (!el) return;
+  el.innerHTML = '';
+  arr.forEach((symbol, idx) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'diff-cell';
+    b.textContent = symbol;
+    b.addEventListener('click', () => {
+      if (!diffAnswer.has(idx)) {
+        if (diffStatus) diffStatus.textContent = '괜찮아요. 다른 칸을 천천히 찾아봐요.';
+        return;
+      }
+      b.classList.add('found');
+      const pair = document.querySelectorAll(`.diff-board .diff-cell[data-idx="${idx}"]`);
+      pair.forEach((x) => x.classList.add('found'));
+      diffAnswer.delete(idx);
+      if (diffStatus) diffStatus.textContent = diffAnswer.size ? `좋아요! 남은 차이 ${diffAnswer.size}개.` : '완료! 집중이 잘 됐어요.';
+    });
+    b.dataset.idx = String(idx);
+    el.appendChild(b);
+  });
+}
+function initDifferenceGame() {
+  const left = [...DIFF_BASE];
+  const right = [...DIFF_BASE];
+  diffAnswer = new Set();
+  const count = 1 + Math.floor(Math.random() * 3);
+  const used = new Set();
+  while (used.size < count) used.add(Math.floor(Math.random() * 9));
+  [...used].forEach((idx) => {
+    right[idx] = DIFF_ALT[idx];
+    diffAnswer.add(idx);
+  });
+  buildDiffBoard(diffLeft, left);
+  buildDiffBoard(diffRight, right);
+  if (diffStatus) diffStatus.textContent = `차이 ${count}개를 찾아보세요.`;
+}
+diffResetBtn?.addEventListener('click', initDifferenceGame);
+
+const loopActions = [];
+function loopActionDelta(action, phase) {
+  if (action === 'left') return { x: -10 * Math.sin(phase), y: 0, s: 1 };
+  if (action === 'right') return { x: 10 * Math.sin(phase), y: 0, s: 1 };
+  if (action === 'up') return { x: 0, y: -10 * Math.sin(phase), s: 1 };
+  return { x: 0, y: 0, s: 1 + 0.15 * Math.sin(phase) };
+}
+function startLoopAnimation() {
+  let frame = 0;
+  function tick() {
+    frame += 1;
+    const phase = (frame / 24) * Math.PI * 2;
+    let x = 0; let y = 0; let s = 1;
+    loopActions.forEach((a) => {
+      const d = loopActionDelta(a, phase);
+      x += d.x; y += d.y; s *= d.s;
+    });
+    if (loopShape) loopShape.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${s})`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+document.querySelectorAll('[data-loop-action]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const action = btn.getAttribute('data-loop-action');
+    if (!action) return;
+    loopActions.push(action);
+    if (loopActions.length > 8) loopActions.shift();
+    if (loopStatus) loopStatus.textContent = `규칙 ${loopActions.length}개가 쌓였어요.`;
+  });
+});
+loopClearBtn?.addEventListener('click', () => {
+  loopActions.length = 0;
+  if (loopStatus) loopStatus.textContent = '루프를 초기화했어요.';
+});
+
+const SAFE_COLORS = ['#acd4f4', '#f7c3d3', '#bfe7cc'];
+let safeTarget = 0;
+function initSafeClickGame() {
+  if (!safeGrid) return;
+  safeGrid.innerHTML = '';
+  safeTarget = Math.floor(Math.random() * SAFE_COLORS.length);
+  if (safeStatus) safeStatus.textContent = `목표 색: ${safeTarget === 0 ? '파랑' : safeTarget === 1 ? '핑크' : '민트'}`;
+  for (let i = 0; i < 16; i++) {
+    const colorIdx = Math.floor(Math.random() * SAFE_COLORS.length);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'safe-cell';
+    btn.style.background = SAFE_COLORS[colorIdx];
+    btn.addEventListener('click', () => {
+      if (colorIdx === safeTarget) {
+        btn.style.opacity = '0.35';
+        if (safeStatus) safeStatus.textContent = '좋아요! 같은 색을 잘 찾았어요.';
+        gameSpeak('좋아요');
+      } else if (safeStatus) {
+        safeStatus.textContent = '괜찮아요. 목표 색을 다시 찾아봐요.';
+      }
+    });
+    safeGrid.appendChild(btn);
+  }
+}
+safeResetBtn?.addEventListener('click', initSafeClickGame);
+
+const EMOTIONS = ['🙂','😌','😮','😢','😠','🤗','😴'];
+let emotionLevel = 3;
+let emotionOpen = [];
+function initEmotionMatch() {
+  if (!emotionGrid) return;
+  const pool = EMOTIONS.slice(0, emotionLevel);
+  const cards = [...pool, ...pool].sort(() => Math.random() - 0.5).map((v, i) => ({ id: i, v, open: false, done: false }));
+  emotionOpen = [];
+  emotionGrid.innerHTML = '';
+  cards.forEach((card) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'emotion-card';
+    btn.textContent = '○';
+    btn.addEventListener('click', () => {
+      if (card.done || card.open || emotionOpen.length >= 2) return;
+      card.open = true;
+      btn.textContent = card.v;
+      emotionOpen.push({ card, btn });
+      if (emotionOpen.length < 2) return;
+      const [a, b] = emotionOpen;
+      if (a.card.v === b.card.v) {
+        a.card.done = true; b.card.done = true;
+        a.btn.classList.add('done'); b.btn.classList.add('done');
+        emotionOpen = [];
+        const left = cards.filter((x) => !x.done).length;
+        if (emotionStatus) emotionStatus.textContent = left ? `좋아요. 남은 카드 ${left}장.` : '완료! 감정 짝을 모두 찾았어요.';
+        return;
+      }
+      if (emotionStatus) emotionStatus.textContent = '다시 시도해봐요. 실수해도 괜찮아요.';
+      setTimeout(() => {
+        a.card.open = false; b.card.open = false;
+        a.btn.textContent = '○'; b.btn.textContent = '○';
+        emotionOpen = [];
+      }, 480);
+    });
+    emotionGrid.appendChild(btn);
+  });
+  if (emotionStatus) emotionStatus.textContent = `감정 ${emotionLevel}종류 매칭 시작.`;
+}
+emotionNextBtn?.addEventListener('click', () => {
+  emotionLevel = Math.min(EMOTIONS.length, emotionLevel + 1);
+  initEmotionMatch();
+});
 
 let breathingTimer = null;
 function startBreathingRoutine() {
@@ -4253,6 +4783,12 @@ routineCoachBtn?.addEventListener('click', coachRoutineProgress);
 initPicturePhrases();
 seedBubbleGame();
 initCircleGame();
+initPatternGame();
+initSortGame();
+initDifferenceGame();
+startLoopAnimation();
+initSafeClickGame();
+initEmotionMatch();
 renderRoutines();
 
 function resetSocial() {
