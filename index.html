@@ -678,6 +678,27 @@
     background: #fff; color: #0d3f70; cursor: pointer; font-size: 17px; font-weight: 800; line-height: 1;
   }
   .support-subtitle { font-size: 12px; color: #4f77a6; margin-bottom: 10px; }
+  .support-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .support-tab {
+    border: 1px solid rgba(103, 157, 214, 0.35);
+    border-radius: 9px;
+    background: #fff;
+    color: #1a4f84;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 4px;
+    cursor: pointer;
+  }
+  .support-tab.active {
+    background: #eaf5ff;
+    border-color: rgba(68, 139, 212, 0.62);
+    color: #0f3d6c;
+  }
   .support-scroll { flex: 1; overflow-y: auto; padding: 0 14px 12px; }
   .support-section {
     background: rgba(255,255,255,0.92);
@@ -686,6 +707,7 @@
     padding: 10px;
     margin-bottom: 10px;
   }
+  .support-section[hidden] { display: none; }
   .support-section h4 { margin: 0 0 8px; font-size: 13px; color: #0d3f70; }
   .support-help { margin: 0 0 8px; font-size: 11.5px; color: #5c7ea8; }
   .pic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -753,6 +775,50 @@
   .routine-item .label { flex: 1; }
   .routine-item .del {
     border: none; background: transparent; color: #bf3e3e; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+  .game-card {
+    border: 1px solid rgba(118, 168, 216, 0.35);
+    border-radius: 12px;
+    background: #fff;
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  .game-title { font-size: 12px; font-weight: 800; color: #154d82; margin: 0 0 6px; }
+  .game-help { font-size: 11px; color: #5d7fa7; margin: 0 0 8px; }
+  .bubble-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .bubble-btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    border: 2px solid rgba(86, 152, 217, 0.5);
+    background: radial-gradient(circle at 35% 35%, #f6fbff 0%, #d8edff 60%, #c5e4ff 100%);
+    cursor: pointer;
+  }
+  .bubble-btn.popped {
+    background: #e7eef6;
+    border-color: rgba(130, 152, 175, 0.45);
+    transform: scale(0.9);
+  }
+  .circle-wrap {
+    border: 1px dashed rgba(95, 152, 210, 0.6);
+    border-radius: 10px;
+    background: #f8fcff;
+    padding: 8px;
+    text-align: center;
+  }
+  .circle-canvas {
+    width: 100%;
+    max-width: 280px;
+    height: 180px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid rgba(110, 164, 219, 0.35);
+    touch-action: none;
   }
   .tool-mascot {
     margin: 2px auto 8px;
@@ -2163,16 +2229,23 @@
             <button type="button" class="support-close" id="supportClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
           <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 생활 지원 코치</span></div>
-          <div class="support-subtitle">그림 소통 · 멜트다운/불안 조절 · 루틴 관리</div>
+          <div class="support-subtitle">그림 소통 · 행동 조절 · 루틴 · 미니게임</div>
         </div>
         <div class="support-scroll">
-          <section class="support-section">
-            <h4>🗣️ 비언어 아동용 그림 말하기 버튼</h4>
+          <div class="support-tabs" id="supportTabs">
+            <button type="button" class="support-tab active" data-section="picture"><span aria-hidden="true">🗣️</span> 그림말하기</button>
+            <button type="button" class="support-tab" data-section="regulation"><span aria-hidden="true">🫁</span> 행동조절</button>
+            <button type="button" class="support-tab" data-section="routine"><span aria-hidden="true">📅</span> 루틴</button>
+            <button type="button" class="support-tab" data-section="games"><span aria-hidden="true">🎮</span> 미니게임</button>
+          </div>
+
+          <section class="support-section" data-support-section="picture">
+            <h4><span aria-hidden="true">🗣️</span> 비언어 아동용 그림 말하기 버튼</h4>
             <p class="support-help">버튼을 누르면 문장을 소리로 읽어줘요.</p>
             <div class="pic-grid" id="picGrid"></div>
           </section>
-          <section class="support-section">
-            <h4>🫁 멜트다운·과민·불안 행동 조절</h4>
+          <section class="support-section" data-support-section="regulation" hidden>
+            <h4><span aria-hidden="true">🫁</span> 멜트다운·과민·불안 행동 조절</h4>
             <p class="support-help">빠른 안정 문구, 4-4-6 호흡, 5-4-3-2-1 그라운딩</p>
             <div class="reg-state-grid" id="regStateGrid">
               <button type="button" class="reg-state-btn active" data-state="sensory">감각 과민</button>
@@ -2187,18 +2260,18 @@
               <button type="button" class="reg-btn" id="sensoryTipBtn">감각 과민 대처 팁</button>
             </div>
             <div class="routine-row" style="margin-top:8px;">
-              <button type="button" id="regCoachBtn" style="width:100%;">🐈‍⬛ 지금 상태 맞춤 코칭</button>
+              <button type="button" id="regCoachBtn" style="width:100%;"><span aria-hidden="true">🐈‍⬛</span> 지금 상태 맞춤 코칭</button>
             </div>
             <div class="routine-row" style="margin-top:8px;">
-              <button type="button" id="regReportBtn" style="width:100%;">📊 오늘 상태 리포트</button>
+              <button type="button" id="regReportBtn" style="width:100%;"><span aria-hidden="true">📊</span> 오늘 상태 리포트</button>
             </div>
             <div class="routine-row" style="margin-top:8px;">
-              <button type="button" id="regResetBtn" style="width:100%;">🧹 오늘 기록 초기화</button>
+              <button type="button" id="regResetBtn" style="width:100%;"><span aria-hidden="true">🧹</span> 오늘 기록 초기화</button>
             </div>
             <div class="reg-status" id="regStatus">준비되면 버튼을 눌러 시작해요.</div>
           </section>
-          <section class="support-section">
-            <h4>📅 일정 관리와 루틴</h4>
+          <section class="support-section" data-support-section="routine" hidden>
+            <h4><span aria-hidden="true">📅</span> 일정 관리와 루틴</h4>
             <p class="support-help">오늘 해야 할 루틴을 추가하고 완료 표시해요.</p>
             <div class="routine-row">
               <input type="text" id="routineInput" placeholder="예: 8시 아침 식사, 9시 등원 준비" />
@@ -2206,7 +2279,27 @@
             </div>
             <ul class="routine-list" id="routineList"></ul>
             <div class="routine-row" style="margin-top:8px;">
-              <button type="button" id="routineCoachBtn" style="width:100%;">🐈‍⬛ 춘직이 코칭 받기</button>
+              <button type="button" id="routineCoachBtn" style="width:100%;"><span aria-hidden="true">🐈‍⬛</span> 춘직이 코칭 받기</button>
+            </div>
+          </section>
+          <section class="support-section" data-support-section="games" hidden>
+            <h4><span aria-hidden="true">🎮</span> 스트레스 완화 미니게임</h4>
+            <div class="game-card">
+              <p class="game-title"><span aria-hidden="true">🫧</span> 뽁뽁이 터트리기</p>
+              <p class="game-help">동그라미를 눌러서 편하게 터트려봐요.</p>
+              <div class="bubble-grid" id="bubbleGrid"></div>
+              <div class="routine-row" style="margin:0;">
+                <button type="button" id="bubbleResetBtn" style="width:100%;">다시 채우기</button>
+              </div>
+            </div>
+            <div class="game-card">
+              <p class="game-title"><span aria-hidden="true">⭕</span> 원 그리기 게임</p>
+              <p class="game-help">점을 중심으로 천천히 원을 그려봐요. 완벽하지 않아도 괜찮아요.</p>
+              <div class="circle-wrap">
+                <canvas id="circleCanvas" class="circle-canvas" width="280" height="180"></canvas>
+                <p class="support-help" id="circleScore">원 정확도: -</p>
+                <button type="button" id="circleResetBtn">다시 그리기</button>
+              </div>
             </div>
           </section>
         </div>
@@ -2456,6 +2549,7 @@ fabMenuHome?.addEventListener('click', (e) => {
   closeFabPlusMenu();
   closeTarot();
   closeSocial();
+  closeSupport();
   showStatus('홈으로 돌아왔어!', 1600);
 });
 fabMenuTarot?.addEventListener('click', (e) => {
@@ -2516,7 +2610,7 @@ function detectToolIntent(raw) {
   if (/(사회성|대화\s*연습|대화연습|롤\s*플레이|롤플레이|역할극|소통\s*연습|사교\s*연습|말하기\s*연습|티키타카)/.test(t)) return 'social';
   if (/(연습하자|연습\s*하자)/.test(t) && /(대화|소통|말하기|사회|역할)/.test(t)) return 'social';
   if (/사회성연습/.test(c)) return 'social';
-  if (/(지원\s*도구|그림\s*버튼|그림\s*말하기|비언어|멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|일정\s*관리|루틴)/.test(t)) return 'support';
+  if (/(지원\s*도구|지원툴|그림\s*버튼|그림\s*말하기|비언어|멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|일정\s*관리|루틴|미니게임|뽁뽁이|원\s*그리기)/.test(t)) return 'support';
 
   return null;
 }
@@ -3585,6 +3679,7 @@ function closeSocial() {
 }
 
 const supportOverlay = document.getElementById('supportOverlay');
+const supportTabs = document.getElementById('supportTabs');
 const supportClose = document.getElementById('supportClose');
 const picGrid = document.getElementById('picGrid');
 const regStatus = document.getElementById('regStatus');
@@ -3600,6 +3695,11 @@ const routineInput = document.getElementById('routineInput');
 const routineAddBtn = document.getElementById('routineAddBtn');
 const routineList = document.getElementById('routineList');
 const routineCoachBtn = document.getElementById('routineCoachBtn');
+const bubbleGrid = document.getElementById('bubbleGrid');
+const bubbleResetBtn = document.getElementById('bubbleResetBtn');
+const circleCanvas = document.getElementById('circleCanvas');
+const circleScore = document.getElementById('circleScore');
+const circleResetBtn = document.getElementById('circleResetBtn');
 
 const PICTURE_PHRASES = [
   { emoji: '💧', text: '물 마시고 싶어요' },
@@ -3674,6 +3774,15 @@ function closeSupport() {
   supportOverlay?.classList.remove('show');
 }
 supportClose?.addEventListener('click', closeSupport);
+supportTabs?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.support-tab');
+  if (!btn) return;
+  const section = btn.dataset.section;
+  supportTabs.querySelectorAll('.support-tab').forEach((el) => el.classList.toggle('active', el === btn));
+  document.querySelectorAll('[data-support-section]').forEach((el) => {
+    el.hidden = el.getAttribute('data-support-section') !== section;
+  });
+});
 
 function initPicturePhrases() {
   if (!picGrid) return;
@@ -3689,6 +3798,100 @@ function initPicturePhrases() {
     });
     picGrid.appendChild(btn);
   });
+}
+
+function seedBubbleGame() {
+  if (!bubbleGrid) return;
+  bubbleGrid.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bubble-btn';
+    b.setAttribute('aria-label', '뽁뽁이');
+    b.addEventListener('click', () => {
+      if (b.classList.contains('popped')) return;
+      b.classList.add('popped');
+      speakKorean('톡');
+    });
+    bubbleGrid.appendChild(b);
+  }
+}
+bubbleResetBtn?.addEventListener('click', seedBubbleGame);
+
+function initCircleGame() {
+  if (!circleCanvas) return;
+  const ctx = circleCanvas.getContext('2d');
+  const center = { x: 140, y: 90 };
+  const targetR = 52;
+  let drawing = false;
+  let points = [];
+
+  function renderGuide() {
+    ctx.clearRect(0, 0, circleCanvas.width, circleCanvas.height);
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, targetR, 0, Math.PI * 2);
+    ctx.strokeStyle = '#b9d9f7';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    if (points.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+      ctx.strokeStyle = '#4d98d9';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  }
+  function getPos(ev) {
+    const rect = circleCanvas.getBoundingClientRect();
+    const p = ev.touches?.[0] || ev;
+    return {
+      x: ((p.clientX - rect.left) / rect.width) * circleCanvas.width,
+      y: ((p.clientY - rect.top) / rect.height) * circleCanvas.height,
+    };
+  }
+  function finishDraw() {
+    if (!drawing) return;
+    drawing = false;
+    if (points.length < 12) {
+      if (circleScore) circleScore.textContent = '원 정확도: 선을 조금 더 길게 그려봐요.';
+      return;
+    }
+    const avgDiff = points.reduce((acc, p) => {
+      const d = Math.hypot(p.x - center.x, p.y - center.y);
+      return acc + Math.abs(d - targetR);
+    }, 0) / points.length;
+    const score = Math.max(0, Math.round(100 - (avgDiff * 2.2)));
+    if (circleScore) circleScore.textContent = `원 정확도: ${score}점`;
+  }
+  function start(ev) {
+    drawing = true;
+    points = [];
+    points.push(getPos(ev));
+    renderGuide();
+  }
+  function move(ev) {
+    if (!drawing) return;
+    points.push(getPos(ev));
+    renderGuide();
+    ev.preventDefault();
+  }
+
+  circleCanvas.addEventListener('mousedown', start);
+  circleCanvas.addEventListener('mousemove', move);
+  circleCanvas.addEventListener('mouseup', finishDraw);
+  circleCanvas.addEventListener('mouseleave', finishDraw);
+  circleCanvas.addEventListener('touchstart', start, { passive: false });
+  circleCanvas.addEventListener('touchmove', move, { passive: false });
+  circleCanvas.addEventListener('touchend', finishDraw);
+  circleResetBtn?.addEventListener('click', () => {
+    points = [];
+    if (circleScore) circleScore.textContent = '원 정확도: -';
+    renderGuide();
+  });
+  renderGuide();
 }
 
 let breathingTimer = null;
@@ -3955,6 +4158,8 @@ routineInput?.addEventListener('keydown', (e) => {
 routineCoachBtn?.addEventListener('click', coachRoutineProgress);
 
 initPicturePhrases();
+seedBubbleGame();
+initCircleGame();
 renderRoutines();
 
 function resetSocial() {
