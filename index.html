@@ -57,10 +57,25 @@
   .header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+    gap: 8px;
     padding: 8px 16px 0;
     flex-shrink: 0;
   }
+  .membership-link-btn {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: #1f6fff;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(31, 111, 255, 0.28);
+  }
+  .membership-link-btn:active { transform: scale(0.97); opacity: 0.92; }
   .header-brand {
     font-size: 17px;
     font-weight: 800;
@@ -216,6 +231,23 @@
   }
   .msg.user { background: #1f6fff; color: #fff; margin-left: auto; }
   .msg.bot  { background: #ffffff; color: #222; border: 1px solid #eef0f3; }
+  .msg-text { margin: 0 0 10px; line-height: 1.45; }
+  .msg-link-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #1f6fff;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .msg-link-btn:active { opacity: 0.9; }
   @keyframes msg-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
   /* 상태 말풍선 */
@@ -254,6 +286,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
+  .feature-tile--membership { grid-column: 1 / -1; min-height: 64px; }
   .feature-tile {
     position: relative;
     display: flex;
@@ -627,6 +660,55 @@
     background: #fff; color: #0d3f70; cursor: pointer; font-size: 17px; font-weight: 800; line-height: 1;
   }
   .support-subtitle { font-size: 12px; color: #4f77a6; margin-bottom: 10px; }
+  .about-card {
+    background: #fff;
+    border: 1px solid rgba(103, 157, 214, 0.22);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    scroll-margin-top: 12px;
+    transition: box-shadow 0.25s ease;
+  }
+  .about-card.highlight {
+    box-shadow: 0 0 0 2px rgba(31, 111, 255, 0.38);
+  }
+  .about-card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0d3f70;
+    letter-spacing: -0.02em;
+  }
+  .about-card .about-kicker {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #eef5ff;
+    color: #1f6fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .about-card p {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.58;
+    color: #2a4365;
+  }
+  .about-card p:last-child { margin-bottom: 0; }
+  .about-membership-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #1f6fff;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+  }
   .support-tabs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2003,6 +2085,7 @@
     <main class="app-main">
     <!-- 헤더 -->
     <div class="header">
+      <button type="button" class="membership-link-btn" id="membershipLinkBtn" title="ASD당사자네트워크 회원가입 문의">회원가입 문의</button>
       <button type="button" class="api-key-toggle" id="apiKeyToggle" title="API 키 입력">API 키</button>
     </div>
 
@@ -2032,6 +2115,11 @@
                 aria-label="사회성 연습">
           <span class="feature-tooltip" aria-hidden="true">연령에 맞는 상황을 고른 뒤, 가상의 상대와 티키타카로 연습해요. 대사와 힌트는 이 앱 전용이에요.</span>
           <span class="feature-name">사회성 연습</span>
+        </button>
+        <button type="button" class="feature-tile feature-tile--membership" id="membershipChip"
+                title="ASD당사자네트워크 회원가입 문의"
+                aria-label="ASD당사자네트워크 회원가입 문의">
+          <span class="feature-name">ASD당사자네트워크 회원가입</span>
         </button>
     </div>
   </div>
@@ -2231,6 +2319,8 @@
           <button type="button" class="fab-plus-btn" id="fabPlusBtn" aria-expanded="false" aria-haspopup="true" title="기능">+</button>
           <div class="fab-plus-menu" id="fabPlusMenu" role="menu" aria-label="기능 메뉴">
             <button type="button" class="fab-menu-item" id="fabMenuHome" role="menuitem">홈으로</button>
+            <button type="button" class="fab-menu-item" id="fabMenuAboutAi41" role="menuitem">AI41 소개</button>
+            <button type="button" class="fab-menu-item" id="fabMenuAboutSky" role="menuitem">스카이 소개</button>
             <button type="button" class="fab-menu-item" id="fabMenuTarot" role="menuitem">타로 보기</button>
             <button type="button" class="fab-menu-item" id="fabMenuSocial" role="menuitem">사회성 연습</button>
             <button type="button" class="fab-menu-item" id="fabMenuPicture" role="menuitem">그림 말하기</button>
@@ -2262,6 +2352,34 @@
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
         </svg>
       </button>
+    </div>
+
+    <div class="support-overlay" id="aboutOverlay">
+      <div class="overlay-shell support-shell">
+        <div class="support-top">
+          <div class="support-header">
+            <div class="support-title">소개</div>
+            <button type="button" class="support-close" id="aboutClose" title="뒤로가기" aria-label="뒤로가기">←</button>
+          </div>
+          <div class="support-subtitle">AI41과 이 솔루션을 만든 스카이를 소개해요.</div>
+        </div>
+        <div class="support-scroll" id="aboutScroll">
+          <section class="about-card" id="aboutAi41">
+            <span class="about-kicker">AI41</span>
+            <h3>AI for One, 당신을 위한 AI</h3>
+            <p>AI41은 <strong>예비사회적기업 창업지원사업</strong>에 선정된 팀이에요. 이름은 <strong>AI for One</strong>, 즉 당신을 위한 AI라는 뜻을 담고 있어요.</p>
+            <p>스펙트럼 당사자, 청각장애인 등 다양한 특성을 가진 <strong>한 명 한 명</strong>을 위해 맞춤 솔루션을 만드는 것이 우리의 신념이에요.</p>
+            <p>지금 사용 중인 이 앱도 AI41이 만든 솔루션입니다.</p>
+          </section>
+          <section class="about-card" id="aboutSky">
+            <span class="about-kicker">대표 · AI 도우미</span>
+            <h3>스카이 (곽한승)</h3>
+            <p>AI41의 현재 대표는 <strong>곽한승</strong>이에요. 이 앱에서 대화를 돕는 AI 도우미 <strong>스카이</strong>의 이름도 대표의 이름에서 따왔어요.</p>
+            <p>스카이는 ASD당사자네트워크 이용자와 보호자를 돕기 위해 타로, 사회성 연습, 행동 조절 등 일상에 필요한 도구를 함께 제공해요.</p>
+            <a class="about-membership-btn" href="https://form.naver.com/response/jfjr-1UnoCULGFekjKnjow" target="_blank" rel="noopener noreferrer">ASD당사자네트워크 회원가입 문의</a>
+          </section>
+        </div>
+      </div>
     </div>
 
     <div class="support-overlay" id="pictureOverlay">
@@ -2522,6 +2640,10 @@
 const PROXY_BASE_STORAGE_KEY = 'chunjik.proxyBase';
 const CHAT_MODEL = 'gpt-5.4-mini';
 const MEMBERSHIP_FORM_URL = 'https://form.naver.com/response/jfjr-1UnoCULGFekjKnjow';
+
+function openMembershipForm() {
+  window.open(MEMBERSHIP_FORM_URL, '_blank', 'noopener,noreferrer');
+}
 const query = new URLSearchParams(location.search);
 const queryProxyBase = query.get('proxyBase') || '';
 if (queryProxyBase) localStorage.setItem(PROXY_BASE_STORAGE_KEY, queryProxyBase);
@@ -2548,6 +2670,37 @@ function buildApiHeaders(json = true) {
     if (key) headers.Authorization = 'Bearer ' + key;
   }
   return headers;
+}
+
+function describeApiHttpError(status) {
+  const code = Number(status);
+  if (code === 429) return '요청이 너무 많아요(429). 잠시 후 다시 시도해주세요.';
+  if (code === 503) return '서버 API 키가 설정되지 않았어요(503). Vercel 환경변수 OPENAI_API_KEY 확인 후 재배포해주세요.';
+  if (code === 401 || code === 403) return `API 인증 오류(${code}). 키를 확인해주세요.`;
+  if (code === 502) return 'AI 서버 연결 오류(502). 잠시 후 다시 시도해주세요.';
+  return 'HTTP ' + code;
+}
+
+function buildTarotKeywordFallback(cards, positions, note = '') {
+  const body = cards.map((c, i) => {
+    const pos = positions[i] || `카드 ${i + 1}`;
+    const orient = c.reversed ? '역방향' : '정방향';
+    const meaning = c.reversed ? c.meaning_rev : c.meaning_up;
+    return `[${pos}] ${c.name} (${orient})\n→ ${meaning || ''}`;
+  }).join('\n\n');
+  return note ? `${note}\n\n${body}` : body;
+}
+
+async function fetchApiWithRetry(url, options, { retries = 2, backoffMs = 2000 } = {}) {
+  let lastRes = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const res = await fetch(url, options);
+    if (res.ok) return res;
+    lastRes = res;
+    if (res.status !== 429 || attempt === retries) return res;
+    await new Promise((r) => setTimeout(r, backoffMs * (attempt + 1)));
+  }
+  return lastRes;
 }
 
 function ensureApiReady(showUi = true) {
@@ -2609,9 +2762,14 @@ const apiSetting = document.getElementById('apiSetting');
 const apiKeySaveBtn = document.getElementById('apiKeySaveBtn');
 const apiKeyClearBtn = document.getElementById('apiKeyClearBtn');
 const refreshBtn = document.getElementById('refreshBtn');
+const aboutOverlay = document.getElementById('aboutOverlay');
+const aboutScroll = document.getElementById('aboutScroll');
+const aboutClose = document.getElementById('aboutClose');
 const fabPlusWrap = document.getElementById('fabPlusWrap');
 const fabPlusBtn = document.getElementById('fabPlusBtn');
 const fabMenuHome = document.getElementById('fabMenuHome');
+const fabMenuAboutAi41 = document.getElementById('fabMenuAboutAi41');
+const fabMenuAboutSky = document.getElementById('fabMenuAboutSky');
 const fabMenuTarot = document.getElementById('fabMenuTarot');
 const fabMenuSocial = document.getElementById('fabMenuSocial');
 const fabMenuPicture = document.getElementById('fabMenuPicture');
@@ -2841,7 +2999,18 @@ fabMenuHome?.addEventListener('click', (e) => {
   closeTarot();
   closeSocial();
   closeSupport();
+  closeAbout();
   showStatus('홈으로 돌아왔어!', 1600);
+});
+fabMenuAboutAi41?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openAbout('ai41');
+});
+fabMenuAboutSky?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openAbout('sky');
 });
 fabMenuTarot?.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -2890,7 +3059,26 @@ function addMessage(text, who='bot') {
   div.textContent = text;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
-  // 자동 스크롤 최상단 3개만 유지
+  while (chatBox.children.length > 16) chatBox.removeChild(chatBox.firstChild);
+  return div;
+}
+
+function addBotMessageWithLink(text, linkLabel, url) {
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const p = document.createElement('p');
+  p.className = 'msg-text';
+  p.textContent = text;
+  const a = document.createElement('a');
+  a.className = 'msg-link-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = linkLabel;
+  div.appendChild(p);
+  div.appendChild(a);
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
   while (chatBox.children.length > 16) chatBox.removeChild(chatBox.firstChild);
   return div;
 }
@@ -2937,9 +3125,10 @@ function detectMembershipIntent(raw) {
 
 function replyMembershipInquiry(userText) {
   addMessage(userText, 'user');
-  addMessage(
-    'ASD당사자네트워크 회원가입 문의는 아래 네이버 폼으로 접수해 주세요.\n' + MEMBERSHIP_FORM_URL,
-    'bot'
+  addBotMessageWithLink(
+    'ASD당사자네트워크 회원가입 문의는 아래 버튼으로 접수해 주세요.',
+    '회원가입 문의하기',
+    MEMBERSHIP_FORM_URL
   );
   hideStatus();
   setState(null);
@@ -3324,7 +3513,7 @@ async function sendToKanana({ text, speakResponse = false }) {
   const body = {
     model: CHAT_MODEL,
     messages: [
-      { role: 'system', content: '너는 ASD당사자네트워크 AI 도우미 스카이야. 친근하고 자연스럽게, 한국어로 짧고 다정하게 답해. 답변은 1-2문장으로 짧게. 답장에는 이모지(그림 문자)나 얼굴·꾸밈 이모티콘(^_^, :), ^^, ; 등)을 넣지 마. ASD당사자네트워크 회원가입·가입 문의가 오면 반드시 다음 링크로 안내해: ' + MEMBERSHIP_FORM_URL },
+      { role: 'system', content: '너는 ASD당사자네트워크 AI 도우미 스카이야. 이 솔루션은 예비사회적기업 창업지원사업에 선정된 AI41(AI for One, 당신을 위한 AI)이 만들었고, 대표는 곽한승이야. 친근하고 자연스럽게, 한국어로 짧고 다정하게 답해. 답변은 1-2문장으로 짧게. 답장에는 이모지(그림 문자)나 얼굴·꾸밈 이모티콘(^_^, :), ^^, ; 등)을 넣지 마. ASD당사자네트워크 회원가입·가입 문의가 오면 화면 상단 또는 아래의 「회원가입 문의」 버튼으로 안내해. AI41이나 스카이(곽한승) 소개가 오면 좌측 하단 + 메뉴의 「AI41 소개」「스카이 소개」로 안내해. URL을 직접 적지 마.' },
       { role: 'user', content: text }
     ],
     stream: true
@@ -3550,6 +3739,8 @@ function formatTarotReading(text) {
 }
 
 const tarotChipBtn = document.getElementById('tarotChip');
+const membershipLinkBtn = document.getElementById('membershipLinkBtn');
+const membershipChipBtn = document.getElementById('membershipChip');
 const tarotOverlay = document.getElementById('tarotOverlay');
 const tarotClose = document.getElementById('tarotClose');
 const tarotSubtitle = document.getElementById('tarotSubtitle');
@@ -3576,6 +3767,8 @@ const tarotStars = document.getElementById('tarotStars');
 })();
 
 tarotChipBtn?.addEventListener('click', openTarot);
+membershipLinkBtn?.addEventListener('click', openMembershipForm);
+membershipChipBtn?.addEventListener('click', openMembershipForm);
 tarotClose?.addEventListener('click', closeTarot);
 tarotDoneBtn?.addEventListener('click', closeTarot);
 tarotAgainBtn?.addEventListener('click', () => { resetTarot(); });
@@ -3597,6 +3790,7 @@ function openTarot() {
   socialState.active = false;
   setSocialCoachLottieState('');
   closeSupport();
+  closeAbout();
   if (characterAnimationDataCache && !tarotCoachLottieInstance) {
     initTarotCoachLottie(characterAnimationDataCache);
   }
@@ -3737,8 +3931,7 @@ async function interpretWithAI(cards, spreadLabel, positions) {
   if (tarotScroll) requestAnimationFrame(() => { tarotScroll.scrollTop = tarotScroll.scrollHeight; });
 
   if (!ensureApiReady(false)) {
-    const fallback = '서버 연결이 필요해요.\n\n' +
-      cards.map((c,i) => `${positions[i]||'#'+(i+1)}: ${c.name} (${c.reversed?'역방향':'정방향'})\n→ ${(c.reversed ? c.meaning_rev : c.meaning_up) || ''}`).join('\n\n');
+    const fallback = buildTarotKeywordFallback(cards, positions, '서버 연결이 필요해요.');
     if (tarotReadingInner) tarotReadingInner.innerHTML = formatTarotReading(fallback);
     return;
   }
@@ -3763,12 +3956,12 @@ async function interpretWithAI(cards, spreadLabel, positions) {
   };
 
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetchApiWithRetry(API_URL, {
       method: 'POST',
       headers: buildApiHeaders(),
       body: JSON.stringify(body)
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) throw new Error(describeApiHttpError(res.status));
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -3815,7 +4008,12 @@ async function interpretWithAI(cards, spreadLabel, positions) {
     }
   } catch (err) {
     if (tarotReadingInner) {
-      tarotReadingInner.textContent = '해석 중 오류: ' + err.message + '\n\n카드만 참고해주세요.';
+      const fallback = buildTarotKeywordFallback(
+        cards,
+        positions,
+        `해석 중 오류: ${err.message}\n\n카드만 참고해주세요.`
+      );
+      tarotReadingInner.innerHTML = formatTarotReading(fallback);
     }
   }
 }
@@ -4076,6 +4274,7 @@ function openSocial(initialSelection = null) {
   tarotOverlay?.classList.remove('show');
   closeTcardLightbox();
   closeSupport();
+  closeAbout();
   resetSocial();
   socialOverlay.classList.add('show');
   if (characterAnimationDataCache && !socialCoachLottieInstance) {
@@ -4214,6 +4413,7 @@ function openSupportSection(section = 'picture') {
   closeTarot();
   closeSocial();
   closeSupport();
+  closeAbout();
   if (characterAnimationDataCache && supportCoachLottieInstances.length === 0) {
     initSupportCoachLotties(characterAnimationDataCache);
   }
@@ -4237,6 +4437,25 @@ function closeSupport() {
   routineOverlay?.classList.remove('show');
   gamesOverlay?.classList.remove('show');
 }
+function closeAbout() {
+  aboutOverlay?.classList.remove('show');
+  document.querySelectorAll('.about-card').forEach((card) => card.classList.remove('highlight'));
+}
+function openAbout(section = 'ai41') {
+  closeTarot();
+  closeSocial();
+  closeSupport();
+  aboutOverlay?.classList.add('show');
+  const targetId = section === 'sky' ? 'aboutSky' : 'aboutAi41';
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.about-card').forEach((card) => {
+      card.classList.toggle('highlight', card.id === targetId);
+    });
+    const target = document.getElementById(targetId);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+aboutClose?.addEventListener('click', closeAbout);
 pictureClose?.addEventListener('click', closeSupport);
 regulationClose?.addEventListener('click', closeSupport);
 routineClose?.addEventListener('click', closeSupport);
