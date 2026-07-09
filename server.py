@@ -1,21 +1,34 @@
 """
-춘직이 AI 아바타 — CORS 우회용 로컬 프록시 서버
+스카이 AI 아바타 — CORS 우회용 로컬 프록시 서버
 =================================================
 실행:
     pip install flask flask-cors requests
+    cp .env.example .env   # OPENAI_API_KEY 입력
     python server.py
 
 그리고 브라우저에서 http://localhost:8080 접속
 (별도 설정 없이 같은 폴더의 index.html이 자동으로 열립니다)
 """
 
+import json
 import os
 import sys
 import requests
 from flask import Flask, request, Response, send_from_directory
 from flask_cors import CORS
 
-UPSTREAM = "https://kanana-o.a2s-endpoint.kr-central-2.kakaocloud.com/v1/chat/completions"
+from proxy_utils import (
+    demo_mode_enabled,
+    load_local_env,
+    resolve_auth,
+    sanitize_chat_body,
+    server_api_key,
+)
+
+load_local_env()
+
+UPSTREAM = "https://api.openai.com/v1/chat/completions"
+TRANSCRIBE_UPSTREAM = "https://api.openai.com/v1/audio/transcriptions"
 TAROT_API_BASE = "https://tarotapi.dev/api/v1"
 PORT = int(os.environ.get("PORT", "8080"))
 
@@ -33,15 +46,26 @@ def static_files(filename):
     return send_from_directory(".", filename)
 
 
+def _json_error(status: int, message: str):
+    return Response(
+        json.dumps({"error": message}, ensure_ascii=False),
+        status=status,
+        content_type="application/json",
+    )
+
+
 @app.route("/v1/chat/completions", methods=["POST", "OPTIONS"])
 def proxy_chat():
     if request.method == "OPTIONS":
         return Response(status=204)
 
-    auth = request.headers.get("Authorization", "")
+    auth = resolve_auth(request.headers.get("Authorization", ""))
     if not auth:
-        return Response('{"error":"Authorization header missing"}',
-                        status=401, content_type="application/json")
+        return _json_error(503, "Server API key is not configured")
+
+    body, err = sanitize_chat_body(request.get_data())
+    if err:
+        return _json_error(400, err)
 
     headers = {"Content-Type": "application/json", "Authorization": auth}
 
@@ -49,13 +73,12 @@ def proxy_chat():
         upstream = requests.post(
             UPSTREAM,
             headers=headers,
-            data=request.get_data(),
+            data=body,
             stream=True,
             timeout=(10, 300),
         )
     except requests.RequestException as e:
-        return Response(f'{{"error":"Upstream request failed: {e}"}}',
-                        status=502, content_type="application/json")
+        return _json_error(502, f"Upstream request failed: {e}")
 
     def generate():
         try:
@@ -69,6 +92,39 @@ def proxy_chat():
         generate(),
         status=upstream.status_code,
         content_type=upstream.headers.get("Content-Type", "text/event-stream"),
+    )
+
+
+@app.route("/v1/audio/transcriptions", methods=["POST", "OPTIONS"])
+def proxy_transcribe():
+    if request.method == "OPTIONS":
+        return Response(status=204)
+    if demo_mode_enabled():
+        return _json_error(403, "Audio upload is disabled in demo mode")
+
+    auth = resolve_auth(request.headers.get("Authorization", ""))
+    if not auth:
+        return _json_error(401, "Authorization header missing")
+
+    headers = {"Authorization": auth}
+    content_type = request.headers.get("Content-Type")
+    if content_type:
+        headers["Content-Type"] = content_type
+
+    try:
+        upstream = requests.post(
+            TRANSCRIBE_UPSTREAM,
+            headers=headers,
+            data=request.get_data(),
+            timeout=(10, 120),
+        )
+    except requests.RequestException as e:
+        return _json_error(502, f"Upstream request failed: {e}")
+
+    return Response(
+        upstream.content,
+        status=upstream.status_code,
+        content_type=upstream.headers.get("Content-Type", "application/json"),
     )
 
 
@@ -89,30 +145,39 @@ def tarot_proxy(subpath):
             content_type=upstream.headers.get("Content-Type", "application/json"),
         )
     except requests.RequestException as e:
-        return Response(
-            f'{{"error":"Tarot API request failed: {e}"}}',
-            status=502,
-            content_type="application/json",
-        )
+        return _json_error(502, f"Tarot API request failed: {e}")
 
 
 @app.route("/health")
 def health():
-    return {"ok": True, "upstream": UPSTREAM, "tarot": TAROT_API_BASE}
+    demo = demo_mode_enabled()
+    has_key = bool(server_api_key())
+    return {
+        "ok": demo and has_key if demo else True,
+        "demo_mode": demo,
+        "ready": has_key if demo else True,
+        "upstream": UPSTREAM,
+        "transcribe": TRANSCRIBE_UPSTREAM,
+        "tarot": TAROT_API_BASE,
+    }
 
 
 if __name__ == "__main__":
     banner = f"""
 ╔══════════════════════════════════════════════════╗
-║  🐈‍⬛  춘직이 AI 아바타 서버                        ║
+║  🐈‍⬛  스카이 AI 아바타 서버                          ║
 ║                                                  ║
 ║  브라우저에서 접속:                              ║
 ║    http://localhost:{PORT}                          ║
+║                                                  ║
+║  시연 모드: {'ON' if demo_mode_enabled() else 'OFF'}  |  API 키: {'설정됨' if server_api_key() else '없음 (.env 확인)'}     ║
 ║                                                  ║
 ║  종료: Ctrl+C                                    ║
 ╚══════════════════════════════════════════════════╝
 """
     print(banner, flush=True)
+    if demo_mode_enabled() and not server_api_key():
+        print("⚠️  DEMO_MODE=1 이지만 OPENAI_API_KEY 가 없습니다. .env 파일을 확인하세요.", file=sys.stderr)
     try:
         app.run(host="0.0.0.0", port=PORT, debug=False, threaded=True)
     except OSError as e:

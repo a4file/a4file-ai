@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>춘직이</title>
+<title>스카이</title>
 <!-- Lottie 라이브러리 (CDN) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <!-- 캐릭터 애니메이션 데이터 (window.CHARACTER_ANIMATION_DATA) -->
@@ -67,6 +67,9 @@
     color: #111;
     letter-spacing: -0.02em;
   }
+  .api-key-toggle.demo-hidden,
+  .api-setting.demo-hidden,
+  .mic-btn.demo-hidden { display: none !important; }
   .api-key-toggle {
     font-size: 13px;
     font-weight: 600;
@@ -1320,7 +1323,7 @@
     box-sizing: border-box;
   }
   .tarot-reading-inner:empty::before {
-    content: '춘직이가 카드를 읽고 있어요... ✨';
+    content: '스카이가 카드를 읽고 있어요... ✨';
     display: block;
     opacity: 0.65;
     font-style: italic;
@@ -1705,7 +1708,7 @@
     padding: 8px 11px;
   }
   .rp-msg.coach::before {
-    content: '🐈‍⬛ 코치 춘직이';
+    content: '🐈‍⬛ 코치 스카이';
     display: block;
     font-size: 10.5px;
     font-weight: 800;
@@ -2005,7 +2008,7 @@
 
     <!-- 캐릭터 스테이지 -->
     <div class="stage">
-      <div class="status-chip" id="statusChip">안녕! 나는 춘직이야 🐾</div>
+      <div class="status-chip" id="statusChip">안녕! 나는 스카이야 🐾</div>
 
       <div class="chat-display" id="chatBox"></div>
 
@@ -2019,7 +2022,7 @@
     <div class="suggestions">
       <div class="feature-grid">
         <button type="button" class="feature-tile feature-tile--tarot" id="tarotChip"
-                title="스프레드를 고르고 카드를 뽑으면 춘직이가 해석해 줘요."
+                title="스프레드를 고르고 카드를 뽑으면 스카이가 해석해 줘요."
                 aria-label="타로 보기">
           <span class="feature-tooltip" aria-hidden="true">스프레드를 고른 뒤 카드를 뽑으면, 오늘의 흐름을 짧게 풀어 줄게요.</span>
           <span class="feature-name">타로 보기</span>
@@ -2040,10 +2043,10 @@
       <div class="overlay-shell tarot-shell">
       <div class="tarot-top">
         <div class="tarot-header">
-          <div class="tarot-title">🔮 춘직이의 타로</div>
+          <div class="tarot-title">🔮 스카이의 타로</div>
           <button type="button" class="tarot-close" id="tarotClose" title="뒤로가기" aria-label="뒤로가기">←</button>
         </div>
-        <div class="tool-mascot tool-mascot--tarot"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 타로 마스터</span></div>
+        <div class="tool-mascot tool-mascot--tarot"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 타로 마스터</span></div>
         <div class="tarot-subtitle" id="tarotSubtitle">오늘 당신의 우주가 전하는 메시지를 받아볼까요?</div>
       </div>
 
@@ -2078,7 +2081,7 @@
       </div>
 
       <div class="tarot-coach-stage" id="tarotCoachStage">
-        <div class="tarot-coach-chat" id="tarotCoachBubble">춘직이가 카드 의미를 같이 보고 있어.</div>
+        <div class="tarot-coach-chat" id="tarotCoachBubble">스카이가 카드 의미를 같이 보고 있어.</div>
         <div class="tarot-coach-avatar-wrap">
           <div class="tarot-coach-lottie" id="tarotCoachLottie" aria-hidden="true"></div>
           <div class="tarot-coach-fallback" id="tarotCoachFallback" aria-hidden="true">🐈‍⬛</div>
@@ -2101,7 +2104,7 @@
           <div class="social-title">🌱 사회성 연습</div>
           <button type="button" class="social-close" id="socialClose" title="뒤로가기" aria-label="뒤로가기">←</button>
         </div>
-        <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 사회성 코치</span></div>
+        <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 사회성 코치</span></div>
         <div class="social-breadcrumb" id="socialCrumb">
           <span class="bc-step" data-step="age">1. 연령</span>
           <span class="bc-arrow">›</span>
@@ -2111,7 +2114,7 @@
           <span class="bc-arrow">›</span>
           <span class="bc-step" data-step="review">4. 피드백</span>
         </div>
-        <div class="social-subtitle" id="socialSubtitle">같이 대화하는 법을 부드럽게 연습해보자냥 🐾</div>
+        <div class="social-subtitle" id="socialSubtitle">같이 대화하는 법을 부드럽게 연습해보자 🐾</div>
       </div>
 
       <div class="social-scroll" id="socialScroll">
@@ -2145,7 +2148,7 @@
           </div>
           <div class="rp-summary" style="margin-top:10px;">
             <div class="rp-summary-title">💡 이 연습은…</div>
-            <strong>체계적 사회 기술·대화 연습</strong>에 대한 공개 연구 동향을 참고해 설계했고, 시나리오와 대화 흐름은 이 앱에서 AI로 새로 짠 거야(특정 기관·상표의 공식 교육 프로그램은 아니야). 정답을 강요하지 않고, 네 방식으로 말해도 돼. 나(춘직이 코치)가 옆에서 힌트를 줄게.
+            <strong>체계적 사회 기술·대화 연습</strong>에 대한 공개 연구 동향을 참고해 설계했고, 시나리오와 대화 흐름은 이 앱에서 AI로 새로 짠 거야(특정 기관·상표의 공식 교육 프로그램은 아니야). 정답을 강요하지 않고, 네 방식으로 말해도 돼. 나(스카이 코치)가 옆에서 힌트를 줄게.
           </div>
         </div>
 
@@ -2174,7 +2177,7 @@
         <!-- STEP 4: 요약/리뷰 -->
         <div id="rpReview" style="display:none;">
           <div class="rp-summary" id="rpSummary">
-            <div class="rp-summary-title">📝 춘직이의 피드백</div>
+            <div class="rp-summary-title">📝 스카이의 피드백</div>
             <div id="rpSummaryBody">연습을 마치면 여기에 피드백이 나와.</div>
           </div>
           <div class="rp-actions">
@@ -2185,7 +2188,7 @@
       </div>
 
       <div class="social-coach-stage" id="socialCoachStage">
-        <div class="social-coach-chat" id="socialCoachBubble">춘직이가 여기서 같이 연습할 준비 중이야.</div>
+        <div class="social-coach-chat" id="socialCoachBubble">스카이가 여기서 같이 연습할 준비 중이야.</div>
         <div class="social-coach-avatar-wrap">
           <div class="social-coach-lottie" id="socialCoachLottie" aria-hidden="true"></div>
           <div class="social-coach-fallback" id="socialCoachFallback" aria-hidden="true">🐈‍⬛</div>
@@ -2244,7 +2247,7 @@
             <line x1="12" y1="18" x2="12" y2="22"/>
           </svg>
         </button>
-        <input type="text" class="text-input" id="textInput" placeholder="춘직이에게 말 걸어봐..." />
+        <input type="text" class="text-input" id="textInput" placeholder="스카이에게 말 걸어봐..." />
         <button class="kbd-btn" id="sendBtn" title="보내기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/>
@@ -2268,7 +2271,7 @@
             <div class="support-title">그림 말하기</div>
             <button type="button" class="support-close" id="pictureClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
-          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 그림 의사소통 코치</span></div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 그림 의사소통 코치</span></div>
           <div class="support-subtitle">버튼을 눌러 원하는 말을 소리로 표현해요.</div>
         </div>
         <div class="support-scroll">
@@ -2292,7 +2295,7 @@
             <div class="support-title">행동 조절</div>
             <button type="button" class="support-close" id="regulationClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
-          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 정서 조절 코치</span></div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 정서 조절 코치</span></div>
           <div class="support-subtitle">지금 상태에 맞는 안정 도구를 선택해요.</div>
         </div>
         <div class="support-scroll">
@@ -2337,7 +2340,7 @@
             <div class="support-title">루틴 관리</div>
             <button type="button" class="support-close" id="routineClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
-          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 생활 루틴 코치</span></div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 생활 루틴 코치</span></div>
           <div class="support-subtitle">오늘 루틴을 하나씩 완료해요.</div>
         </div>
         <div class="support-scroll">
@@ -2349,7 +2352,7 @@
             </div>
             <ul class="routine-list" id="routineList"></ul>
             <div class="routine-row" style="margin-top:8px;">
-              <button type="button" id="routineCoachBtn" style="width:100%;"><span aria-hidden="true">🐈‍⬛</span> 춘직이 코칭 받기</button>
+              <button type="button" id="routineCoachBtn" style="width:100%;"><span aria-hidden="true">🐈‍⬛</span> 스카이 코칭 받기</button>
             </div>
           </section>
         </div>
@@ -2368,7 +2371,7 @@
             <div class="support-title">미니게임</div>
             <button type="button" class="support-close" id="gamesClose" title="뒤로가기" aria-label="뒤로가기">←</button>
           </div>
-          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>춘직이 스트레스 완화 게임</span></div>
+          <div class="tool-mascot tool-mascot--social"><span class="tool-mascot-face">🐈‍⬛</span><span>스카이 스트레스 완화 게임</span></div>
           <div class="support-subtitle">부담 없이 짧게 긴장을 푸는 게임들이에요.</div>
         </div>
         <div class="support-scroll">
@@ -2389,7 +2392,7 @@
               <button type="button" id="gameSoundToggleBtn" style="width:100%;">사운드: ON</button>
             </div>
             <div class="game-card" data-game-card="bubble">
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 뽁뽁이를 터트려요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 뽁뽁이를 터트려요.</p>
               <p class="game-title"><span aria-hidden="true">🫧</span> 뽁뽁이 터트리기</p>
               <p class="game-help">동그라미를 눌러서 편하게 터트려봐요.</p>
               <div class="bubble-grid" id="bubbleGrid"></div>
@@ -2398,7 +2401,7 @@
               </div>
             </div>
             <div class="game-card" data-game-card="circle" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 천천히 원을 그려요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 천천히 원을 그려요.</p>
               <p class="game-title"><span aria-hidden="true">⭕</span> 원 그리기 게임</p>
               <p class="game-help">점을 중심으로 천천히 원을 그려봐요. 완벽하지 않아도 괜찮아요.</p>
               <div class="circle-wrap">
@@ -2408,7 +2411,7 @@
               </div>
             </div>
             <div class="game-card" data-game-card="pattern" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 순서를 따라 눌러봐요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 순서를 따라 눌러봐요.</p>
               <p class="game-title">Pattern Echo</p>
               <p class="game-help">깜빡이는 순서를 그대로 눌러요. 길이만 천천히 늘어나요.</p>
               <div class="game-toolbar">
@@ -2419,7 +2422,7 @@
               <div class="game-status" id="patternStatus">준비되면 시작 버튼을 눌러요.</div>
             </div>
             <div class="game-card" data-game-card="sort" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 같은 것끼리 모아봐요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 같은 것끼리 모아봐요.</p>
               <p class="game-title">Sort & Calm</p>
               <p class="game-help">시간 제한 없이 같은 색끼리 정리해요.</p>
               <div class="game-toolbar">
@@ -2435,7 +2438,7 @@
               <div class="game-status" id="sortStatus">아이템을 선택한 뒤 바구니를 눌러요.</div>
             </div>
             <div class="game-card" data-game-card="rhythm" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 일정한 박자로 탭해요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 일정한 박자로 탭해요.</p>
               <p class="game-title">Soft Rhythm Tap</p>
               <p class="game-help">항상 같은 간격으로 점이 빛나요. 부담 없이 맞춰요.</p>
               <div class="rhythm-lane"><div class="rhythm-dot" id="rhythmDot"></div></div>
@@ -2446,7 +2449,7 @@
               <div class="game-status" id="rhythmStatus">리듬을 시작하면 같은 템포로 반복돼요.</div>
             </div>
             <div class="game-card" data-game-card="difference" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 천천히 다른 칸을 찾아요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 천천히 다른 칸을 찾아요.</p>
               <p class="game-title">Low Stimulus Spot the Difference</p>
               <p class="game-help">두 화면의 차이 1~3개를 찾아 터치해요.</p>
               <div class="game-toolbar">
@@ -2459,7 +2462,7 @@
               <div class="game-status" id="diffStatus">왼쪽/오른쪽 아무 쪽이나 눌러도 돼요.</div>
             </div>
             <div class="game-card" data-game-card="loop" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 규칙적인 루프를 만들어요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 규칙적인 루프를 만들어요.</p>
               <p class="game-title">Loop Builder</p>
               <p class="game-help">움직임 규칙을 쌓아 나만의 반복 애니메이션을 만들어요.</p>
               <div class="loop-stage"><div class="loop-shape" id="loopShape"></div></div>
@@ -2473,7 +2476,7 @@
               <div class="game-status" id="loopStatus">버튼을 눌러 규칙을 추가해보세요.</div>
             </div>
             <div class="game-card" data-game-card="safe" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 목표 색만 눌러요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 목표 색만 눌러요.</p>
               <p class="game-title">Safe Click</p>
               <p class="game-help">실수해도 괜찮아요. 목표 색만 다시 찾아 누르면 돼요.</p>
               <div class="game-toolbar">
@@ -2483,7 +2486,7 @@
               <div class="game-status" id="safeStatus">목표 색: -</div>
             </div>
             <div class="game-card" data-game-card="emotion" hidden>
-              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 춘직이와 같은 감정을 짝지어요.</p>
+              <p class="support-help"><span aria-hidden="true">🐈‍⬛</span> 스카이와 같은 감정을 짝지어요.</p>
               <p class="game-title">Emotion Match</p>
               <p class="game-help">같은 표정을 두 장 맞추는 가벼운 카드 매칭이에요.</p>
               <div class="game-toolbar">
@@ -2504,7 +2507,7 @@
 
     <!-- API 설정 (우측 상단 API 키로 토글) -->
     <div class="api-setting" id="apiSetting">
-      <input type="password" id="apiKey" placeholder="API Key (KC_IS_...)" autocomplete="off" />
+      <input type="password" id="apiKey" placeholder="API Key (sk-...)" autocomplete="off" />
       <button type="button" class="api-setting-btn" id="apiKeySaveBtn" title="API 키 저장">저장</button>
       <button type="button" class="api-setting-btn ghost" id="apiKeyClearBtn" title="저장된 API 키 삭제">삭제</button>
     </div>
@@ -2514,21 +2517,81 @@
 
 <script>
 /* ============================================================
-   춘직이 AI 아바타 — Kanana-o 연동
+   스카이 AI 아바타 — GPT-5.4 mini (OpenAI) 연동
 ============================================================ */
 const PROXY_BASE_STORAGE_KEY = 'chunjik.proxyBase';
+const CHAT_MODEL = 'gpt-5.4-mini';
+const MEMBERSHIP_FORM_URL = 'https://form.naver.com/response/jfjr-1UnoCULGFekjKnjow';
 const query = new URLSearchParams(location.search);
 const queryProxyBase = query.get('proxyBase') || '';
 if (queryProxyBase) localStorage.setItem(PROXY_BASE_STORAGE_KEY, queryProxyBase);
 const savedProxyBase = localStorage.getItem(PROXY_BASE_STORAGE_KEY) || '';
 const configuredProxyBase = String(window.CHUNJIK_PROXY_BASE || queryProxyBase || savedProxyBase || '').trim().replace(/\/+$/, '');
 const isHttpContext = (location.protocol === 'http:' || location.protocol === 'https:') && location.host;
+const HEALTH_URL = configuredProxyBase
+  ? `${configuredProxyBase}/health`
+  : (isHttpContext ? '/health' : null);
 const API_URL = configuredProxyBase
   ? `${configuredProxyBase}/v1/chat/completions`
-  : (isHttpContext
-      ? '/v1/chat/completions'
-      : 'https://kanana-o.a2s-endpoint.kr-central-2.kakaocloud.com/v1/chat/completions');
+  : (isHttpContext ? '/v1/chat/completions' : null);
+const TRANSCRIBE_URL = configuredProxyBase
+  ? `${configuredProxyBase}/v1/audio/transcriptions`
+  : (isHttpContext ? '/v1/audio/transcriptions' : null);
 const SAMPLE_RATE = 24000;
+let demoMode = false;
+
+function buildApiHeaders(json = true) {
+  const headers = {};
+  if (json) headers['Content-Type'] = 'application/json';
+  if (!demoMode) {
+    const key = getApiKey();
+    if (key) headers.Authorization = 'Bearer ' + key;
+  }
+  return headers;
+}
+
+function ensureApiReady(showUi = true) {
+  if (!API_URL) {
+    if (showUi) alert('서버를 통해 접속해주세요. (index.html 직접 열기 불가)');
+    return false;
+  }
+  if (demoMode) return true;
+  const key = getApiKey();
+  if (!key) {
+    if (showUi) {
+      alert('API Key를 입력해주세요 (우측 상단 API 키)');
+      apiSetting?.classList.add('show');
+      apiKeyInput?.focus();
+    }
+    return false;
+  }
+  return true;
+}
+
+function applyDemoUi() {
+  apiKeyToggle?.classList.toggle('demo-hidden', demoMode);
+  apiSetting?.classList.toggle('demo-hidden', demoMode);
+  micBtn?.classList.toggle('demo-hidden', demoMode);
+  if (demoMode) {
+    localStorage.removeItem(API_KEY_STORAGE_KEY);
+    if (apiKeyInput) apiKeyInput.value = '';
+    apiSetting?.classList.remove('show');
+  }
+}
+
+async function initDemoMode() {
+  if (!HEALTH_URL) return;
+  try {
+    const res = await fetch(HEALTH_URL);
+    if (!res.ok) return;
+    const data = await res.json();
+    demoMode = !!data.demo_mode;
+    applyDemoUi();
+    if (demoMode && data.ready === false) {
+      showStatus('시연 서버 API 키가 아직 설정되지 않았어요', 5000);
+    }
+  } catch (_) {}
+}
 
 const avatarLottieEl = document.getElementById('avatarLottie');
 let avatar = avatarLottieEl;
@@ -2716,11 +2779,12 @@ function syncLottieSpeed(state) {
   lottieInstance.setSpeed(speedMap[state] ?? 1);
 }
 
-/* API 키 패널 토글 */
+/* API 키 패널 토글 (시연 모드에서는 숨김) */
 {
   const savedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
   if (savedApiKey && apiKeyInput) apiKeyInput.value = savedApiKey;
 }
+initDemoMode();
 apiKeyToggle?.addEventListener('click', () => {
   apiSetting.classList.toggle('show');
   if (apiSetting.classList.contains('show')) apiKeyInput?.focus();
@@ -2860,6 +2924,28 @@ function detectToolIntent(raw) {
   return null;
 }
 
+/** ASD당사자네트워크 회원가입·가입 문의 */
+function detectMembershipIntent(raw) {
+  const t = String(raw || '').trim();
+  if (!t) return false;
+  const compact = t.replace(/\s/g, '').toLowerCase();
+  if (/(회원가입|가입문의|가입신청|멤버십|회원등록)/.test(compact)) return true;
+  if (/(당사자네트워크|asd당사자네트워크)/.test(compact) && /(가입|회원|문의|신청|등록|어떻게)/.test(t)) return true;
+  if (/(asd|에이에스디).*(당사자|네트워크).*(가입|회원|문의)/i.test(t)) return true;
+  return false;
+}
+
+function replyMembershipInquiry(userText) {
+  addMessage(userText, 'user');
+  addMessage(
+    'ASD당사자네트워크 회원가입 문의는 아래 네이버 폼으로 접수해 주세요.\n' + MEMBERSHIP_FORM_URL,
+    'bot'
+  );
+  hideStatus();
+  setState(null);
+  return true;
+}
+
 function parseSocialNavigationCommand(raw) {
   const t = String(raw || '').trim();
   if (!t) return null;
@@ -2879,6 +2965,8 @@ function parseSocialNavigationCommand(raw) {
 
 /** true면 메인 챗봇 호출 없이 해당 툴로 이동 */
 function tryRouteToolIntent(text) {
+  if (detectMembershipIntent(text)) return replyMembershipInquiry(text);
+
   const mode = detectToolIntent(text);
   const socialNav = parseSocialNavigationCommand(text);
 
@@ -3042,6 +3130,7 @@ function logSttDebug(message) {
 }
 
 micBtn.addEventListener('click', async () => {
+  if (demoMode) return;
   if (isRecording) { mediaRecorder.stop(); return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -3073,13 +3162,15 @@ micBtn.addEventListener('click', async () => {
           await handleRpSendWithText(line);
           return;
         }
-        if (line) await sendToKanana({ text: line });
+        if (line) await sendToKanana({ text: line, speakResponse: true });
         else {
           if (socialOverlay?.classList.contains('show') && socialState?.active) {
             addRpMsg('system', '음성을 글로 바꾸지 못했어요. 다시 말해줘.');
             return;
           }
-          await sendToKanana({ audio: b64 });
+          setState(null);
+          hideStatus();
+          addMessage('음성을 글로 바꾸지 못했어요. 다시 말하거나 텍스트로 입력해주세요.', 'bot');
         }
       } catch (err) {
         hideStatus();
@@ -3136,27 +3227,27 @@ function extractAssistantMessageText(msg) {
   return String(c ?? '').trim();
 }
 
-/** 사회성 연습용: WAV 음성을 한 줄 텍스트로 전사 (Kanana-o) */
+/** WAV 음성을 한 줄 텍스트로 전사 (OpenAI Whisper) */
 async function transcribeWavToText(b64) {
-  const apiKey = apiKeyInput.value.trim();
+  if (demoMode) throw new Error('시연 모드에서는 음성 입력을 사용할 수 없어요');
+  const apiKey = getApiKey();
   if (!apiKey) throw new Error('API Key가 필요해요');
   if (!b64 || b64.length < 200) throw new Error('오디오 데이터가 너무 짧아요');
-  const res = await fetch(API_URL, {
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const form = new FormData();
+  form.append('file', new Blob([bytes], { type: 'audio/wav' }), 'audio.wav');
+  form.append('model', 'whisper-1');
+  form.append('language', 'ko');
+  const res = await fetch(TRANSCRIBE_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-    body: JSON.stringify({
-      model: 'kanana-o',
-      stream: false,
-      messages: [
-        { role: 'system', content: '너는 받아쓰기 전용이야. 들리는 말을 한국어로만 옮겨 적어. 앞뒤 설명·인사·따옴표 없이 발화 내용만 한 줄로 출력해.' },
-        { role: 'user', content: [{ type: 'input_audio', input_audio: { data: b64, format: 'wav' } }] }
-      ],
-      modalities: ['text'],
-    })
+    headers: buildApiHeaders(false),
+    body: form,
   });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const j = await res.json();
-  let txt = extractAssistantMessageText(j.choices?.[0]?.message);
+  let txt = String(j.text || '').trim();
   txt = txt.replace(/^[\s"'「]+|[\s"'」]+$/g, '').trim();
   return txt;
 }
@@ -3200,7 +3291,7 @@ function appendStreamDelta(full, chunk) {
  * 전체 답변이 2번 이상 반복되는 경우 제거.
  * 예: "안녕 민지야!안녕 민지야!" → "안녕 민지야!"
  * 예: "ABCABCAB" (ABC가 2.67회) → "ABC"
- * Kanana-o가 가끔 같은 답을 반복해서 내보낼 때 방어선.
+ * 모델이 가끔 같은 답을 반복해서보낼 때 방어선.
  */
 function removeConsecutiveRepeat(s) {
   if (!s) return s;
@@ -3221,33 +3312,28 @@ function removeConsecutiveRepeat(s) {
   return s;
 }
 
-/* Kanana-o 호출 */
-async function sendToKanana({ text, audio }) {
-  const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) { alert('API Key를 입력해주세요 (우측 상단 API 키)'); apiSetting.classList.add('show'); return; }
+/* GPT-5.4 mini 호출 */
+async function sendToKanana({ text, speakResponse = false }) {
+  if (!ensureApiReady()) return;
+  if (!text) return;
 
-  if (text) addMessage(text, 'user');
-  else if (audio) addMessage('[음성 메시지]', 'user');
+  addMessage(text, 'user');
 
-  setState('thinking', '생각 중이다냥 🤔');
+  setState('thinking', '생각 중이야 🤔');
 
   const body = {
-    model: 'kanana-o',
+    model: CHAT_MODEL,
     messages: [
-      { role: 'system', content: '너는 카카오 춘식이의 사촌 검은고양이 춘직이야. 친근하고 자연스럽게, 한국어로 짧고 다정하게 답해. 답변은 1-2문장으로 짧게. 답장에는 이모지(그림 문자)나 얼굴·꾸밈 이모티콘(^_^, :), ^^, ; 등)을 넣지 마.' },
-      { role: 'user', content: [
-        ...(text ? [{ type: 'text', text }] : []),
-        ...(audio ? [{ type: 'input_audio', input_audio: { data: audio, format: 'wav' } }] : [])
-      ]}
+      { role: 'system', content: '너는 ASD당사자네트워크 AI 도우미 스카이야. 친근하고 자연스럽게, 한국어로 짧고 다정하게 답해. 답변은 1-2문장으로 짧게. 답장에는 이모지(그림 문자)나 얼굴·꾸밈 이모티콘(^_^, :), ^^, ; 등)을 넣지 마. ASD당사자네트워크 회원가입·가입 문의가 오면 반드시 다음 링크로 안내해: ' + MEMBERSHIP_FORM_URL },
+      { role: 'user', content: text }
     ],
-    modalities: ['text','audio'],
     stream: true
   };
 
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -3256,8 +3342,7 @@ async function sendToKanana({ text, audio }) {
     const botDiv = addMessage('', 'bot');
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let buf = '', audios = [], full = '';
-    let lastAudioB64 = '';
+    let buf = '', full = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -3277,33 +3362,19 @@ async function sendToKanana({ text, audio }) {
             full = appendStreamDelta(full, d.content);
             botDiv.textContent = full;
           }
-          if (d.audio) {
-            const b64 = typeof d.audio === 'string' ? d.audio : (d.audio.data || d.audio.audio);
-            if (b64 && b64 !== lastAudioB64) {
-              audios.push(b64);
-              lastAudioB64 = b64;
-            }
-          }
         } catch {}
       }
     }
 
-    // 🛡️ 전체 응답이 중복되어 온 경우 제거
     const deduped = removeConsecutiveRepeat(full);
     if (deduped !== full) { full = deduped; botDiv.textContent = full; }
 
-    if (audios.length) {
-      const merged = mergePcmWavs(audios);
-      audioPlayer.src = URL.createObjectURL(new Blob([merged], { type: 'audio/wav' }));
-      audioPlayer.play();
-      audioPlayer.onplay = () => setState('speaking', '💬');
-      audioPlayer.onended = () => { setState(null); hideStatus(); };
-    } else {
-      setState(null); hideStatus();
-    }
+    if (speakResponse && full && !demoMode) speakKorean(full);
+    setState(null);
+    hideStatus();
   } catch (err) {
     console.error(err);
-    setState(null, '앗, 오류가 났다냥 😿 (CORS일 수 있어요. server.py 실행해주세요)', 4000);
+    setState(null, '앗, 오류가 났어 😿 (CORS일 수 있어요. server.py 실행해주세요)', 4000);
     addMessage('오류: ' + err.message, 'bot');
   }
 }
@@ -3658,16 +3729,15 @@ function getPositionLabels(spreadLabel, n) {
   return n === 1 ? ['오늘'] : Array.from({length:n}, (_,i) => `#${i+1}`);
 }
 
-/* Kanana-o로 춘직이 리딩 요청 */
+/* GPT-5.4 mini로 스카이 리딩 요청 */
 async function interpretWithAI(cards, spreadLabel, positions) {
-  const apiKey = apiKeyInput.value.trim();
   tarotReading.style.display = 'block';
   if (tarotReadingInner) tarotReadingInner.innerHTML = '';
   tarotSubtitle.textContent = `✨ ${spreadLabel}`;
   if (tarotScroll) requestAnimationFrame(() => { tarotScroll.scrollTop = tarotScroll.scrollHeight; });
 
-  if (!apiKey) {
-    const fallback = 'API Key가 필요해요. 우측 상단 API 키에서 설정해주세요.\n\n' +
+  if (!ensureApiReady(false)) {
+    const fallback = '서버 연결이 필요해요.\n\n' +
       cards.map((c,i) => `${positions[i]||'#'+(i+1)}: ${c.name} (${c.reversed?'역방향':'정방향'})\n→ ${(c.reversed ? c.meaning_rev : c.meaning_up) || ''}`).join('\n\n');
     if (tarotReadingInner) tarotReadingInner.innerHTML = formatTarotReading(fallback);
     return;
@@ -3684,19 +3754,18 @@ async function interpretWithAI(cards, spreadLabel, positions) {
   const prompt = `아래 타로 카드를 보고 "${spreadLabel}" 스프레드로 따뜻하게 해석해줘.\n\n${cardInfo}\n\n각 포지션별로 1-2문장씩, 마지막에 종합 메시지도 1문장 말해줘. 친근하게 반말로. 이모지·이모티콘은 쓰지 마.`;
 
   const body = {
-    model: 'kanana-o',
+    model: CHAT_MODEL,
     messages: [
-      { role: 'system', content: '너는 검은고양이 타로 마스터 춘직이야. 따뜻하고 긍정적으로 카드를 해석해. 부정적인 카드라도 희망의 메시지를 담아. 해석 본문에는 이모지·이모티콘을 넣지 마. ⚠️ 답변을 절대 두 번 출력하지 마. 같은 해석·문단을 되풀이하면 안 돼. 종합 메시지 한 문장으로 끝내고 그 이후 아무것도 쓰지 마.' },
-      { role: 'user', content: [{ type: 'text', text: prompt }] }
+      { role: 'system', content: '너는 타로 마스터 스카이야. 따뜻하고 긍정적으로 카드를 해석해. 부정적인 카드라도 희망의 메시지를 담아. 해석 본문에는 이모지·이모티콘을 넣지 마. ⚠️ 답변을 절대 두 번 출력하지 마. 같은 해석·문단을 되풀이하면 안 돼. 종합 메시지 한 문장으로 끝내고 그 이후 아무것도 쓰지 마.' },
+      { role: 'user', content: prompt }
     ],
-    modalities: ['text'],    // 타로는 텍스트만
     stream: true
   };
 
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify(body)
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -3755,7 +3824,7 @@ async function interpretWithAI(cards, spreadLabel, positions) {
    🌱 사회성 연습 — 연구 동향 참고 + AI 생성 시나리오·롤플레이
    - 연령: 미취학(4-6) / 청소년(13-17) / 성인(18-35)
    - 각 시나리오는 페르소나(상대)와 코칭 힌트를 포함(앱 전용 콘텐츠)
-   - Kanana-o가 페르소나 연기 담당
+   - GPT-5.4 mini가 페르소나 연기 담당
 ============================================================ */
 const SOCIAL_SCENARIOS = {
   preschool: {
@@ -4672,14 +4741,13 @@ async function coachRegulationState() {
   const preset = REG_STATE_PRESETS[regulationState] || REG_STATE_PRESETS.sensory;
   const fallback = `${preset.label} 상태일 때는: ${preset.localGuide}`;
   logRegulationEvent('state-coaching');
-  const apiKey = getApiKey();
-  if (!apiKey) {
+  if (!ensureApiReady(false)) {
     if (regStatus) regStatus.textContent = fallback;
     speakKorean(fallback);
     return;
   }
   try {
-    if (regStatus) regStatus.textContent = '춘직이가 지금 상태에 맞는 코칭을 만들고 있어…';
+    if (regStatus) regStatus.textContent = '스카이가 지금 상태에 맞는 코칭을 만들고 있어…';
     const prompt = [
       '너는 자폐 친화적 정서 조절 코치다.',
       `현재 상태: ${preset.label}`,
@@ -4689,15 +4757,14 @@ async function coachRegulationState() {
     ].join('\n');
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify({
-        model: 'kanana-o',
+        model: CHAT_MODEL,
         stream: false,
         messages: [
           { role: 'system', content: '정서 조절을 돕는 코치다. 짧고 구체적으로 안내한다.' },
-          { role: 'user', content: [{ type: 'text', text: prompt }] },
+          { role: 'user', content: prompt },
         ],
-        modalities: ['text'],
         temperature: 0.35,
       })
     });
@@ -4809,17 +4876,16 @@ async function coachRoutineProgress() {
     ? `멋져요! ${total}개 루틴을 모두 끝냈어요. 오늘은 충분히 잘했어요.`
     : `좋아요. ${total}개 중 ${done}개를 끝냈어요. 다음 한 가지는 "${pending[0] || '남은 루틴'}" 어때요?`;
 
-  const apiKey = getApiKey();
-  if (!apiKey) {
+  if (!ensureApiReady(false)) {
     if (regStatus) regStatus.textContent = fallback;
     speakKorean(fallback);
     return;
   }
 
   try {
-    if (regStatus) regStatus.textContent = '춘직이가 루틴 코칭 문장을 만드는 중…';
+    if (regStatus) regStatus.textContent = '스카이가 루틴 코칭 문장을 만드는 중…';
     const prompt = [
-      '너는 자폐 친화적 생활 코치 춘직이다.',
+      '너는 자폐 친화적 생활 코치 스카이다.',
       '아래 루틴 진행 상황을 보고, 비판 없이 짧고 구체적으로 코칭해라.',
       '출력 형식: 2문장 이내. 1) 인정/격려 2) 다음 한 단계 제안.',
       '이모지, 과장된 표현, 장문 금지.',
@@ -4829,15 +4895,14 @@ async function coachRoutineProgress() {
 
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify({
-        model: 'kanana-o',
+        model: CHAT_MODEL,
         stream: false,
         messages: [
           { role: 'system', content: '생활 루틴 코칭 전문가로서 짧고 따뜻하게 말해.' },
-          { role: 'user', content: [{ type: 'text', text: prompt }] },
+          { role: 'user', content: prompt },
         ],
-        modalities: ['text'],
         temperature: 0.4,
       })
     });
@@ -4887,8 +4952,8 @@ function resetSocial() {
   rpHintsEl.classList.remove('show');
   rpChatEl.innerHTML = '';
   rpSummaryBody.innerHTML = '연습을 마치면 여기에 피드백이 나와.';
-  if (socialCoachBubble) socialCoachBubble.textContent = '춘직이가 여기서 같이 연습할 준비 중이야.';
-  socialSubtitle.textContent = '같이 대화하는 법을 부드럽게 연습해보자냥 🐾';
+  if (socialCoachBubble) socialCoachBubble.textContent = '스카이가 여기서 같이 연습할 준비 중이야.';
+  socialSubtitle.textContent = '같이 대화하는 법을 부드럽게 연습해보자 🐾';
   setCrumb('age');
   setSocialCoachLottieState('');
   if (socialScroll) socialScroll.scrollTop = 0;
@@ -5109,9 +5174,8 @@ async function handleRpSendWithText(text) {
 async function askPersonaReply() {
   const scenario = socialState.scenario;
   const group = SOCIAL_SCENARIOS[socialState.age];
-  const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) {
-    addRpMsg('system', 'API Key가 필요해요 (우측 상단 API 키)');
+  if (!ensureApiReady(false)) {
+    addRpMsg('system', '서버 연결이 필요해요');
     return;
   }
 
@@ -5178,9 +5242,7 @@ async function askPersonaReply() {
   for (const t of socialState.turns) {
     messages.push({
       role: t.role === 'persona' ? 'assistant' : 'user',
-      content: t.role === 'persona'
-        ? t.text
-        : [{ type: 'text', text: t.text }]
+      content: t.text
     });
   }
 
@@ -5191,11 +5253,10 @@ async function askPersonaReply() {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify({
-        model: 'kanana-o',
+        model: CHAT_MODEL,
         messages,
-        modalities: ['text'],
         stream: true,
         max_tokens: 200,
         temperature: 0.75,
@@ -5262,7 +5323,7 @@ async function finishAndReview() {
   rolePlayEl.style.display = 'none';
   rpReviewEl.style.display = '';
   setCrumb('review');
-  rpSummaryBody.innerHTML = '<em>춘직이가 연습을 돌아보는 중이야…</em>';
+  rpSummaryBody.innerHTML = '<em>스카이가 연습을 돌아보는 중이야…</em>';
   socialSubtitle.textContent = '📝 연습 피드백';
   if (socialScroll) socialScroll.scrollTop = 0;
 
@@ -5273,8 +5334,7 @@ async function finishAndReview() {
     return;
   }
 
-  const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) { rpSummaryBody.textContent = 'API Key가 필요해요.'; return; }
+  if (!ensureApiReady(false)) { rpSummaryBody.textContent = '서버 연결이 필요해요.'; return; }
 
   const prompt = [
     `아래는 "${socialState.scenario.title}" 사회성 연습 대화 기록이야.`,
@@ -5301,14 +5361,13 @@ async function finishAndReview() {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      headers: buildApiHeaders(),
       body: JSON.stringify({
-        model: 'kanana-o',
+        model: CHAT_MODEL,
         messages: [
-          { role: 'system', content: '너는 자폐 친화적 사회성 코치 춘직이야. 공개 연구에서 말하는 단계적·구체적 사회 기술 피드백 아이디어를 참고하되, 이 앱의 연습은 AI가 만든 시나리오이므로 특정 기관·상표 교육 프로그램을 대표하거나 그 이름을 내세우지 마. 신경다양성을 존중하고, 마스킹을 강요하지 않고, 사용자의 주체성을 지지해. 대화 로그에서 "[나]"로 표시된 문장만 학습자의 발화다. 페르소나(상대)의 대사를 학습자가 한 말로 착각하지 마. 학습자 발화가 없으면 잘한 점을 만들어내지 말고, 실제 발화만 인용해 평가해. 이모지·이모티콘은 쓰지 마. ⚠️ 답변을 절대 두 번 출력하지 마. 같은 문장·문단·섹션을 반복하는 것 금지. 마지막 응원 한 줄로 끝내고 그 이후 아무것도 쓰지 마.' },
-          { role: 'user', content: [{ type: 'text', text: prompt }] }
+          { role: 'system', content: '너는 자폐 친화적 사회성 코치 스카이야. 공개 연구에서 말하는 단계적·구체적 사회 기술 피드백 아이디어를 참고하되, 이 앱의 연습은 AI가 만든 시나리오이므로 특정 기관·상표 교육 프로그램을 대표하거나 그 이름을 내세우지 마. 신경다양성을 존중하고, 마스킹을 강요하지 않고, 사용자의 주체성을 지지해. 대화 로그에서 "[나]"로 표시된 문장만 학습자의 발화다. 페르소나(상대)의 대사를 학습자가 한 말로 착각하지 마. 학습자 발화가 없으면 잘한 점을 만들어내지 말고, 실제 발화만 인용해 평가해. 이모지·이모티콘은 쓰지 마. ⚠️ 답변을 절대 두 번 출력하지 마. 같은 문장·문단·섹션을 반복하는 것 금지. 마지막 응원 한 줄로 끝내고 그 이후 아무것도 쓰지 마.' },
+          { role: 'user', content: prompt }
         ],
-        modalities: ['text'],
         stream: true,
       })
     });
