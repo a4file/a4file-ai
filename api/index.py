@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import requests
-from flask import Flask, Response, request
+from flask import Flask, Response, request, send_from_directory
 from flask_cors import CORS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,10 +16,8 @@ from proxy_utils import (
     sanitize_chat_body,
     server_api_key,
 )
-from privacy_routes import register_privacy_routes
-from contact_routes import register_contact_routes
-import privacy_store
 from contact_mail import status_payload as contact_status_payload
+import privacy_store
 
 load_local_env()
 
@@ -27,10 +25,22 @@ UPSTREAM = "https://api.openai.com/v1/chat/completions"
 TRANSCRIBE_UPSTREAM = "https://api.openai.com/v1/audio/transcriptions"
 TAROT_API_BASE = "https://tarotapi.dev/api/v1"
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=ROOT, static_url_path="")
 CORS(app, supports_credentials=True, expose_headers="*")
-register_privacy_routes(app)
-register_contact_routes(app)
+
+try:
+    from privacy_routes import register_privacy_routes
+
+    register_privacy_routes(app)
+except Exception as e:
+    print(f"[boot] privacy routes skipped: {e}", flush=True)
+
+try:
+    from contact_routes import register_contact_routes
+
+    register_contact_routes(app)
+except Exception as e:
+    print(f"[boot] contact routes skipped: {e}", flush=True)
 
 
 def _json_error(status: int, message: str):
@@ -45,6 +55,14 @@ def _json_error(status: int, message: str):
 def health():
     demo = demo_mode_enabled()
     has_key = bool(server_api_key())
+    try:
+        privacy = privacy_store.status_payload()
+    except Exception as e:
+        privacy = {"enabled": False, "ready": False, "error": str(e)}
+    try:
+        contact = contact_status_payload()
+    except Exception as e:
+        contact = {"ready": False, "error": str(e)}
     return {
         "ok": demo and has_key if demo else True,
         "demo_mode": demo,
@@ -52,8 +70,8 @@ def health():
         "upstream": UPSTREAM,
         "transcribe": TRANSCRIBE_UPSTREAM,
         "tarot": TAROT_API_BASE,
-        "privacy": privacy_store.status_payload(),
-        "contact": contact_status_payload(),
+        "privacy": privacy,
+        "contact": contact,
     }
 
 
@@ -147,3 +165,19 @@ def tarot_proxy():
         )
     except requests.RequestException as e:
         return _json_error(502, f"Tarot API request failed: {e}")
+
+
+@app.route("/")
+def index():
+    return send_from_directory(ROOT, "index.html")
+
+
+@app.route("/<path:filename>")
+def static_files(filename):
+    # Keep API routes from colliding with missing static 404s.
+    if filename.startswith("api/") or filename.startswith("v1/"):
+        return _json_error(404, "Not found")
+    path = os.path.join(ROOT, filename)
+    if not os.path.isfile(path):
+        return _json_error(404, "Not found")
+    return send_from_directory(ROOT, filename)

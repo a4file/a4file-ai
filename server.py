@@ -38,8 +38,14 @@ PORT = int(os.environ.get("PORT", "8080"))
 
 app = Flask(__name__, static_folder=".", static_url_path="")
 CORS(app, supports_credentials=True, expose_headers="*")
-register_privacy_routes(app)
-register_contact_routes(app)
+try:
+    register_privacy_routes(app)
+except Exception as e:
+    print(f"[boot] privacy routes skipped: {e}", flush=True)
+try:
+    register_contact_routes(app)
+except Exception as e:
+    print(f"[boot] contact routes skipped: {e}", flush=True)
 
 
 @app.route("/")

@@ -57,8 +57,20 @@ def _require_guardian():
     return None
 
 
+def _require_store():
+    if not store.privacy_enabled():
+        return _disabled()
+    if not store.ensure_db():
+        return _json_error(503, "Privacy storage unavailable")
+    return None
+
+
 def register_privacy_routes(app):
-    store.init_db()
+    # Never crash app import on read-only serverless filesystems.
+    try:
+        store.init_db()
+    except Exception as e:
+        print(f"[privacy] init skipped: {e}", flush=True)
 
     @app.route("/api/privacy/status", methods=["GET", "OPTIONS"])
     def privacy_status():
@@ -66,14 +78,16 @@ def register_privacy_routes(app):
             return Response(status=204)
         if not store.privacy_enabled():
             return _disabled()
+        store.ensure_db()
         return _json(store.status_payload())
 
     @app.route("/api/privacy/consent", methods=["GET", "POST", "OPTIONS"])
     def privacy_consent():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
 
         if request.method == "GET":
             user_id, err = _user_id_from_query_or_body()
@@ -108,8 +122,9 @@ def register_privacy_routes(app):
     def privacy_messages():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
 
         data, err = _parse_json()
         if err:
@@ -135,8 +150,9 @@ def register_privacy_routes(app):
     def privacy_activity():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
 
         data, err = _parse_json()
         if err:
@@ -160,8 +176,9 @@ def register_privacy_routes(app):
     def privacy_export():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
 
         user_id, err = _user_id_from_query_or_body()
         if err:
@@ -173,8 +190,9 @@ def register_privacy_routes(app):
     def privacy_delete_data():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
 
         user_id, err = _user_id_from_query_or_body()
         if err:
@@ -186,8 +204,9 @@ def register_privacy_routes(app):
     def guardian_login():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
         if not store.guardian_pin_configured():
             return _json_error(503, "Guardian PIN is not configured")
 
@@ -205,7 +224,7 @@ def register_privacy_routes(app):
         if request.method == "OPTIONS":
             return Response(status=204)
         token = _guardian_token()
-        if token:
+        if token and store.db_ready():
             store.revoke_guardian_session(token)
         return _json({"ok": True})
 
@@ -213,8 +232,9 @@ def register_privacy_routes(app):
     def guardian_users():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
         auth_err = _require_guardian()
         if auth_err:
             return auth_err
@@ -224,8 +244,9 @@ def register_privacy_routes(app):
     def guardian_dashboard():
         if request.method == "OPTIONS":
             return Response(status=204)
-        if not store.privacy_enabled():
-            return _disabled()
+        blocked = _require_store()
+        if blocked:
+            return blocked
         auth_err = _require_guardian()
         if auth_err:
             return auth_err

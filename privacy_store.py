@@ -22,15 +22,25 @@ except ImportError:  # pragma: no cover
 CONSENT_VERSION = "1.0"
 SESSION_TTL_SEC = 3600
 _lock = threading.RLock()
+_db_ready = False
 
 
 def _root_dir() -> Path:
     return Path(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _on_vercel() -> bool:
+    return bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+
+
 def data_dir() -> Path:
     raw = os.environ.get("DATA_DIR", "").strip()
-    return Path(raw) if raw else _root_dir() / "data"
+    if raw:
+        return Path(raw)
+    # Serverless filesystems are read-only except /tmp.
+    if _on_vercel():
+        return Path("/tmp/ai41-privacy")
+    return _root_dir() / "data"
 
 
 def db_path() -> Path:
@@ -39,6 +49,10 @@ def db_path() -> Path:
 
 def privacy_enabled() -> bool:
     return os.environ.get("PRIVACY_ENABLED", "1").strip().lower() in ("1", "true", "yes", "on")
+
+
+def db_ready() -> bool:
+    return _db_ready
 
 
 def guardian_pin_configured() -> bool:
@@ -81,48 +95,66 @@ def _connect() -> sqlite3.Connection:
     return conn
 
 
-def init_db() -> None:
-    data_dir().mkdir(parents=True, exist_ok=True)
-    with _lock, _connect() as conn:
-        conn.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS consents (
-                user_id TEXT PRIMARY KEY,
-                version TEXT NOT NULL,
-                accepted INTEGER NOT NULL,
-                accepted_at TEXT,
-                updated_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id TEXT NOT NULL,
-                role TEXT NOT NULL,
-                module TEXT NOT NULL DEFAULT 'chat',
-                body_enc TEXT NOT NULL,
-                created_at TEXT NOT NULL
-            );
-            CREATE INDEX IF NOT EXISTS idx_messages_user ON messages(user_id, created_at);
-            CREATE TABLE IF NOT EXISTS activity_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id TEXT NOT NULL,
-                event_type TEXT NOT NULL,
-                detail_enc TEXT,
-                created_at TEXT NOT NULL
-            );
-            CREATE INDEX IF NOT EXISTS idx_activity_user ON activity_logs(user_id, created_at);
-            CREATE TABLE IF NOT EXISTS guardian_sessions (
-                token TEXT PRIMARY KEY,
-                created_at TEXT NOT NULL,
-                expires_at TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS deletion_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id TEXT NOT NULL,
-                requested_at TEXT NOT NULL,
-                completed_at TEXT NOT NULL
-            );
-            """
-        )
+def init_db() -> bool:
+    """Create SQLite schema. Returns False if the filesystem is not writable."""
+    global _db_ready
+    if not privacy_enabled():
+        _db_ready = False
+        return False
+    try:
+        data_dir().mkdir(parents=True, exist_ok=True)
+        with _lock, _connect() as conn:
+            conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS consents (
+                    user_id TEXT PRIMARY KEY,
+                    version TEXT NOT NULL,
+                    accepted INTEGER NOT NULL,
+                    accepted_at TEXT,
+                    updated_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT NOT NULL,
+                    role TEXT NOT NULL,
+                    module TEXT NOT NULL DEFAULT 'chat',
+                    body_enc TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_messages_user ON messages(user_id, created_at);
+                CREATE TABLE IF NOT EXISTS activity_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT NOT NULL,
+                    event_type TEXT NOT NULL,
+                    detail_enc TEXT,
+                    created_at TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_activity_user ON activity_logs(user_id, created_at);
+                CREATE TABLE IF NOT EXISTS guardian_sessions (
+                    token TEXT PRIMARY KEY,
+                    created_at TEXT NOT NULL,
+                    expires_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS deletion_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT NOT NULL,
+                    requested_at TEXT NOT NULL,
+                    completed_at TEXT NOT NULL
+                );
+                """
+            )
+        _db_ready = True
+        return True
+    except OSError as e:
+        _db_ready = False
+        print(f"[privacy] init_db failed: {e}", flush=True)
+        return False
+
+
+def ensure_db() -> bool:
+    if _db_ready:
+        return True
+    return init_db()
 
 
 def get_consent(user_id: str) -> dict[str, Any] | None:
@@ -372,8 +404,10 @@ def revoke_guardian_session(token: str) -> None:
 def status_payload() -> dict[str, Any]:
     return {
         "enabled": privacy_enabled(),
+        "ready": db_ready(),
         "consent_version": CONSENT_VERSION,
         "guardian_configured": guardian_pin_configured(),
         "encryption": "fernet-aes",
         "storage": "sqlite",
+        "data_dir": str(data_dir()),
     }
