@@ -40,8 +40,12 @@ micBtn.addEventListener('click', async () => {
           await handleRpSendWithText(line);
           return;
         }
-        if (line) await sendToKanana({ text: line, speakResponse: true });
-        else {
+        if (line) {
+          if (typeof isAnyToolOverlayOpen === 'function' && isAnyToolOverlayOpen()) {
+            closeAllToolOverlays();
+          }
+          await sendToKanana({ text: line, speakResponse: true });
+        } else {
           if (socialOverlay?.classList.contains('show') && socialState?.active) {
             addRpMsg('system', '음성을 글로 바꾸지 못했어요. 다시 말해줘.');
             return;
@@ -136,9 +140,14 @@ sendBtn.addEventListener('click', () => {
   if (!text) return;
   textInput.value = '';
   if (tryRouteToolIntent(text)) return;
+  // 롤플레이 진행 중이면 도구 창을 유지하고 RP로 보냄
   if (socialOverlay?.classList.contains('show') && socialState?.active) {
     handleRpSendWithText(text);
     return;
+  }
+  // 도구 창이 떠 있으면 일반 채팅 전에 닫아 메인 대화로 전환
+  if (typeof isAnyToolOverlayOpen === 'function' && isAnyToolOverlayOpen()) {
+    closeAllToolOverlays();
   }
   sendToKanana({ text });
 });
@@ -268,7 +277,14 @@ async function sendToKanana({ text, speakResponse = false }) {
   const body = {
     model: CHAT_MODEL,
     messages: [
-      { role: 'system', content: '너는 ASD당사자네트워크 AI 도우미 스카이야. 이 솔루션은 예비사회적기업 창업지원사업에 선정된 AI41(AI FOR ONE, 한 사람을 위한 AI)이 만들었고, AI41 대표이사는 서보경이야. CPO는 곽한승이야. 네 이름 스카이는 대표 이름이 아니라 CPO 곽한승의 자조 단톡방 닉네임에서 따온 제품·도우미 브랜드야. 치료·진단을 대체하지 않는 보조 도구야. 친근하고 자연스럽게, 한국어로 짧고 다정하게 답해. 답변은 1-2문장으로 짧게. 답장에는 이모지(그림 문자)나 얼굴·꾸밈 이모티콘(^_^, :), ^^, ; 등)을 넣지 마. 기관 도입·학교·센터 도입·PoC·파트너십·메일 문의가 오면 「도입 문의」라고 말하거나 문의 흐름을 시작하라고 짧게 안내해. mailto나 URL을 직접 적지 마. AI41이나 스카이 소개가 오면 좌측 하단 + 메뉴의 「AI41 소개」「스카이 소개」로 안내해.' },
+      { role: 'system', content: `You are Sky, AI companion by AI41 (AI FOR ONE) for neurodivergent people and families. CEO Seobokyung, CPO Hanseung Kwak; your name Sky comes from the CPO nickname. Support tool only — not diagnosis or treatment. Reply in ${getLangChatName()}, warm, 1-2 short sentences, no emojis/emoticons.
+
+Tools exist in this app and open automatically when the user asks clearly. Prefer guiding them to tools instead of long advice:
+- Tarot: say they can ask for tarot / 타로
+- Social practice: 사회성 연습 / social practice
+- Sensory / meltdown / anxiety coping: 감각과민·행동 조절 / regulation
+- Routines, picture talk, mini-games: suggest those words or the + menu
+Only for institutional adoption / PoC / partnership / email contact forms: tell them to say adoption inquiry (도입 문의). Do NOT turn every chat into an intake form. Do not write mailto or URLs. Language switch: ask them to tap KO/EN/JA/ZH/FR or say switch language.` },
       { role: 'user', content: text }
     ],
     stream: true,

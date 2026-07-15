@@ -197,11 +197,7 @@ tarotAgainBtn?.addEventListener('click', () => {
 })();
 
 function openTarot() {
-  socialOverlay?.classList.remove('show');
-  socialState.active = false;
-  setSocialCoachLottieState('');
-  closeSupport();
-  closeAbout();
+  showOnlyOverlay(tarotOverlay);
   if (characterAnimationDataCache && !tarotCoachLottieInstance) {
     initTarotCoachLottie(characterAnimationDataCache);
   }
@@ -209,11 +205,10 @@ function openTarot() {
   const daily = loadTarotDaily();
   if (daily) restoreTarotFromDaily(daily);
   else updateTarotDailyUi(false);
-  tarotOverlay.classList.add('show');
 }
 function closeTarot() {
   closeTcardLightbox();
-  tarotOverlay.classList.remove('show');
+  tarotOverlay?.classList.remove('show');
 }
 function resetTarot() {
   closeTcardLightbox();

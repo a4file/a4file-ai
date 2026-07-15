@@ -172,7 +172,7 @@ apiKeyInput?.addEventListener('keydown', (e) => {
 apiKeyInput?.addEventListener('blur', () => {
   if (getApiKey()) localStorage.setItem(API_KEY_STORAGE_KEY, getApiKey());
 });
-refreshBtn.addEventListener('click', () => { chatBox.innerHTML = ''; showStatus('새로운 대화 시작! 🐾', 2000); });
+refreshBtn.addEventListener('click', () => { chatBox.innerHTML = ''; showStatus(t('sky.newChat'), 2000); });
 
 /* 상태 관리 */
 let statusTimer = null;
@@ -340,7 +340,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* 첫 인사 */
-setTimeout(() => showStatus('말 걸어봐! 🐾', 3500), 600);
+setTimeout(() => showStatus(t('sky.greet'), 3500), 600);
 
 /* 메시지 추가 */
 function addMessage(text, who='bot') {
@@ -377,23 +377,32 @@ function addBotMessageWithLink(text, linkLabel, url) {
   return div;
 }
 
-/** 채팅/음성 전사 문장에서 타로·사회성 연습 의도 감지 */
+/** 채팅/음성 전사 문장에서 타로·사회성·지원도구 의도 감지 */
 function detectToolIntent(raw) {
   const t = String(raw || '').trim();
   if (!t) return null;
   const c = t.replace(/\s/g, '');
   const low = t.toLowerCase();
 
-  if (/tarot/i.test(low)) return 'tarot';
-  if (/(타로|카드\s*를?\s*뽑|카드뽑|스프레드|점\s*봐|점봐|점\s*쳐|카드\s*읽|오늘\s*운세)/.test(t)) return 'tarot';
+  if (/tarot|タロット|塔罗|塔羅/i.test(low) || /(타로|카드\s*를?\s*뽑|카드뽑|스프레드|점\s*봐|점봐|점\s*쳐|카드\s*읽|오늘\s*운세)/.test(t)) return 'tarot';
   if (/리딩/.test(t) && /(해줘|해주|봐줘|보여|하자)/.test(t)) return 'tarot';
+  if (/(fortune|oracle|draw\s*a?\s*card|reading)/i.test(t) && /(tarot|card|오늘|운세|봐|해)/i.test(t)) return 'tarot';
 
   if (/(사회성|대화\s*연습|대화연습|롤\s*플레이|롤플레이|역할극|소통\s*연습|사교\s*연습|말하기\s*연습|티키타카)/.test(t)) return 'social';
   if (/(연습하자|연습\s*하자)/.test(t) && /(대화|소통|말하기|사회|역할)/.test(t)) return 'social';
   if (/사회성연습/.test(c)) return 'social';
+  if (/(social\s*practice|role\s*play|conversation\s*practice|社会性|社交练习|pratique\s*sociale)/i.test(t)) return 'social';
+
   if (/(그림\s*버튼|그림\s*말하기|비언어|의사소통\s*버튼|말하기\s*버튼)/.test(t)) return 'picture';
-  if (/(멜트다운|과민|불안|행동\s*조절|진정|호흡|그라운딩|감각\s*조절)/.test(t)) return 'regulation';
+  if (/(picture\s*talk|aac|pekcs?|絵で話|图画表达)/i.test(t)) return 'picture';
+
+  if (/(멜트다운|감각\s*과민|감각과민|과민|불안|행동\s*조절|진정|호흡|그라운딩|감각\s*조절|진정법|숨\s*쉬)/.test(t)) return 'regulation';
+  if (/(meltdown|overstimul|sensory\s*overload|anxiety|grounding|breathing|calming|感覚過敏|感觉过载|surcharge\s*sensorielle)/i.test(t)) return 'regulation';
+  if (/(대처|힘들|괴롭)/.test(t) && /(감각|과민|불안|멜트|조절|진정)/.test(t)) return 'regulation';
+
   if (/(일정\s*관리|루틴|체크리스트|할\s*일)/.test(t)) return 'routine';
+  if (/(routine|checklist|schedule|ルーチン|日程)/i.test(t)) return 'routine';
+
   if (/(패턴|패턴게임|패턴\s*따라|pattern)/i.test(t)) return 'game-pattern';
   if (/(정렬|정리\s*게임|sort)/i.test(t)) return 'game-sort';
   if (/(리듬|박자|rhythm)/i.test(t)) return 'game-rhythm';
@@ -401,24 +410,27 @@ function detectToolIntent(raw) {
   if (/(루프|반복\s*애니|loop)/i.test(t)) return 'game-loop';
   if (/(안전\s*클릭|특정\s*색|safe\s*click)/i.test(t)) return 'game-safe';
   if (/(감정\s*매칭|표정\s*매칭|emotion)/i.test(t)) return 'game-emotion';
-  if (/(미니게임|뽁뽁이|원\s*그리기|게임)/.test(t)) return 'games';
+  if (/(미니게임|뽁뽁이|원\s*그리기|게임|mini\s*games|ミニゲーム|小游戏)/i.test(t)) return 'games';
 
   return null;
 }
 
 const CONTACT_EMAIL = 'ai41@ai41.kr';
 
-/** 기관 도입·PoC·파트너십 문의 → 대화형 접수 */
+/** 기관 도입·PoC·파트너십 문의 → 대화형 접수 (일상 채팅과 구분) */
 function detectIntroInquiryIntent(raw) {
   const t = String(raw || '').trim();
   if (!t) return false;
   const compact = t.replace(/\s/g, '');
-  if (/(도입문의|기관도입|학교도입|센터도입|상담센터|특수학교)/.test(compact)) return true;
-  if (/(도입).*(문의|하고싶|할래|싶어)/.test(compact)) return true;
-  if (/(문의).*(도입|기관|학교|센터)/.test(compact)) return true;
-  if (/(PoC|피오씨|파트너십|제휴문의)/i.test(t)) return true;
-  if (/(메일문의|문의시작|상담문의)/.test(compact)) return true;
-  if (/(연락처|메일|이메일).*(알려|주세요|줘)/.test(t) && /(도입|기관|문의|PoC)/i.test(t)) return true;
+  // 도구/증상 이야기는 문의로 가로채지 않음
+  if (detectToolIntent(t)) return false;
+  if (/(도입문의|기관도입|학교도입|센터도입|메일문의|문의시작)/.test(compact)) return true;
+  if (/(도입).*(문의|상담|하고싶|할래|싶어)/.test(compact)) return true;
+  if (/(문의|상담).*(도입|기관\s*계약|학교\s*도입|센터\s*도입|PoC)/.test(t)) return true;
+  if (/(institutional\s*adoption|ask\s*about\s*adoption|partenariat|導入相談|机构引入)/i.test(t)) return true;
+  if (/(PoC|피오씨).*(문의|상담|and|want|願|想)/i.test(t)) return true;
+  if (/(파트너십|제휴).*(문의|제안|하고)/.test(t)) return true;
+  if (/(연락처|메일|이메일).*(알려|주세요|줘)/.test(t) && /(도입|기관|PoC|파트너)/i.test(t)) return true;
   return false;
 }
 
@@ -443,139 +455,99 @@ function parseSocialNavigationCommand(raw) {
   return Object.keys(out).length ? out : null;
 }
 
+/** 타로·사회성·지원도구·소개 등 도구 창 전부 닫기 */
+function closeAllToolOverlays() {
+  try { closeTcardLightbox?.(); } catch (_) {}
+  tarotOverlay?.classList.remove('show');
+  socialOverlay?.classList.remove('show');
+  if (typeof socialState !== 'undefined') {
+    socialState.active = false;
+  }
+  try { setSocialCoachLottieState?.(''); } catch (_) {}
+  pictureOverlay?.classList.remove('show');
+  regulationOverlay?.classList.remove('show');
+  routineOverlay?.classList.remove('show');
+  gamesOverlay?.classList.remove('show');
+  aboutOverlay?.classList.remove('show');
+  try { closePrivacySettings?.(); } catch (_) {}
+  try { closeGuardian?.(); } catch (_) {}
+}
+
+function isAnyToolOverlayOpen() {
+  return !!(
+    tarotOverlay?.classList.contains('show') ||
+    socialOverlay?.classList.contains('show') ||
+    pictureOverlay?.classList.contains('show') ||
+    regulationOverlay?.classList.contains('show') ||
+    routineOverlay?.classList.contains('show') ||
+    gamesOverlay?.classList.contains('show') ||
+    aboutOverlay?.classList.contains('show') ||
+    privacyOverlay?.classList.contains('show') ||
+    guardianOverlay?.classList.contains('show')
+  );
+}
+
+function showOnlyOverlay(el) {
+  closeAllToolOverlays();
+  if (!el) return;
+  void el.offsetWidth;
+  el.classList.add('show');
+}
+
 /** true면 메인 챗봇 호출 없이 해당 툴로 이동 */
 function tryRouteToolIntent(text) {
-  if (typeof handleContactInquiryReply === 'function' && handleContactInquiryReply(text)) return true;
-  if (detectIntroInquiryIntent(text)) return replyIntroInquiry(text);
-
   const mode = detectToolIntent(text);
   const socialNav = parseSocialNavigationCommand(text);
 
-  if (mode === 'tarot') {
+  // 도구 요청이 오면 문의 수집 중에도 도구를 우선 연다
+  if (mode) {
+    if (typeof contactInquiryState !== 'undefined' && contactInquiryState.active) {
+      resetContactInquiry();
+    }
     addMessage(text, 'user');
     closeFabPlusMenu();
     hideStatus();
     setState('', '');
-    showStatus('타로로 갈게!', 2400);
-    openTarot();
-    return true;
+
+    if (mode === 'tarot') {
+      showStatus(typeof t === 'function' ? t('route.tarot') : '타로로 갈게!', 2400);
+      openTarot();
+      return true;
+    }
+    if (mode === 'social') {
+      showStatus(typeof t === 'function' ? t('route.social') : '사회성 연습으로 갈게!', 2400);
+      openSocial(socialNav || null);
+      return true;
+    }
+    if (mode === 'picture') {
+      showStatus(typeof t === 'function' ? t('route.picture') : '그림 말하기로 이동할게!', 2200);
+      openSupportSection('picture');
+      return true;
+    }
+    if (mode === 'regulation') {
+      showStatus(typeof t === 'function' ? t('route.regulation') : '행동 조절 화면으로 이동할게!', 2200);
+      openSupportSection('regulation');
+      return true;
+    }
+    if (mode === 'routine') {
+      showStatus(typeof t === 'function' ? t('route.routine') : '루틴 관리로 이동할게!', 2200);
+      openSupportSection('routine');
+      return true;
+    }
+    if (mode.startsWith('game-') || mode === 'games') {
+      const focus = mode.startsWith('game-') ? mode.slice(5) : null;
+      showStatus(typeof t === 'function' ? t('route.games') : '미니게임으로 이동할게!', 2200);
+      openGameSection(focus);
+      return true;
+    }
   }
 
-  if (mode === 'social') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('사회성 연습으로 갈게!', 2400);
-    openSocial(socialNav || null);
-    return true;
-  }
-  if (mode === 'picture') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('그림 말하기로 이동할게!', 2200);
-    openSupportSection('picture');
-    return true;
-  }
-  if (mode === 'regulation') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('행동 조절 화면으로 이동할게!', 2200);
-    openSupportSection('regulation');
-    return true;
-  }
-  if (mode === 'routine') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('루틴 관리로 이동할게!', 2200);
-    openSupportSection('routine');
-    return true;
-  }
-  if (mode === 'game-pattern') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('패턴 따라하기로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('pattern');
-    return true;
-  }
-  if (mode === 'game-sort') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('정렬 힐링 게임으로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('sort');
-    return true;
-  }
-  if (mode === 'game-rhythm') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('리듬 탭으로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('rhythm');
-    return true;
-  }
-  if (mode === 'game-difference') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('차이 찾기로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('difference');
-    return true;
-  }
-  if (mode === 'game-loop') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('루프 만들기로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('loop');
-    return true;
-  }
-  if (mode === 'game-safe') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('안전 클릭 게임으로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('safe');
-    return true;
-  }
-  if (mode === 'game-emotion') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('감정 매칭으로 이동할게!', 2200);
-    openSupportSection('games');
-    openGameSection('emotion');
-    return true;
-  }
-  if (mode === 'games') {
-    addMessage(text, 'user');
-    closeFabPlusMenu();
-    hideStatus();
-    setState('', '');
-    showStatus('미니게임으로 이동할게!', 2200);
-    openSupportSection('games');
-    return true;
-  }
+  if (typeof handleContactInquiryReply === 'function' && handleContactInquiryReply(text)) return true;
+
+  const lang = typeof detectLanguageIntent === 'function' ? detectLanguageIntent(text) : null;
+  if (lang) return replyLanguageSwitch(text, lang);
+
+  if (detectIntroInquiryIntent(text)) return replyIntroInquiry(text);
 
   if (socialNav) {
     if (socialOverlay?.classList.contains('show')) {
@@ -584,7 +556,7 @@ function tryRouteToolIntent(text) {
       hideStatus();
       setState('', '');
       applySocialNavigation(socialNav);
-      showStatus('사회성 연습 설정을 반영했어!', 1800);
+      showStatus(typeof t === 'function' ? t('route.social') : '사회성 연습 설정을 반영했어!', 1800);
       return true;
     }
     if (socialNav.age) {
@@ -592,7 +564,7 @@ function tryRouteToolIntent(text) {
       closeFabPlusMenu();
       hideStatus();
       setState('', '');
-      showStatus('사회성 연습으로 이동할게!', 2000);
+      showStatus(typeof t === 'function' ? t('route.social') : '사회성 연습으로 갈게!', 2000);
       openSocial(socialNav);
       return true;
     }

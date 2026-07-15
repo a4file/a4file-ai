@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>AI41 | 한 사람을 위한 AI · 스카이 · 뉴로크래프트</title>
-<meta name="description" content="자폐·신경다양성을 위한 저자극 AI 스카이, DEI 데이터 아웃소싱 뉴로크래프트. 예비사회적기업 AI41이 만듭니다. 스카이에게 물어보세요.">
+<meta name="description" content="자폐·신경다양성을 위한 저자극 AI 스카이, DEI 데이터 아웃소싱 뉴로크래프트. 사회적기업 초기창업지원사업 선정 AI41이 만듭니다. 스카이에게 물어보세요.">
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -22,19 +22,28 @@
     <aside class="stage-panel" id="stagePanel" aria-label="AI41 홈페이지">
       <header class="top-slim-bar">
         <a class="top-slim-brand" href="#stage-home">
-          <img src="logo.png" width="36" height="36" alt="AI41 로고" />
+          <img src="logo.png" width="36" height="36" alt="AI41" />
           AI41<span>AI FOR ONE</span>
-          <span class="top-slim-badge"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span>예비사회적기업</span>
+          <span class="top-slim-badge"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span><span data-i18n="badge.prep">사회적기업 초기창업지원사업 선정</span></span>
         </a>
-        <nav class="top-slim-nav" aria-label="사이트 섹션">
-          <button type="button" class="active" data-stage-nav="stage-home">홈</button>
-          <button type="button" data-stage-nav="stage-mission">미션</button>
-          <button type="button" data-stage-nav="stage-products">제품</button>
-          <button type="button" data-stage-nav="stage-impact">임팩트</button>
-          <button type="button" data-stage-nav="stage-achievements">성과</button>
-          <button type="button" data-stage-nav="stage-partners">파트너</button>
-          <button type="button" data-stage-nav="stage-contact">문의</button>
-        </nav>
+        <div class="top-slim-actions">
+          <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="언어 선택">
+            <button type="button" data-lang="ko" aria-pressed="true">KO</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+            <button type="button" data-lang="ja" aria-pressed="false">JA</button>
+            <button type="button" data-lang="zh" aria-pressed="false">ZH</button>
+            <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+          </div>
+          <nav class="top-slim-nav" data-i18n-aria="nav.aria" aria-label="사이트 섹션">
+            <button type="button" class="active" data-stage-nav="stage-home" data-i18n="nav.home">홈</button>
+            <button type="button" data-stage-nav="stage-mission" data-i18n="nav.mission">미션</button>
+            <button type="button" data-stage-nav="stage-products" data-i18n="nav.products">제품</button>
+            <button type="button" data-stage-nav="stage-impact" data-i18n="nav.impact">임팩트</button>
+            <button type="button" data-stage-nav="stage-achievements" data-i18n="nav.achievements">성과</button>
+            <button type="button" data-stage-nav="stage-partners" data-i18n="nav.partners">파트너</button>
+            <button type="button" data-stage-nav="stage-contact" data-i18n="nav.contact">문의</button>
+          </nav>
+        </div>
       </header>
       <div class="stage-scroll" id="stageScroll">
 
@@ -42,72 +51,72 @@
           <img class="stage-hero-mark" src="logo.png" width="120" height="120" alt="AI41" />
           <p class="stage-kicker">Social Venture · Deeptech</p>
           <h1 class="stage-brand">AI FOR ONE</h1>
-          <p class="stage-line">한 사람을 위한 AI</p>
-          <p class="stage-lead">
+          <p class="stage-line" data-i18n="hero.line">한 사람을 위한 AI</p>
+          <p class="stage-lead" data-i18n="hero.lead" data-i18n-html="1">
             신경다양성 당사자와 가족을 위한 AI를 만들고,<br>
             AI 시대의 새 일자리와 창작 기회를 여는 사회적기업입니다.
           </p>
           <div class="stage-cta-row">
-            <button type="button" class="stage-chip" data-ask-sky="스카이 체험하고 싶어">스카이 체험</button>
-            <button type="button" class="stage-chip ghost" data-ask-sky="기관 도입 문의하고 싶어">도입 문의</button>
+            <button type="button" class="stage-chip" data-i18n="hero.try" data-i18n-ask="ask.try" data-ask-sky="스카이 체험하고 싶어">스카이 체험</button>
+            <button type="button" class="stage-chip ghost" data-i18n="hero.intro" data-i18n-ask="ask.intro" data-ask-sky="기관 도입 문의하고 싶어">도입 문의</button>
           </div>
-          <p class="stage-hint">오른쪽 스카이에게 말해주세요. <strong>Human First · Global by Default</strong></p>
+          <p class="stage-hint"><span data-i18n="hero.hint">오른쪽 스카이에게 말해주세요. </span><strong>Human First · Global by Default</strong></p>
         </section>
 
         <section class="stage-section" id="stage-mission">
           <p class="stage-kicker">Mission</p>
-          <h2 class="stage-h2">우리가 지키는 것</h2>
-          <p class="stage-sub">사람을 대체하지 않고, 한 사람의 가능성에 응답합니다.</p>
+          <h2 class="stage-h2" data-i18n="mission.h2">우리가 지키는 것</h2>
+          <p class="stage-sub" data-i18n="mission.sub">사람을 대체하지 않고, 한 사람의 가능성에 응답합니다.</p>
           <div class="mission-grid">
-            <article class="mission-card"><strong>Human First</strong><span>사람이 먼저</span></article>
-            <article class="mission-card"><strong>Opportunity for All</strong><span>기회를 모두에게</span></article>
-            <article class="mission-card"><strong>Create Together</strong><span>함께 만든다</span></article>
-            <article class="mission-card"><strong>Build, Not Just Talk</strong><span>실행으로 증명</span></article>
-            <article class="mission-card"><strong>Global by Default</strong><span>처음부터 세계로</span></article>
+            <article class="mission-card"><strong>Human First</strong><span data-i18n="mission.human">사람이 먼저</span></article>
+            <article class="mission-card"><strong>Opportunity for All</strong><span data-i18n="mission.opp">기회를 모두에게</span></article>
+            <article class="mission-card"><strong>Create Together</strong><span data-i18n="mission.create">함께 만든다</span></article>
+            <article class="mission-card"><strong>Build, Not Just Talk</strong><span data-i18n="mission.build">실행으로 증명</span></article>
+            <article class="mission-card"><strong>Global by Default</strong><span data-i18n="mission.global">처음부터 세계로</span></article>
           </div>
         </section>
 
         <section class="stage-section" id="stage-products">
           <p class="stage-kicker">Products</p>
-          <h2 class="stage-h2">스카이 · 뉴로크래프트</h2>
-          <p class="stage-sub">두 제품으로 일상 지원과 질적 고용을 함께 만듭니다.</p>
+          <h2 class="stage-h2" data-i18n="products.h2">스카이 · 뉴로크래프트</h2>
+          <p class="stage-sub" data-i18n="products.sub">두 제품으로 일상 지원과 질적 고용을 함께 만듭니다.</p>
           <div class="product-grid">
             <article class="product-card">
               <span class="tag">SKY</span>
-              <h3>저자극 AI Companion</h3>
-              <p>신경다양성 당사자·가족을 위한 일상 지원 AI</p>
+              <h3 data-i18n="sky.h3">저자극 AI Companion</h3>
+              <p data-i18n="sky.p">신경다양성 당사자·가족을 위한 일상 지원 AI</p>
               <div class="feature-icon-grid">
-                <div class="feature-icon"><b>사</b>사회성</div>
-                <div class="feature-icon"><b>루</b>루틴</div>
-                <div class="feature-icon"><b>감</b>감정조절</div>
-                <div class="feature-icon"><b>의</b>의사소통</div>
-                <div class="feature-icon"><b>게</b>미니게임</div>
-                <div class="feature-icon"><b>타</b>타로</div>
+                <div class="feature-icon"><b>사</b><span data-i18n="sky.f1">사회성</span></div>
+                <div class="feature-icon"><b>루</b><span data-i18n="sky.f2">루틴</span></div>
+                <div class="feature-icon"><b>감</b><span data-i18n="sky.f3">감정조절</span></div>
+                <div class="feature-icon"><b>의</b><span data-i18n="sky.f4">의사소통</span></div>
+                <div class="feature-icon"><b>게</b><span data-i18n="sky.f5">미니게임</span></div>
+                <div class="feature-icon"><b>타</b><span data-i18n="sky.f6">타로</span></div>
               </div>
-              <button type="button" class="ask-sky-btn" data-ask-sky="스카이 써볼래">체험하기</button>
+              <button type="button" class="ask-sky-btn" data-i18n="sky.cta" data-i18n-ask="ask.skyUse" data-ask-sky="스카이 써볼래">체험하기</button>
             </article>
             <article class="product-card">
               <span class="tag">NeuroCraft</span>
-              <h3>Managed AI Workforce</h3>
-              <p>신경다양성 Managed 3+1 팀의 데이터·크리에이티브 아웃소싱</p>
+              <h3 data-i18n="nc.h3">Managed AI Workforce</h3>
+              <p data-i18n="nc.p">신경다양성 Managed 3+1 팀의 데이터·크리에이티브 아웃소싱</p>
               <div class="feature-icon-grid">
-                <div class="feature-icon"><b>A</b>데이터 검수</div>
-                <div class="feature-icon"><b>B</b>크리에이티브</div>
+                <div class="feature-icon"><b>A</b><span data-i18n="nc.f1">데이터 검수</span></div>
+                <div class="feature-icon"><b>B</b><span data-i18n="nc.f2">크리에이티브</span></div>
                 <div class="feature-icon"><b>3+1</b>Managed</div>
               </div>
-              <button type="button" class="ask-sky-btn ghost" data-ask-sky="뉴로크래프트 PoC 문의하고 싶어">PoC 문의</button>
+              <button type="button" class="ask-sky-btn ghost" data-i18n="nc.cta" data-i18n-ask="ask.poc" data-ask-sky="뉴로크래프트 PoC 문의하고 싶어">PoC 문의</button>
             </article>
           </div>
         </section>
 
         <section class="stage-section" id="stage-impact">
           <p class="stage-kicker">Impact</p>
-          <h2 class="stage-h2">숫자로 보는 AI41</h2>
+          <h2 class="stage-h2" data-i18n="impact.h2">숫자로 보는 AI41</h2>
           <div class="stats-grid">
-            <div class="stat-card"><span class="num">2025</span><span class="label">설립</span></div>
-            <div class="stat-card"><span class="num">TRL6</span><span class="label">스카이 시연</span></div>
-            <div class="stat-card"><span class="num">200+</span><span class="label">커뮤니티</span></div>
-            <div class="stat-card"><span class="num">110+</span><span class="label">검증 참여</span></div>
+            <div class="stat-card"><span class="num">2025</span><span class="label" data-i18n="impact.founded">설립</span></div>
+            <div class="stat-card"><span class="num">TRL6</span><span class="label" data-i18n="impact.demo">스카이 시연</span></div>
+            <div class="stat-card"><span class="num">200+</span><span class="label" data-i18n="impact.comm">커뮤니티</span></div>
+            <div class="stat-card"><span class="num">110+</span><span class="label" data-i18n="impact.verify">검증 참여</span></div>
             <div class="stat-card"><span class="num">2,500만</span><span class="label">Seed</span></div>
             <div class="stat-card"><span class="num">3+1</span><span class="label">Managed Team</span></div>
           </div>
@@ -115,18 +124,18 @@
 
         <section class="stage-section" id="stage-achievements">
           <p class="stage-kicker">Achievements</p>
-          <h2 class="stage-h2">성과와 생태계</h2>
+          <h2 class="stage-h2" data-i18n="achieve.h2">성과와 생태계</h2>
           <div class="achieve-grid">
-            <article class="achieve-card"><h3>NIA</h3><p>공공·디지털 생태계 연계</p></article>
-            <article class="achieve-card"><h3>카카오 AI 생태계</h3><p>MCP · 수어 등 AI 확장 실험</p></article>
-            <article class="achieve-card"><h3>오티즘엑스포</h3><p>스카이 공개 시연</p></article>
-            <article class="achieve-card"><h3>예비사회적기업</h3><p>보건복지형 · 서울 지역형</p></article>
+            <article class="achieve-card"><h3>NIA</h3><p data-i18n="achieve.nia">공공·디지털 생태계 연계</p></article>
+            <article class="achieve-card"><h3 data-i18n="achieve.kakao">카카오 AI 생태계</h3><p data-i18n="achieve.kakao.p">MCP · 수어 등 AI 확장 실험</p></article>
+            <article class="achieve-card"><h3 data-i18n="achieve.expo">오티즘엑스포</h3><p data-i18n="achieve.expo.p">스카이 공개 시연</p></article>
+            <article class="achieve-card"><h3 data-i18n="achieve.social">사회적기업 초기창업지원사업 선정</h3><p data-i18n="achieve.social.p">창업지원 · 임팩트</p></article>
           </div>
         </section>
 
         <section class="stage-section" id="stage-partners">
           <p class="stage-kicker">Partners</p>
-          <h2 class="stage-h2">연대 허브</h2>
+          <h2 class="stage-h2" data-i18n="partners.h2">연대 허브</h2>
           <div class="partner-chip-row">
             <a class="partner-chip" href="https://autismkorea.kr/" target="_blank" rel="noopener noreferrer">자폐인사랑협회</a>
             <a class="partner-chip" href="https://severance-andd.com/" target="_blank" rel="noopener noreferrer">민윤기치료센터</a>
@@ -145,19 +154,19 @@
 
         <section class="stage-section" id="stage-contact">
           <p class="stage-kicker">Contact</p>
-          <h2 class="stage-h2">함께할까요?</h2>
-          <p class="stage-sub">학교·센터 도입, PoC, 파트너십 — 오른쪽 스카이에게 말씀해 주시면 문의를 받아 메일로 전달합니다.</p>
+          <h2 class="stage-h2" data-i18n="contact.h2">함께할까요?</h2>
+          <p class="stage-sub" data-i18n="contact.sub">학교·센터 도입, PoC, 파트너십 — 오른쪽 스카이에게 말씀해 주시면 문의를 받아 메일로 전달합니다.</p>
           <div class="stage-cta-row">
-            <button type="button" class="stage-chip" data-ask-sky="기관 도입 문의하고 싶어">도입 문의</button>
-            <button type="button" class="stage-chip ghost" data-ask-sky="뉴로크래프트 PoC 문의하고 싶어">PoC 문의</button>
+            <button type="button" class="stage-chip" data-i18n="hero.intro" data-i18n-ask="ask.intro" data-ask-sky="기관 도입 문의하고 싶어">도입 문의</button>
+            <button type="button" class="stage-chip ghost" data-i18n="nc.cta" data-i18n-ask="ask.poc" data-ask-sky="뉴로크래프트 PoC 문의하고 싶어">PoC 문의</button>
           </div>
           <div class="contact-row">
-            <button type="button" class="stage-chip ghost" id="contactInquiryBtn">메일 문의 시작</button>
-            <span class="contact-email-hint">접수: ai41@ai41.kr</span>
+            <button type="button" class="stage-chip ghost" id="contactInquiryBtn" data-i18n="contact.mailBtn">메일 문의 시작</button>
+            <span class="contact-email-hint" data-i18n="contact.hint">접수: ai41@ai41.kr</span>
           </div>
           <div class="stage-footer">
-            <p>주식회사 AI41 · AI FOR ONE · 서울 · 설립 2025.08.07</p>
-            <p>스카이는 치료·진단을 대체하지 않는 보조 도구입니다.</p>
+            <p data-i18n="footer.corp">주식회사 AI41 · AI FOR ONE · 서울 · 설립 2025.08.07</p>
+            <p data-i18n="footer.disclaimer">스카이는 치료·진단을 대체하지 않는 보조 도구입니다.</p>
           </div>
         </section>
 
@@ -171,13 +180,20 @@
     <div class="header">
       <div class="header-left">
         <img class="header-logo" src="logo.png" width="28" height="28" alt="AI41" />
+        <div class="lang-switch lang-switch--sky" role="group" data-i18n-aria="lang.aria" aria-label="언어 선택">
+          <button type="button" data-lang="ko" aria-pressed="true">KO</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="ja" aria-pressed="false">JA</button>
+          <button type="button" data-lang="zh" aria-pressed="false">ZH</button>
+          <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+        </div>
       </div>
-      <button type="button" class="api-key-toggle" id="apiKeyToggle" title="API 키 입력">API 키</button>
+      <button type="button" class="api-key-toggle" id="apiKeyToggle" data-i18n="sky.apiKey" data-i18n-title="sky.apiKey" title="API 키 입력">API 키</button>
     </div>
 
     <!-- 캐릭터 스테이지 -->
     <div class="stage">
-      <div class="status-chip" id="statusChip">안녕! 나는 스카이야 🐾</div>
+      <div class="status-chip" id="statusChip" data-i18n="sky.status">안녕! 나는 스카이야</div>
 
       <div class="chat-display" id="chatBox"></div>
 
@@ -398,17 +414,17 @@
       <div class="fab-plus-wrap" id="fabPlusWrap">
         <button type="button" class="fab-plus-btn" id="fabPlusBtn" aria-expanded="false" aria-haspopup="true" title="기능">+</button>
         <div class="fab-plus-menu" id="fabPlusMenu" role="menu" aria-label="기능 메뉴">
-          <button type="button" class="fab-menu-item" id="fabMenuHome" role="menuitem">홈으로</button>
-          <button type="button" class="fab-menu-item" id="fabMenuAboutAi41" role="menuitem">AI41 소개</button>
-          <button type="button" class="fab-menu-item" id="fabMenuAboutSky" role="menuitem">스카이 소개</button>
-          <button type="button" class="fab-menu-item" id="fabMenuTarot" role="menuitem">타로 보기</button>
-          <button type="button" class="fab-menu-item" id="fabMenuSocial" role="menuitem">사회성 연습</button>
-          <button type="button" class="fab-menu-item" id="fabMenuPicture" role="menuitem">그림 말하기</button>
-          <button type="button" class="fab-menu-item" id="fabMenuRegulation" role="menuitem">행동 조절</button>
-          <button type="button" class="fab-menu-item" id="fabMenuRoutine" role="menuitem">루틴 관리</button>
-          <button type="button" class="fab-menu-item" id="fabMenuGames" role="menuitem">미니게임</button>
-          <button type="button" class="fab-menu-item" id="fabMenuPrivacy" role="menuitem">개인정보</button>
-          <button type="button" class="fab-menu-item" id="fabMenuGuardian" role="menuitem">보호자 보기</button>
+          <button type="button" class="fab-menu-item" id="fabMenuHome" role="menuitem" data-i18n="fab.home">홈으로</button>
+          <button type="button" class="fab-menu-item" id="fabMenuAboutAi41" role="menuitem" data-i18n="fab.aboutAi41">AI41 소개</button>
+          <button type="button" class="fab-menu-item" id="fabMenuAboutSky" role="menuitem" data-i18n="fab.aboutSky">스카이 소개</button>
+          <button type="button" class="fab-menu-item" id="fabMenuTarot" role="menuitem" data-i18n="fab.tarot">타로 보기</button>
+          <button type="button" class="fab-menu-item" id="fabMenuSocial" role="menuitem" data-i18n="fab.social">사회성 연습</button>
+          <button type="button" class="fab-menu-item" id="fabMenuPicture" role="menuitem" data-i18n="fab.picture">그림 말하기</button>
+          <button type="button" class="fab-menu-item" id="fabMenuRegulation" role="menuitem" data-i18n="fab.regulation">행동 조절</button>
+          <button type="button" class="fab-menu-item" id="fabMenuRoutine" role="menuitem" data-i18n="fab.routine">루틴 관리</button>
+          <button type="button" class="fab-menu-item" id="fabMenuGames" role="menuitem" data-i18n="fab.games">미니게임</button>
+          <button type="button" class="fab-menu-item" id="fabMenuPrivacy" role="menuitem" data-i18n="fab.privacy">개인정보</button>
+          <button type="button" class="fab-menu-item" id="fabMenuGuardian" role="menuitem" data-i18n="fab.guardian">보호자 보기</button>
         </div>
       </div>
       <div class="bottom-input-cluster">
@@ -420,7 +436,7 @@
             <line x1="12" y1="18" x2="12" y2="22"/>
           </svg>
         </button>
-        <input type="text" class="text-input" id="textInput" placeholder="스카이에게 말 걸어봐..." />
+        <input type="text" class="text-input" id="textInput" data-i18n-placeholder="sky.placeholder" placeholder="스카이에게 말 걸어봐..." />
         <button class="kbd-btn" id="sendBtn" title="보내기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/>
@@ -451,7 +467,7 @@
             <span class="about-kicker">AI41</span>
             <img src="logo.png" width="72" height="72" alt="AI41 로고" style="display:block;margin:8px 0 12px;" />
             <h3>AI FOR ONE, 한 사람을 위한 AI</h3>
-            <p>AI41(주식회사 AI41)은 <strong>예비사회적기업 창업지원사업</strong>에 선정된 딥테크 임팩트 팀이에요. 이름은 <strong>AI FOR ONE</strong>, 모두를 위한 AI와 한 사람을 위한 AI를 함께 만든다는 뜻이에요.</p>
+            <p>AI41(주식회사 AI41)은 <strong>사회적기업 초기창업지원사업</strong>에 선정된 딥테크 임팩트 팀이에요. 이름은 <strong>AI FOR ONE</strong>, 모두를 위한 AI와 한 사람을 위한 AI를 함께 만든다는 뜻이에요.</p>
             <p>신경다양성 당사자·가족을 위한 저자극 AI(스카이)와 질적 고용(뉴로크래프트)을 만듭니다. 대표이사는 <strong>서보경</strong>, 본점은 서울, 설립일은 2025.08.07.이에요.</p>
             <p>지금 사용 중인 이 앱도 AI41이 만든 솔루션입니다.</p>
           </section>
@@ -799,6 +815,7 @@
   </div><!-- /.site-shell -->
 
 <script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/dom.js"></script>
 <script src="js/core-ui.js"></script>
 <script src="js/inquiry.js"></script>

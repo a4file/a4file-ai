@@ -251,14 +251,8 @@ const socialCoachBubble = document.getElementById('socialCoachBubble');
 socialChipBtn?.addEventListener('click', openSocial);
 socialClose?.addEventListener('click', closeSocial);
 function openSocial(initialSelection = null) {
-  tarotOverlay?.classList.remove('show');
-  closeTcardLightbox();
-  closeSupport();
-  closeAbout();
-  closePrivacySettings();
-  closeGuardian();
+  showOnlyOverlay(socialOverlay);
   resetSocial();
-  socialOverlay.classList.add('show');
   logPrivacyActivity('social_open');
   if (characterAnimationDataCache && !socialCoachLottieInstance) {
     initSocialCoachLottie(characterAnimationDataCache);
@@ -266,7 +260,7 @@ function openSocial(initialSelection = null) {
   if (initialSelection) applySocialNavigation(initialSelection);
 }
 function closeSocial() {
-  socialOverlay.classList.remove('show');
+  socialOverlay?.classList.remove('show');
   socialState.active = false;
   setSocialCoachLottieState('');
 }

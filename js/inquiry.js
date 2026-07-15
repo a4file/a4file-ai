@@ -30,17 +30,23 @@ function resetContactInquiry() {
 }
 
 function isContactInquiryCancel(raw) {
-  const t = String(raw || '').trim();
-  return /^(취소|그만|문의취소|나중에|됐어|아니요)$/.test(t.replace(/\s/g, '')) ||
-    /(문의).*(취소|그만)/.test(t);
+  const s = String(raw || '').trim();
+  const c = s.replace(/\s/g, '');
+  return /^(취소|그만|문의취소|나중에|됐어|아니요|cancel|annuler|キャンセル|取消|non)$/i.test(c) ||
+    /(문의).*(취소|그만)/.test(s) ||
+    /(cancel|annul)/i.test(s);
 }
 
 function parseContactKind(raw) {
-  const t = String(raw || '').trim();
-  const c = t.replace(/\s/g, '');
-  if (/(단체|법인|기관|회사|학교|센터|재단|협회)/.test(c)) return '단체(법인)';
-  if (/(개인|나|저|혼자|individual)/i.test(c)) return '개인';
-  if (/^[12]$/.test(c)) return c === '1' ? '개인' : '단체(법인)';
+  const s = String(raw || '').trim();
+  const c = s.replace(/\s/g, '');
+  if (/(단체|법인|기관|회사|학교|센터|재단|협회|organization|organisation|corp|회사|団体|法人|机构|entreprise|organisation)/i.test(c)) {
+    return t('kind.org');
+  }
+  if (/(개인|나|저|혼자|individual|particulier|个人|個人)/i.test(c)) {
+    return t('kind.person');
+  }
+  if (/^[12]$/.test(c)) return c === '1' ? t('kind.person') : t('kind.org');
   return null;
 }
 
@@ -54,10 +60,7 @@ function startContactInquiry(userText) {
   resetContactInquiry();
   contactInquiryState.active = true;
   contactInquiryState.step = 'type';
-  addMessage(
-    '도입·상담 문의를 도와드릴게요. 먼저 개인이신가요, 단체(법인)이신가요? (취소라고 하시면 중단해요)',
-    'bot'
-  );
+  addMessage(t('inq.start'), 'bot');
   hideStatus();
   setState(null);
   textInput?.focus();
@@ -67,12 +70,12 @@ function startContactInquiry(userText) {
 async function submitContactInquiry() {
   const url = contactApiUrl('/inquiry');
   if (!url) {
-    addMessage('지금은 문의 전송 서버에 연결되지 않았어요. 잠시 후 다시 시도해 주세요.', 'bot');
+    addMessage(t('inq.noServer'), 'bot');
     resetContactInquiry();
     return;
   }
-  addMessage('말씀해 주신 내용을 모아 ai41@ai41.kr 로 보내는 중이에요…', 'bot');
-  setState('thinking', '문의 전송 중', 0);
+  addMessage(t('inq.sending'), 'bot');
+  setState('thinking', t('inq.sending'), 0);
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -82,25 +85,20 @@ async function submitContactInquiry() {
         affiliation: contactInquiryState.affiliation,
         contact: contactInquiryState.contact,
         message: contactInquiryState.message,
+        lang: typeof currentLang !== 'undefined' ? currentLang : 'ko',
         user_id: (typeof getOrCreateUserId === 'function' ? getOrCreateUserId() : ''),
       }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok || !data.ok) {
-      throw new Error(data.error || `전송 실패 (${res.status})`);
+      throw new Error(data.error || `fail (${res.status})`);
     }
-    addMessage(
-      `접수했어요. ${CONTACT_TO_EMAIL} 로 메일을 보냈고, 확인되는 대로 회신드릴게요.`,
-      'bot'
-    );
+    addMessage(t('inq.sent'), 'bot');
     if (typeof logPrivacyActivity === 'function') {
       logPrivacyActivity('contact_inquiry_sent', contactInquiryState.kind);
     }
   } catch (err) {
-    addMessage(
-      `메일 전송에 실패했어요. ${err.message || err} — 잠시 후 다시 「도입 문의」를 말해 주세요.`,
-      'bot'
-    );
+    addMessage(`${t('inq.fail')} (${err.message || err})`, 'bot');
   } finally {
     hideStatus();
     setState(null);
@@ -118,43 +116,38 @@ function handleContactInquiryReply(raw) {
 
   if (isContactInquiryCancel(text)) {
     resetContactInquiry();
-    addMessage('문의를 취소했어요. 나중에 다시 「도입 문의」라고 말해 주세요.', 'bot');
+    addMessage(t('inq.cancel'), 'bot');
     return true;
   }
 
   if (contactInquiryState.step === 'type') {
     const kind = parseContactKind(text);
     if (!kind) {
-      addMessage('「개인」또는 「단체(법인)」으로 답해 주세요.', 'bot');
+      addMessage(t('inq.typeRetry'), 'bot');
       return true;
     }
     contactInquiryState.kind = kind;
     contactInquiryState.step = 'affiliation';
-    addMessage(
-      kind === '개인'
-        ? '알겠어요. 소속이나 이름을 알려 주세요. (예: 프리랜서, 보호자, 관심 있는 분)'
-        : '알겠어요. 소속 기관·법인명을 알려 주세요.',
-      'bot'
-    );
+    addMessage(kind === t('kind.person') ? t('inq.affPerson') : t('inq.affOrg'), 'bot');
     return true;
   }
 
   if (contactInquiryState.step === 'affiliation') {
     if (text.length < 2) {
-      addMessage('소속을 한두 글자 이상 적어 주세요.', 'bot');
+      addMessage(t('inq.affRetry'), 'bot');
       return true;
     }
     contactInquiryState.affiliation = text;
     const maybeEmail = extractEmail(text);
     if (maybeEmail) contactInquiryState.contact = maybeEmail;
     contactInquiryState.step = 'message';
-    addMessage('어떤 내용으로 문의하시나요? 도입·PoC·파트너십 등 편하게 적어 주세요.', 'bot');
+    addMessage(t('inq.message'), 'bot');
     return true;
   }
 
   if (contactInquiryState.step === 'message') {
     if (text.length < 4) {
-      addMessage('문의 내용을 조금만 더 적어 주시면 전달하기 좋아요.', 'bot');
+      addMessage(t('inq.msgRetry'), 'bot');
       return true;
     }
     contactInquiryState.message = text;
@@ -165,13 +158,13 @@ function handleContactInquiryReply(raw) {
       return true;
     }
     contactInquiryState.step = 'contact';
-    addMessage('마지막으로, 회신 받으실 이메일(또는 전화번호)을 알려 주세요.', 'bot');
+    addMessage(t('inq.contact'), 'bot');
     return true;
   }
 
   if (contactInquiryState.step === 'contact') {
     if (text.length < 3) {
-      addMessage('회신 가능한 이메일이나 전화번호를 적어 주세요.', 'bot');
+      addMessage(t('inq.contactRetry'), 'bot');
       return true;
     }
     contactInquiryState.contact = text;

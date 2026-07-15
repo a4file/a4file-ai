@@ -83,13 +83,6 @@ function speakKorean(text) {
 }
 
 function openSupportSection(which) {
-  closeSocial();
-  tarotOverlay?.classList.remove('show');
-  closeAbout();
-  pictureOverlay?.classList.remove('show');
-  regulationOverlay?.classList.remove('show');
-  routineOverlay?.classList.remove('show');
-  gamesOverlay?.classList.remove('show');
   const map = {
     picture: pictureOverlay,
     regulation: regulationOverlay,
@@ -97,8 +90,8 @@ function openSupportSection(which) {
     games: gamesOverlay,
   };
   const el = map[which];
+  showOnlyOverlay(el);
   if (el) {
-    el.classList.add('show');
     logPrivacyActivity('support_open', { which });
   }
 }

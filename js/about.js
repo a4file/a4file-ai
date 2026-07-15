@@ -2,12 +2,7 @@
    ℹ️ AI41 소개 오버레이
 ============================================================ */
 function openAbout(section) {
-  closeSocial();
-  tarotOverlay?.classList.remove('show');
-  closeSupport();
-  closePrivacySettings();
-  closeGuardian();
-  aboutOverlay?.classList.add('show');
+  showOnlyOverlay(aboutOverlay);
   logPrivacyActivity('about_open', section || '');
   const targetId = section === 'sky' ? 'aboutSky' : 'aboutAi41';
   requestAnimationFrame(() => {
