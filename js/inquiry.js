@@ -98,7 +98,8 @@ async function submitContactInquiry() {
       logPrivacyActivity('contact_inquiry_sent', contactInquiryState.kind);
     }
   } catch (err) {
-    addMessage(`${t('inq.fail')} (${err.message || err})`, 'bot');
+    const detail = String(err.message || err || '').trim();
+    addMessage(detail && !detail.startsWith('fail') ? detail : t('inq.fail'), 'bot');
   } finally {
     hideStatus();
     setState(null);

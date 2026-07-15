@@ -30,15 +30,22 @@ def contact_mail_ready() -> bool:
 
 
 def status_payload() -> dict[str, Any]:
-    return {
+    via = (
+        "resend"
+        if (os.environ.get("RESEND_API_KEY") or "").strip()
+        else ("smtp" if contact_mail_ready() else None)
+    )
+    payload: dict[str, Any] = {
         "ready": contact_mail_ready(),
         "to": contact_to(),
-        "via": (
-            "resend"
-            if (os.environ.get("RESEND_API_KEY") or "").strip()
-            else ("smtp" if contact_mail_ready() else None)
-        ),
+        "via": via,
     }
+    if via == "resend":
+        payload["from"] = _resend_from_addr()
+        payload["domain_verified"] = _resend_domain_verified() or (
+            _extract_email(_resend_from_addr()).endswith("@resend.dev")
+        )
+    return payload
 
 
 def _build_body(payload: dict[str, Any]) -> str:
@@ -59,11 +66,60 @@ def _build_body(payload: dict[str, Any]) -> str:
     )
 
 
+def _extract_email(addr: str) -> str:
+    addr = (addr or "").strip()
+    if "<" in addr and ">" in addr:
+        return addr[addr.rfind("<") + 1 : addr.rfind(">")].strip()
+    return addr
+
+
+def _resend_domain_verified() -> bool:
+    return (os.environ.get("RESEND_DOMAIN_VERIFIED") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+
+
+def _resend_from_addr() -> str:
+    """Resend only allows verified domains. Until ai41.kr is verified, use resend.dev."""
+    fallback = "AI41 <onboarding@resend.dev>"
+    configured = (os.environ.get("CONTACT_FROM") or os.environ.get("SMTP_FROM") or "").strip()
+    if not configured:
+        return fallback
+    domain = (_extract_email(configured).split("@")[-1] or "").lower()
+    if domain == "resend.dev" or _resend_domain_verified():
+        return configured
+    print(
+        f"[contact] CONTACT_FROM domain {domain!r} is not verified on Resend; "
+        f"sending as {fallback}. Set RESEND_DOMAIN_VERIFIED=1 after verifying.",
+        flush=True,
+    )
+    return fallback
+
+
+def _resend_user_error(status: int, detail: str) -> str:
+    low = detail.lower()
+    if status == 403 and ("domain is not verified" in low or "verify your domain" in low):
+        return (
+            "메일 발신 도메인이 Resend에서 아직 인증되지 않았어요. "
+            "https://resend.com/domains 에서 ai41.kr 을 추가·인증하거나, "
+            "CONTACT_FROM 을 AI41 <onboarding@resend.dev> 로 바꿔 주세요."
+        )
+    if "only send testing emails" in low or "own email" in low:
+        return (
+            "Resend 테스트 발신(onboarding@resend.dev)은 가입 이메일로만 받을 수 있어요. "
+            "ai41.kr 도메인을 인증하면 CONTACT_TO=ai41@ai41.kr 로 정상 수신됩니다."
+        )
+    return "메일 전송에 실패했어요. 잠시 후 다시 시도해 주세요."
+
+
 def _send_via_resend(subject: str, body: str, reply_to: str | None) -> None:
     api_key = (os.environ.get("RESEND_API_KEY") or "").strip()
     if not api_key:
         raise ContactMailError("RESEND_API_KEY is not configured")
-    from_addr = (os.environ.get("SMTP_FROM") or os.environ.get("CONTACT_FROM") or "AI41 <onboarding@resend.dev>").strip()
+    from_addr = _resend_from_addr()
     payload: dict[str, Any] = {
         "from": from_addr,
         "to": [contact_to()],
@@ -83,7 +139,8 @@ def _send_via_resend(subject: str, body: str, reply_to: str | None) -> None:
     )
     if res.status_code >= 400:
         detail = res.text[:300]
-        raise ContactMailError(f"Resend failed ({res.status_code}): {detail}")
+        print(f"[contact] Resend {res.status_code}: {detail}", flush=True)
+        raise ContactMailError(_resend_user_error(res.status_code, detail))
 
 
 def _send_via_smtp(subject: str, body: str, reply_to: str | None) -> None:
