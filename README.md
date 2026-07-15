@@ -1,281 +1,498 @@
-# 🐈‍⬛ 춘직이 AI 아바타
+# 🐈‍⬛ 스카이 AI 아바타
 
-검은고양이 캐릭터 **춘직이**와 대화하는 모바일 최적화 웹앱입니다.  
-기본 챗(텍스트/음성), 타로 리딩, 사회성 연습 기능을 단일 페이지(`index.html`)에서 제공합니다.
+**AI41**이 만든 ASD(자폐 스펙트럼) 당사자·보호자 지원용 모바일 웹 솔루션입니다.  
+AI 도우미 **스카이**가 대화, 타로, 사회성 연습, 행동 조절, 루틴 관리, 미니게임을 하나의 단일 페이지(`index.html`)에서 제공합니다.
 
----
-
-## 개요
-
-- **대화 인터페이스**: 텍스트/음성 입력, 스트리밍 응답, 음성 재생
-- **도구 인터페이스**: `+` 버튼 메뉴로 타로/사회성 연습/그림 말하기/행동 조절/루틴 관리/미니게임 진입
-- **자연어 도구 라우팅**: `"타로 봐줘"`, `"사회성 연습하자"`, `"패턴게임 하자"` 같은 입력으로 해당 화면/게임으로 자동 전환
-- **캐릭터 렌더링**: Lottie 우선, 실패 시 SVG 폴백
-- **모바일 레이아웃**: 하단 입력바 고정, 본문 스크롤 분리
+> **문서 목적**  
+> 현재 시연을 마친 시점의 기술 상태를 **TRL 6(관련 환경에서의 시스템 시연)** 수준으로 정리한 기술 문서입니다.  
+> 개발자 온보딩, 사업 보고, 후속 R&D 계획 수립에 공통으로 사용할 수 있도록 작성했습니다.
 
 ---
 
-## 아키텍처
+## 1. 프로젝트 개요
 
-### 1) 프런트엔드
-- 단일 파일: `index.html` (HTML/CSS/JS 통합)
-- 상태 중심 UI:
-  - 기본 대화 상태
-  - 타로 오버레이 상태
-  - 사회성 연습(연령/상황/롤플레이/피드백) 상태
-  - 그림 말하기 오버레이 상태
-  - 행동 조절 오버레이 상태
-  - 루틴 관리 오버레이 상태
-  - 미니게임 오버레이 상태
+### 1.1 배경
+- **제작**: AI41 (AI for One, 당신을 위한 AI) — 예비사회적기업 창업지원사업 선정 팀
+- **대상**: ASD당사자네트워크 이용자 및 보호자
+- **캐릭터**: 스카이 — 팀 단톡방 별명에서 따온 AI 도우미 이름 (대표 이름과 무관)
+- **형태**: 설치 없이 브라우저에서 동작하는 모바일 최적화 SPA
 
-### 2) AI 호출 경로
-- 기본 모델 엔드포인트: `API_URL` (`/v1/chat/completions` 또는 원격 URL)
-- 호출 모드:
-  - 일반 대화: 텍스트+오디오 가능
-  - 타로 해석: 텍스트 스트리밍
-  - 사회성 연습: 페르소나 롤플레이 + 피드백 스트리밍
-  - 음성 전사: `transcribeWavToText()`
+### 1.2 해결하려는 문제
+- 일상에서 필요한 **대화·정서·사회성·루틴** 지원 도구가 여러 앱에 분산되어 있음
+- API 키 입력, CORS, 모바일 UX 등 기술 장벽이 이용자 앞에 노출됨
+- 공개 시연·체험 환경에서는 키 관리와 비용 통제가 필요함
 
-### 3) 데이터 흐름
-- 음성 입력: `MediaRecorder(WebM)` -> `WAV(24kHz)` 변환 -> 전사/모델 호출
-- 스트리밍 파싱: SSE 델타 누적(`appendStreamDelta`) + 중복 제거(`removeConsecutiveRepeat`)
-- 사회성 상태:
-  - `socialState.turns`: 전체 대화 턴
-  - `socialState.userMemory`: 최근 사용자 발화 메모리
-  - `socialState.sessionLog`: 피드백 생성용 로그
-
-### 4) 선택적 로컬 프록시
-- `server.py` 실행 시 CORS/프록시 경유 사용 가능 (`/tarot/random` 포함)
+### 1.3 핵심 가치
+- **단일 진입점**: 채팅 한 곳에서 모든 도구로 이동
+- **자연어 라우팅**: "타로 봐줘", "사회성 연습하자" 같은 말로 화면 전환
+- **저자극 설계**: 이모지 본문 제한, 짧은 응답, 실패 페널티 최소화
+- **시연 친화**: 서버측 키·일일 제한·토큰 상한으로 공개 체험 가능
 
 ---
 
-## 기능
+## 2. TRL 6 기술 성숙도 정리
 
-## 기본 대화
-- 텍스트 입력 + 엔터 전송
-- 음성 입력(녹음 시작/종료)
-- 스트리밍 응답 말풍선 표시
-- 대화 초기화 버튼
+### 2.1 TRL 정의 (본 프로젝트 적용)
 
-## 도구 진입 UX
-- 하단 왼쪽 `+` 버튼 메뉴:
-  - `타로 보기`
-  - `사회성 연습`
-  - `그림 말하기`
-  - `행동 조절`
-  - `루틴 관리`
-  - `미니게임`
-- 문장 의도 기반 자동 라우팅:
-  - 예: `타로 봐줘`, `운세`, `사회성 연습하자`, `멜트다운`, `루틴 관리`, `뽁뽁이`, `원 그리기`
-  - 미니게임 세부 라우팅 예:
-    - `패턴게임 하자` -> `Pattern Echo`
-    - `정렬 힐링 열어줘` -> `Sort & Calm`
-    - `리듬 탭 시작` -> `Soft Rhythm Tap`
-    - `차이찾기 하자` -> `Low Stimulus Spot the Difference`
-    - `루프 만들기` -> `Loop Builder`
-    - `안전 클릭 게임` -> `Safe Click`
-    - `감정 매칭 해줘` -> `Emotion Match`
-  - 텍스트 입력과 음성 전사 결과 모두 라우팅
+| TRL | 정의 | 본 프로젝트 상태 |
+|-----|------|------------------|
+| TRL 4 | 구성요소 실험실 검증 | ✅ 초기 프로토타입 완료 |
+| TRL 5 | 관련 환경에서 구성요소 검증 | ✅ 개별 모듈(채팅/타로/사회성/프록시) 검증 완료 |
+| **TRL 6** | **관련 환경에서 시스템 시연** | **✅ 현재 단계** |
+| TRL 7 | 운영 환경에서 시스템 시연 | ⬜ 미진입 |
+| TRL 8~9 | 실제 서비스·상용화 | ⬜ 미진입 |
 
-## 타로 리딩
-- 스프레드 선택 후 랜덤 카드 뽑기
-- 카드 뒤집기/확대 보기(lightbox)
-- AI 리딩 스트리밍 출력
-- 카드 이미지 로딩 규칙:
-  - 폴더: `JPG`
-  - 메이저: `00-TheFool.jpg` ~ `21-TheWorld.jpg`
-  - 마이너: `Cups01.jpg`, `Wands01.jpg`, `Swords01.jpg`, `Pentacles01.jpg` ... `14`
+**TRL 6 판정 근거**
+- 단일 통합 시스템(프론트 + 프록시 + 외부 AI API)이 **실제 배포 환경**에서 동작함
+- 공개 시연용 **DEMO_MODE** 운영 경험을 확보함
+- ASD당사자네트워크 맥락의 **실사용 시나리오**(사회성 연습, 행동 조절, 회원가입 안내)가 구현·시연됨
+- 모바일 브라우저, HTTPS, 서버리스/PaaS 등 **운영에 가까운 환경**에서 end-to-end 흐름 검증
 
-## 사회성 연습
-- 연령대별 시나리오(미취학/청소년/성인)
-- 상황별 고정 페르소나 롤플레이
-- 인물별 난이도/성격/말투 반영(`personaGuide`)
-- 힌트 보기 / 연습 종료 후 피드백 생성
-- 맥락 유지 강화:
-  - 페르소나 고정 규칙(시나리오 잠금)
-  - 최근 사용자 발화 메모리 반영
-  - 최근 대화 흐름(window) 반영
+### 2.2 시연 완료 시점에서 검증된 항목
 
-## 그림 말하기 (독립 화면)
-- 그림 말하기 버튼(TTS): 비언어 아동용 핵심 요청 문장을 버튼으로 즉시 음성 출력
+| 영역 | 검증 내용 | 결과 |
+|------|-----------|------|
+| 통합 UX | 채팅 → 도구 진입 → 복귀 | ✅ 단일 페이지 내 완결 |
+| AI 대화 | GPT 스트리밍 응답 | ✅ 정상 |
+| 타로 | 카드 API + AI 해석 + 이미지 표시 | ✅ 정상 (일일 1회 제한 포함) |
+| 사회성 연습 | 페르소나 롤플레이 + 피드백 | ✅ 정상 (턴 제한·캐시 포함) |
+| 행동 조절 | 로컬 가이드 + LLM 코칭 + 일일 리포트 | ✅ 정상 |
+| 루틴 관리 | CRUD + 진행률 코칭 | ✅ 정상 |
+| 미니게임 | 9종 저자극 게임 | ✅ 정상 |
+| 시연 모드 | 서버 키 인증, 키 UI 숨김, 음성 차단 | ✅ 정상 |
+| 배포 | Vercel / Render / Cloudflare Worker | ✅ 다중 경로 지원 |
+| 비용 통제 | 토큰 상한, 일일 제한, 요청 정제 | ✅ 적용 |
 
-## 행동 조절 (독립 화면)
-- 행동 조절: 감각 과민/불안/분노/다운 상태 선택 후 안정문구, 호흡(4-4-6), 그라운딩(5-4-3-2-1), 감각 팁 제공
-- 상태 맞춤 코칭: 선택 상태에 따라 LLM 또는 로컬 fallback으로 2문장 코칭
-- 오늘 리포트: 상태 조절 사용 로그를 일자 단위로 집계해 요약 제공(로컬 저장)
+### 2.3 TRL 6에서 아직 미완인 항목 (TRL 7 진입 전 과제)
 
-## 루틴 관리 (독립 화면)
-- 일정/루틴 관리: 루틴 추가·완료 체크·삭제 + 진행률 기반 코칭
-
-## 미니게임 (독립 화면)
-- 미니게임 상단 섹터형 UI + 사운드 ON/OFF 토글 지원
-- 시간 제한/실패 페널티를 최소화한 저자극 설계
-- 제공 게임:
-  - 뽁뽁이 터트리기
-  - 원 그리기(정확도 점수)
-  - Pattern Echo(패턴 따라하기)
-  - Sort & Calm(정렬 힐링)
-  - Soft Rhythm Tap(리듬 탭)
-  - Low Stimulus Spot the Difference(차이 찾기)
-  - Loop Builder(루프 만들기)
-  - Safe Click(안전 클릭)
-  - Emotion Match(감정 매칭)
-- UI 규칙: 이모티콘은 텍스트 본문이 아닌 아이콘 영역에만 사용
-
-## 캐릭터 렌더링
-- `character.json` 존재 시 Lottie 사용
-- 실패/부재 시 SVG 캐릭터 폴백
-- 상태(듣기/생각/말하기)에 따라 애니메이션 속도/표현 변화
+| 항목 | 현재 한계 | TRL 7 목표 |
+|------|-----------|------------|
+| 사용자 계정 | localStorage 기반, 기기 종속 | 계정·동기화·보호자 연동 |
+| 데이터 거버넌스 | 클라이언트 저장 위주 | 서버 저장, 동의·보관 정책 |
+| 운영 모니터링 | `/health` 수준 | 로그, 알림, 사용량 대시보드 |
+| 품질 검증 | 수동 시연 중심 | 자동 테스트, 시나리오 회귀 테스트 |
+| 임상/교육 효과 | 정성적 체험 수준 | 파일럿 평가, 피드백 수집 체계 |
+| 멀티테넌트 | 단일 배포 인스턴스 | 기관별 설정·키·콘텐츠 분리 |
 
 ---
 
-## 에러 핸들링
+## 3. 시스템 아키텍처
 
-## 공통
-- API Key 미입력 시 즉시 안내 메시지 표시
-- 네트워크/HTTP 오류를 사용자 메시지로 표시
-- 스트리밍 중 파싱 실패 시 해당 델타만 스킵
+### 3.1 전체 구조
 
-## 대화
-- CORS 가능성 메시지 안내(`server.py` 실행 유도)
-- 음성 전사 실패 시 텍스트 입력 유도 또는 오디오 경로 fallback
-- STT 디버그 메시지(`[STT 디버그]`)로 녹음/변환/전사 상태를 채팅창에 출력
+```mermaid
+flowchart TB
+  subgraph client [Browser SPA]
+    UI[index.html]
+    LS[localStorage]
+    UI --> LS
+  end
 
-## 타로
-- 카드 API 1차 실패 시 `/tarot/random` 프록시 재시도
-- 카드 이미지 로드 실패 시:
-  - `onerror` 1회 처리 후 폴백 UI 표시
-  - lightbox 이미지 숨김 처리
+  subgraph proxy [Proxy Layer]
+    LOCAL[server.py Flask]
+    VERCEL[api/index.py Vercel]
+    CF[cloudflare-worker]
+    UTIL[proxy_utils.py]
+    LOCAL --> UTIL
+    VERCEL --> UTIL
+  end
 
-## 사회성 연습
-- API Key/응답 오류를 시스템 말풍선으로 표시
-- 사용자 발화 없이 종료 시 피드백 호출 차단(환각성 칭찬 방지)
-- 페르소나 응답 중복 제거
+  subgraph external [External APIs]
+    OAI_CHAT[OpenAI /v1/chat/completions]
+    OAI_STT[OpenAI /v1/audio/transcriptions]
+    TAROT[tarotapi.dev /cards/random]
+  end
+
+  UI -->|/health /v1/* /tarot/*| LOCAL
+  UI -->|배포 URL| VERCEL
+  UI -->|?proxyBase=| CF
+  LOCAL --> OAI_CHAT
+  LOCAL --> OAI_STT
+  LOCAL --> TAROT
+  VERCEL --> OAI_CHAT
+  VERCEL --> OAI_STT
+  VERCEL --> TAROT
+  CF --> OAI_CHAT
+  CF --> OAI_STT
+  CF --> TAROT
+```
+
+### 3.2 프런트엔드 (`index.html`)
+- **구조**: 단일 HTML 파일에 UI·스타일·로직 통합 (~5,700줄)
+- **상태 모델**: 오버레이 기반 멀티 모드
+  - `home` — 기본 대화
+  - `tarot` — 타로 리딩
+  - `social` — 사회성 연습 (연령 → 시나리오 → 롤플레이 → 피드백)
+  - `picture` — 그림 말하기
+  - `regulation` — 행동 조절
+  - `routine` — 루틴 관리
+  - `games` — 미니게임
+  - `about` — AI41/스카이 소개
+- **캐릭터**: `character.js` → `character.json` → SVG 폴백 순서
+- **모바일 UX**: `max-width: 440px`, safe-area 대응, 하단 입력바 고정
+
+### 3.3 프록시 레이어
+공통 책임 (`proxy_utils.py` / Worker JS 동기화):
+
+| 엔드포인트 | 역할 |
+|------------|------|
+| `GET /health` | 시연 모드·키 준비 상태 반환 |
+| `POST /v1/chat/completions` | OpenAI 채팅 스트리밍 프록시 |
+| `POST /v1/audio/transcriptions` | 음성 전사 프록시 (시연 모드 403) |
+| `GET /tarot/random` | tarotapi.dev CORS 우회 |
+
+**요청 정제 정책**
+- `modalities` 필드 제거
+- `image_url`, `input_audio`, `audio`, `image` 파트 차단
+- `max_tokens` 없으면 256, 최대 600으로 클램프
+
+**인증 정책**
+- `DEMO_MODE=1`: 서버 환경변수 키만 사용, 클라이언트 Authorization 무시
+- `DEMO_MODE=0`: 클라이언트 Authorization 우선, 없으면 서버 키 fallback
+
+### 3.4 AI 호출 설계
+
+| 기능 | 모델 | 스트리밍 | max_tokens | 비고 |
+|------|------|----------|------------|------|
+| 일반 대화 | `gpt-5.4-mini` | ✅ | 120 | 1~2문장 응답 유도 |
+| 타로 해석 | `gpt-5.4-mini` | ✅ | 320 | 포지션별 1문장 + 종합 1문장 |
+| 사회성 롤플레이 | `gpt-5.4-mini` | ✅ | 140 | 페르소나 고정, temperature 0.75 |
+| 사회성 피드백 | `gpt-5.4-mini` | ✅ | 400 | 사용자 발화 없으면 생성 차단 |
+| 행동/루틴 코칭 | `gpt-5.4-mini` | ❌ | 72 | 실패 시 로컬 fallback |
+| 음성 전사 | Whisper 계열 | ❌ | — | WebM→WAV(24kHz) 후 업로드 |
+
+**응답 품질 가드**
+- 스트리밍 중복 제거 (`removeConsecutiveRepeat`)
+- 429 응답 자동 재시도 (`fetchApiWithRetry`, 최대 2회)
+- 시스템 프롬프트로 이모지·이모티콘·URL 직접 출력 금지
 
 ---
 
-## 빠른 시작
+## 4. 기능 모듈 상세
 
-## 권장 실행 (로컬 서버)
+### 4.1 기본 대화
+- 텍스트 입력, 엔터 전송, 대화 초기화
+- 음성 입력: `MediaRecorder` → WAV 변환 → STT → 의도 라우팅 또는 채팅
+- TTS: `speechSynthesis` (시연 모드 비활성)
+- 채팅창 최대 16개 말풍선 유지
+
+### 4.2 자연어 도구 라우팅 (`detectToolIntent`)
+사용자 발화(텍스트·음성 전사)를 분석해 해당 화면으로 즉시 이동합니다.
+
+| 의도 키워드 예시 | 이동 대상 |
+|------------------|-----------|
+| 타로, 점 봐줘, 운세 | 타로 |
+| 사회성 연습, 롤플레이 | 사회성 연습 |
+| 그림 말하기, 비언어 | 그림 말하기 |
+| 멜트다운, 호흡, 그라운딩 | 행동 조절 |
+| 루틴, 할 일 | 루틴 관리 |
+| 패턴게임, 뽁뽁이, 미니게임 | 미니게임 (세부 게임까지) |
+| 회원가입, ASD당사자네트워크 | 회원가입 문의 폼 안내 |
+
+사회성 연습 중에는 `"미취학"`, `"3번"` 같은 내비게이션 명령도 파싱합니다.
+
+### 4.3 타로 리딩
+**스프레드**
+- 오늘의 카드 (1장)
+- 과거·현재·미래 (3장)
+- 마음·상황·조언 (3장)
+- 켈틱 간소 (5장)
+
+**흐름**
+1. tarotapi.dev에서 카드 데이터 수신 (`/tarot/random`)
+2. 카드 뒤집기·lightbox 확대
+3. `JPG/` 폴더 이미지 로드 (`name_short` 규칙)
+4. GPT 스트리밍 해석
+5. 당일 결과 `chunjik.tarotDaily`에 저장 → **하루 1회 제한**
+
+### 4.4 사회성 연습
+**연령대별 시나리오 (총 12개)**
+
+| 연령 | 시나리오 수 | 예시 |
+|------|-------------|------|
+| 미취학 (4~6세) | 4 | 인사하기, 차례 지키기, 감정 표현, 놀이 끼어들기 |
+| 청소년 (13~17세) | 4 | 점심 대화 합류, 오해 풀기, 놀림 대응, 놀자 제안 |
+| 성인 (18~35세) | 4 | 스몰토크, 피드백 수용, 자기 옹호, 데이트 신청 |
+
+**성인 시나리오**는 `personaGuide`로 난이도(1~5), 성격, 화법, 압박 패턴을 정의합니다.
+
+**세션 제어**
+- 사용자 턴 최대 8회 (`MAX_SOCIAL_USER_TURNS`)
+- API 전송 시 최근 8턴 / 사용자 메모리 4개 / 로그 20줄만 사용
+- 피드백은 당일 `chunjik.socialFeedbackDaily`에 캐시
+- 사용자 발화(`[나]`) 없으면 피드백 API 호출 차단
+
+### 4.5 그림 말하기
+비언어 아동용 핵심 요청 6종 버튼:
+- 물, 화장실, 쉬기, 배고픔, 멈춰달라, 도와달라
+- 버튼 탭 시 `speechSynthesis`로 즉시 음성 출력
+
+### 4.6 행동 조절
+**상태 4종**
+- 감각 과민 / 불안 / 분노·폭발 직전 / 다운·무기력
+
+**제공 도구**
+- 상태별 로컬 안정 가이드
+- 호흡 루틴 (4-4-6)
+- 그라운딩 (5-4-3-2-1)
+- LLM 2문장 코칭 (실패 시 로컬 문구)
+- 일일 사용 로그 집계 리포트 (`localStorage`)
+
+### 4.7 루틴 관리
+- 루틴 추가·완료 체크·삭제
+- 진행률 기반 LLM 코칭
+- 데이터는 `localStorage`에 저장
+
+### 4.8 미니게임 (저자극 9종)
+
+| 게임 | 설계 의도 |
+|------|-----------|
+| 뽁뽁이 터트리기 | 즉각적 시각·청각 피드백, 실패 없음 |
+| 원 그리기 | 정확도 점수, 짧은 세션 |
+| Pattern Echo | 패턴 기억·따라하기 |
+| Sort & Calm | 정렬 행동의 안정감 |
+| Soft Rhythm Tap | 리듬·예측 가능한 반복 |
+| Low Stimulus Spot the Difference | 저자극 시각 탐색 |
+| Loop Builder | 예측 가능한 반복 애니메이션 |
+| Safe Click | 지정 색만 클릭, 안전 행동 연습 |
+| Emotion Match | 감정 라벨 매칭 |
+
+공통: 사운드 ON/OFF, 시간 제한·실패 페널티 최소화, 이모지는 아이콘 영역만 사용
+
+---
+
+## 5. 시연 모드 (DEMO_MODE)
+
+공개 시연·체험을 위해 설계된 운영 모드입니다.
+
+### 5.1 동작 방식
+1. 앱 로드 시 `GET /health` 호출
+2. `demo_mode: true`이면 시연 모드 활성화
+3. API 키 입력 UI·마이크 버튼 숨김
+4. 모든 AI 요청은 서버측 `OPENAI_API_KEY`로 인증
+5. 음성 업로드(`/v1/audio/transcriptions`)는 403 차단
+
+### 5.2 시연 모드에서 가능/불가
+
+| 가능 | 불가 |
+|------|------|
+| 텍스트 대화 | 음성 입력·STT |
+| 타로 (1일 1회) | 개인 API 키 입력 |
+| 사회성 연습 | TTS 응답 재생 |
+| 행동 조절·루틴·게임 | — |
+| 회원가입 안내 | — |
+
+### 5.3 비용·남용 방지
+- 기능별 `max_tokens` 상한
+- 프록시 레벨 `max_tokens` 600 클램프
+- 타로·사회성 피드백 일일 캐시로 중복 API 호출 방지
+- 사회성 연습 턴 수 제한
+
+---
+
+## 6. 데이터·보안
+
+### 6.1 저장 위치
+
+| 데이터 | 저장소 | 비고 |
+|--------|--------|------|
+| API 키 (비시연) | `localStorage` | 브라우저 로컬 |
+| 이용자 ID | `localStorage` | `chunjik.userId` (익명 UUID) |
+| 동의 상태 (캐시) | `localStorage` | `chunjik.privacyConsentCache` |
+| 프록시 URL | `localStorage` | `chunjik.proxyBase` |
+| 타로 일일 결과 | `localStorage` | `chunjik.tarotDaily` |
+| 사회성 피드백 | `localStorage` | `chunjik.socialFeedbackDaily` |
+| 행동 조절 로그 | `localStorage` | 최대 300건 |
+| 루틴 목록 | `localStorage` | 기기 종속 |
+| **대화·활동 (동의 시)** | **서버 SQLite (`data/privacy.db`)** | **Fernet 암호화** |
+| 서버 API 키 | 환경변수 | `.env` / 배포 시크릿 |
+| 보호자 PIN | 환경변수 | `GUARDIAN_PIN` |
+
+### 6.2 개인정보·보호자 기능 (구현됨)
+
+**동의 워크플로우**
+- 최초 접속 시 동의 모달 (`동의하고 시작` / `동의 안 함`)
+- `+` 메뉴 → `개인정보`에서 동의·철회·데이터보내기·삭제 관리
+- API: `GET/POST /api/privacy/consent`
+
+**서버 암호화 저장**
+- 동의한 이용자의 대화·활동만 저장
+- 메시지 본문·활동 상세는 Fernet(AES)으로 암호화
+- API: `POST /api/privacy/messages`, `POST /api/privacy/activity`
+
+**GDPR/개인정보보호법 권리**
+- **열람·이전**: `GET /api/privacy/export?user_id=...` → JSON 다운로드
+- **삭제**: `DELETE /api/privacy/data?user_id=...` → 서버 기록 영구 삭제
+- **동의 철회**: `POST /api/privacy/consent` (`accepted: false`)
+
+**보호자 대시보드**
+- `+` 메뉴 → `보호자 보기` → PIN 로그인 (`GUARDIAN_PIN`)
+- 이용자 목록 조회, 대화·활동 로그 읽기 전용 열람
+- API: `POST /api/privacy/guardian/login`, `GET /api/privacy/guardian/users`, `GET /api/privacy/guardian/dashboard`
+
+### 6.3 보안 원칙
+- API 키를 소스코드에 하드코딩하지 않음
+- `.env`, `data/`는 git 제외
+- 시연 모드에서 클라이언트 키·음성 업로드 차단
+- 프록시에서 멀티모달(이미지/오디오) 업스트림 전송 차단
+- 보호자 세션 토큰 1시간 만료, PIN은 서버 환경변수만 보관
+
+### 6.4 환경 변수 (개인정보)
+
+| 변수 | 설명 | 기본값 |
+|------|------|--------|
+| `PRIVACY_ENABLED` | 개인정보 API 활성화 | `1` |
+| `GUARDIAN_PIN` | 보호자 대시보드 PIN | — (필수 권장) |
+| `PRIVACY_ENCRYPTION_KEY` | Fernet 키 (선택) | `GUARDIAN_PIN` 파생 |
+| `DATA_DIR` | SQLite 저장 경로 | `./data` |
+
+> **Vercel 서버리스 주의**: SQLite 파일이 인스턴스 간 공유되지 않을 수 있습니다. 영구 저장이 필요하면 Render 등 디스크 있는 런타임을 권장합니다.
+
+### 6.5 TRL 7 진입 전 남은 과제
+- 보호자·이용자 계정 체계 (현재는 익명 user_id + PIN)
+- 서버 감사 로그·운영 모니터링
+- 법적 고지문·개인정보처리방침 페이지 외부화
+- 다중 기기 동기화 및 보호자-이용자 연결(페어링)
+
+---
+
+## 7. 배포·운영
+
+### 7.1 지원 배포 경로
+
+| 플랫폼 | 구성 | 적합 용도 |
+|--------|------|-----------|
+| **Render** (`render.yaml`) | Flask + gunicorn | 상시 운영, 시연 서버 |
+| **Vercel** (`vercel.json`) | 정적 + `api/index.py` | 빠른 배포, 서버리스 |
+| **Cloudflare Worker** | 프록시 전용 | 정적 Pages + API 분리 |
+| **로컬** (`server.py`) | 개발·검증 | TRL 검증, 디버깅 |
+
+### 7.2 환경 변수
+
+| 변수 | 설명 | 기본값 |
+|------|------|--------|
+| `OPENAI_API_KEY` | OpenAI API 키 (우선) | — |
+| `KANANA_SERVER_API_KEY` | Python/Vercel 대체 키 이름 | — |
+| `KANANA_API_KEY` | Cloudflare Worker 대체 키 이름 | — |
+| `DEMO_MODE` | `1`=시연, `0`=개인 키 모드 | `1` |
+| `PORT` | 로컬 서버 포트 | `8080` |
+| `PRIVACY_ENABLED` | 개인정보 API 활성화 | `1` |
+| `GUARDIAN_PIN` | 보호자 대시보드 PIN | — |
+| `PRIVACY_ENCRYPTION_KEY` | Fernet 암호화 키 (선택) | PIN 파생 |
+| `DATA_DIR` | SQLite 저장 경로 | `./data` |
+
+### 7.3 배포 후 확인 체크리스트
+- [ ] `GET /health` → `demo_mode`, `ready` 확인
+- [ ] 텍스트 대화 스트리밍 정상
+- [ ] 타로 카드 뽑기 + 해석 정상
+- [ ] 사회성 연습 롤플레이 + 피드백 정상
+- [ ] 시연 모드에서 API 키 UI·마이크 숨김 확인
+- [ ] `JPG/` 카드 이미지 로드 확인
+- [ ] 하드코딩 API 키 없음 확인
+
+---
+
+## 8. 빠른 시작 (개발자)
+
 ```bash
-pip install flask flask-cors requests
+pip install -r requirements.txt
+cp .env.example .env   # OPENAI_API_KEY 입력
 python server.py
 ```
 
-브라우저에서 `http://localhost:8080` 접속
+브라우저: `http://localhost:8080`
 
-## 직접 열기
-- `index.html` 직접 열기도 가능
-- 단, 환경에 따라 CORS 이슈가 있을 수 있어 로컬 서버 방식 권장
+- `DEMO_MODE=1` (기본): 시연 모드, 서버 키만 사용
+- `DEMO_MODE=0`: 브라우저에서 `sk-...` 키 입력 후 음성 입력 가능
 
----
+`file://`로 `index.html`을 직접 열면 API 경로를 사용할 수 없으므로 로컬 서버 실행을 권장합니다.
 
-## 설정
-
-## API Key
-- 상단 우측 `API 키` 버튼으로 입력창 토글
-- 키 형식: `KC_IS_...`
-- 입력한 키는 브라우저 `localStorage`에 저장되어 다음 접속 시 자동 복원
-- `저장` 버튼 또는 엔터로 저장, `삭제` 버튼으로 브라우저 저장값 제거
-
-## 프록시 URL 설정 (Cloudflare Worker 등)
-- 기본값은 현재 호스트의 `/v1/chat/completions`, `/tarot/random` 경로를 사용
-- 별도 프록시를 쓸 때는 URL에 `?proxyBase=https://<your-worker-domain>` 추가
-- 한 번 지정하면 브라우저 `localStorage`에 저장되어 다음 접속에도 유지
-
-## Lottie 커스터마이징
-1. 원하는 Lottie JSON 파일명을 `character.json`으로 변경
-2. `index.html`과 같은 폴더에 배치
-3. 새로고침
+### 프록시 URL (Cloudflare Worker 등)
+```
+https://<your-domain>/?proxyBase=https://<worker-domain>
+```
+한 번 지정하면 `localStorage`에 저장되어 유지됩니다.
 
 ---
 
-## 파일 구조 (핵심)
+## 9. 파일 구조
 
-- `index.html`: UI/스타일/로직 전체
-- `README.md`: 프로젝트 문서
-- `server.py`: 로컬 프록시/정적 서빙(사용 시)
-- `api/index.py`: Vercel 서버리스용 Flask 엔트리
-- `requirements.txt`: Python 의존성(배포/로컬 공용)
-- `Procfile`: PaaS 실행 명령(`gunicorn server:app`)
-- `cloudflare-worker/`: Cloudflare Worker 프록시(`wrangler.toml`, `src/worker.js`)
-- `vercel.json`: Vercel 라우팅(`/v1/chat/completions`, `/tarot/random`, `/health`)
-- `JPG/`: 타로 카드 이미지 폴더(파일명 규칙 준수)
-
----
-
-## 트러블슈팅
-
-- **타로 카드 이미지가 안 뜸**
-  - `JPG` 폴더 위치 확인
-  - 파일명 규칙(대소문자/공백/하이픈) 확인
-- **API 호출 실패**
-  - API Key 확인
-  - 로컬 서버(`server.py`)로 접속했는지 확인
-- **음성 인식 안 됨**
-  - 브라우저 마이크 권한 확인
-  - HTTPS/localhost 환경 확인
+```
+chunjik/
+├── index.html              # SPA 전체 (UI + 로직)
+├── character.js            # Lottie 애니메이션 데이터 (선택)
+├── server.py               # 로컬 Flask 프록시 + 정적 서빙
+├── proxy_utils.py          # 프록시 공통 로직
+├── privacy_store.py        # 암호화 저장소 (SQLite)
+├── privacy_routes.py       # 개인정보·보호자 API
+├── api/index.py            # Vercel 서버리스 엔트리
+├── requirements.txt        # Python 의존성
+├── .env.example            # 환경 변수 템플릿
+├── Procfile                # PaaS 시작 명령
+├── render.yaml             # Render 배포 설정
+├── vercel.json             # Vercel 라우팅
+├── cloudflare-worker/      # Worker 프록시
+│   ├── src/worker.js
+│   └── wrangler.toml
+└── JPG/                    # 타로 카드 이미지 (name_short 규칙)
+```
 
 ---
 
-## 기술 스택
+## 10. 기술 스택
 
-- Vanilla JavaScript
-- HTML/CSS (단일 페이지)
-- `lottie-web` (CDN)
-- MediaRecorder API / Web Audio API
-- SSE 스트리밍 파싱
-- Flask (옵션)
-
----
-
-## 배포 가이드
-
-### 추천 플랫폼
-- **Render / Railway 권장**: 현재 구조가 Flask 프록시(`server.py`)를 포함하므로 서버 런타임이 필요한 배포에 적합
-- **Vercel (현재 지원)**: 정적 프론트 + `api/index.py` Flask 서버리스 경로로 바로 배포 가능
-- **Cloudflare Pages + Workers**: 정적 페이지 + 프록시 분리 배포에 적합
-- **Netlify**: 정적 호스팅에는 강점이 있지만, 현재 Flask 라우트를 그대로 쓰려면 추가 서버리스 마이그레이션 필요
-
-### Render/Railway 공통 설정
-1. 저장소 연결
-2. 빌드 명령: `pip install -r requirements.txt`
-3. 시작 명령: `gunicorn server:app --bind 0.0.0.0:$PORT`
-4. 헬스체크: `/health`
-
-### Cloudflare Workers 배포
-1. `cloudflare-worker` 폴더로 이동
-2. Wrangler 로그인 후 배포:
-   ```bash
-   npx wrangler login
-   npx wrangler deploy
-   ```
-3. 출력된 Worker 도메인을 복사 (예: `https://chunjik-proxy.<subdomain>.workers.dev`)
-4. 프론트 접속 URL에 `?proxyBase=<WorkerURL>` 추가
-   - 예: `https://<pages-domain>/?proxyBase=https://chunjik-proxy.<subdomain>.workers.dev`
-
-### Vercel 배포
-1. Vercel에서 `a4file/chunjik` 저장소 Import
-2. Framework Preset은 `Other`(자동)
-3. Build Command 비워둠 (정적 + Python serverless 자동 감지)
-4. Deploy 실행
-5. 배포 후 확인
-   - `https://<vercel-domain>/health`
-   - 앱에서 채팅/타로 요청이 `/v1/chat/completions`, `/tarot/random`으로 정상 동작하는지 확인
-
-선택: Vercel 환경변수 `KANANA_SERVER_API_KEY`를 설정하면, 클라이언트 Authorization 헤더 없이도 서버측 키로 동작할 수 있습니다.
-
-### 배포 전 체크리스트
-- 하드코딩된 API 키가 없는지 확인 (`index.html`의 `value="KC_IS_..."` 금지)
-- `__pycache__/` 및 로그 파일이 커밋 대상에서 제외되는지 확인 (`.gitignore`)
-- 브라우저에서 API 키 저장/삭제 동작 확인
-- `JPG/` 카드 이미지 파일명 규칙 재확인
+| 계층 | 기술 |
+|------|------|
+| 프런트 | Vanilla JS, HTML/CSS, lottie-web (CDN) |
+| 음성 | MediaRecorder API, Web Audio API, SpeechSynthesis |
+| AI | OpenAI Chat Completions (SSE), Audio Transcriptions |
+| 백엔드 | Flask, flask-cors, requests, gunicorn |
+| 프록시 | Cloudflare Workers, Vercel Python Runtime |
+| 외부 | tarotapi.dev (타로 카드 데이터) |
 
 ---
 
-## 향후 개선 추천
+## 11. TRL 7+ 로드맵
 
-- 카드 이미지 파일명 자동 인덱싱(매핑 테이블 외부화)
-- 사회성 연습 로그 저장/복원(세션 지속)
-- 테스트 스크립트(의도 라우팅/이미지 로드/전사 fallback)
-- 설정 분리(`config.js`)로 모델/엔드포인트 관리 단순화
+### Phase 1 — 운영 환경 시연 (TRL 7)
+- 사용자 계정·세션 서버 저장
+- 보호자/상담자 읽기 전용 뷰
+- 운영 로그·에러 모니터링
+- 자동 E2E 테스트 (의도 라우팅, 타로, 사회성 피드백)
+
+### Phase 2 — 파일럿 서비스 (TRL 8 준비)
+- ASD당사자네트워크 파일럿 배포
+- 사용 데이터 기반 시나리오 개선
+- 접근성·인지 부하 추가 검증
+- 개인정보 처리방침·동의 흐름 정비
+
+### Phase 3 — 상용화 준비 (TRL 9)
+- 기관별 멀티테넌트
+- 요금·쿼터·SLA
+- 임상/교육 효과 평가 연계
+- 콘텐츠 CMS 및 시나리오 외부화
+
+---
+
+## 12. 트러블슈팅
+
+| 증상 | 확인 사항 |
+|------|-----------|
+| API 503 | `OPENAI_API_KEY` 환경변수 설정·재배포 |
+| CORS 오류 | `server.py` 또는 배포 URL로 접속 |
+| 음성 인식 안 됨 | `DEMO_MODE=0`, 마이크 권한, HTTPS/localhost |
+| 타로 이미지 없음 | `JPG/` 파일명이 tarotapi `name_short`와 일치하는지 확인 |
+| 타로 재뽑기 불가 | 일일 1회 제한 — 다음 날 또는 `chunjik.tarotDaily` 삭제 |
+| 시연 모드인데 응답 없음 | `/health`의 `ready: false` — 서버 키 미설정 |
+
+---
+
+## 13. 라이선스·고지
+
+- 본 앱의 사회성 시나리오·피드백은 AI가 생성하는 **앱 전용 콘텐츠**이며, 특정 기관·상표 교육 프로그램을 대표하지 않습니다.
+- 타로 카드 데이터: [tarotapi.dev](https://tarotapi.dev)
+- 회원가입 문의: [ASD당사자네트워크 폼](https://form.naver.com/response/jfjr-1UnoCULGFekjKnjow)
+
+---
+
+*최종 업데이트: 2026년 7월 — 시연 완료, TRL 6 정리 기준*

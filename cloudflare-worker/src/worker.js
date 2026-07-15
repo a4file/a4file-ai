@@ -53,6 +53,15 @@ function sanitizeChatBody(rawText) {
   }
   if (!data || typeof data !== "object") return { error: "Invalid request body" };
   delete data.modalities;
+  // gpt-5.x: max_tokens → max_completion_tokens
+  let rawLimit = data.max_completion_tokens ?? data.max_tokens;
+  if (typeof rawLimit !== "number" || rawLimit <= 0) {
+    rawLimit = 256;
+  } else if (rawLimit > 600) {
+    rawLimit = 600;
+  }
+  delete data.max_tokens;
+  data.max_completion_tokens = rawLimit;
   if (!Array.isArray(data.messages)) return { error: "messages must be an array" };
   for (const msg of data.messages) {
     if (!msg || typeof msg !== "object") continue;

@@ -24,6 +24,10 @@ from proxy_utils import (
     sanitize_chat_body,
     server_api_key,
 )
+from privacy_routes import register_privacy_routes
+from contact_routes import register_contact_routes
+from contact_mail import status_payload as contact_status_payload
+import privacy_store
 
 load_local_env()
 
@@ -34,6 +38,8 @@ PORT = int(os.environ.get("PORT", "8080"))
 
 app = Flask(__name__, static_folder=".", static_url_path="")
 CORS(app, supports_credentials=True, expose_headers="*")
+register_privacy_routes(app)
+register_contact_routes(app)
 
 
 @app.route("/")
@@ -159,6 +165,8 @@ def health():
         "upstream": UPSTREAM,
         "transcribe": TRANSCRIBE_UPSTREAM,
         "tarot": TAROT_API_BASE,
+        "privacy": privacy_store.status_payload(),
+        "contact": contact_status_payload(),
     }
 
 

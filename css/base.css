@@ -1,0 +1,23 @@
+:root {
+  --app-top-gap: max(18px, env(safe-area-inset-top));
+  --bottom-bar-reserve: calc(54px + env(safe-area-inset-bottom));
+  --home-avatar-zone: 214px;
+  --ink: #12151a;
+  --muted: #5c6570;
+  --line: rgba(18, 21, 26, 0.1);
+  --paper: #f4f6f8;
+  --paper-2: #ebf0f4;
+  --accent: #5a84b8;
+  --accent-deep: #3d628f;
+  --accent-soft: #f0b5a8;
+  --sky-rail-bg: #e8eef5;
+}
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #f0f2f5;
+    color: #1a1a1a;
+    overflow: hidden;
+    overflow-x: clip;
+  }

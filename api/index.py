@@ -16,6 +16,10 @@ from proxy_utils import (
     sanitize_chat_body,
     server_api_key,
 )
+from privacy_routes import register_privacy_routes
+from contact_routes import register_contact_routes
+import privacy_store
+from contact_mail import status_payload as contact_status_payload
 
 load_local_env()
 
@@ -25,6 +29,8 @@ TAROT_API_BASE = "https://tarotapi.dev/api/v1"
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, expose_headers="*")
+register_privacy_routes(app)
+register_contact_routes(app)
 
 
 def _json_error(status: int, message: str):
@@ -46,6 +52,8 @@ def health():
         "upstream": UPSTREAM,
         "transcribe": TRANSCRIBE_UPSTREAM,
         "tarot": TAROT_API_BASE,
+        "privacy": privacy_store.status_payload(),
+        "contact": contact_status_payload(),
     }
 
 

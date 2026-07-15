@@ -69,6 +69,15 @@ def sanitize_chat_body(raw: bytes):
 
     data.pop("modalities", None)
 
+    # gpt-5.x 계열은 max_tokens 대신 max_completion_tokens 사용
+    raw_limit = data.get("max_completion_tokens", data.get("max_tokens"))
+    if not isinstance(raw_limit, int) or raw_limit <= 0:
+        raw_limit = 256
+    elif raw_limit > 600:
+        raw_limit = 600
+    data.pop("max_tokens", None)
+    data["max_completion_tokens"] = raw_limit
+
     messages = data.get("messages")
     if not isinstance(messages, list):
         return None, "messages must be an array"

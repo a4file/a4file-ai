@@ -4,6 +4,8 @@
     { "source": "/v1/chat/completions", "destination": "/api/index" },
     { "source": "/v1/audio/transcriptions", "destination": "/api/index" },
     { "source": "/tarot/random", "destination": "/api/index" },
-    { "source": "/health", "destination": "/api/index" }
+    { "source": "/health", "destination": "/api/index" },
+    { "source": "/api/privacy/:path*", "destination": "/api/index" },
+    { "source": "/api/contact/:path*", "destination": "/api/index" }
   ]
 }
