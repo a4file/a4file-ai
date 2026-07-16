@@ -26,8 +26,11 @@ from proxy_utils import (
 )
 from privacy_routes import register_privacy_routes
 from contact_routes import register_contact_routes
+from blog_routes import register_blog_routes
+from external_routes import register_external_routes
 from contact_mail import status_payload as contact_status_payload
 import privacy_store
+import blog_store
 
 load_local_env()
 
@@ -46,6 +49,14 @@ try:
     register_contact_routes(app)
 except Exception as e:
     print(f"[boot] contact routes skipped: {e}", flush=True)
+try:
+    register_blog_routes(app)
+except Exception as e:
+    print(f"[boot] blog routes skipped: {e}", flush=True)
+try:
+    register_external_routes(app)
+except Exception as e:
+    print(f"[boot] external routes skipped: {e}", flush=True)
 
 
 @app.route("/")
@@ -173,6 +184,7 @@ def health():
         "tarot": TAROT_API_BASE,
         "privacy": privacy_store.status_payload(),
         "contact": contact_status_payload(),
+        "blog": blog_store.status_payload(),
     }
 
 

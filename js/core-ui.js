@@ -412,6 +412,9 @@ function detectToolIntent(raw) {
   if (/(감정\s*매칭|표정\s*매칭|emotion)/i.test(t)) return 'game-emotion';
   if (/(미니게임|뽁뽁이|원\s*그리기|게임|mini\s*games|ミニゲーム|小游戏)/i.test(t)) return 'games';
 
+  if (/(날씨|기온|온도|weather|météo|天気|天气)/i.test(t)) return 'weather';
+  if (/(지도|맵\s*보여|어디\s*야|어디야|위치\s*알려|장소\s*찾아|geocode|openstreetmap|\bmap\b|地図|地图|carte)/i.test(t)) return 'maps';
+
   return null;
 }
 
@@ -469,6 +472,7 @@ function closeAllToolOverlays() {
   routineOverlay?.classList.remove('show');
   gamesOverlay?.classList.remove('show');
   aboutOverlay?.classList.remove('show');
+  document.getElementById('blogOverlay')?.classList.remove('show');
   try { closePrivacySettings?.(); } catch (_) {}
   try { closeGuardian?.(); } catch (_) {}
 }
@@ -482,6 +486,7 @@ function isAnyToolOverlayOpen() {
     routineOverlay?.classList.contains('show') ||
     gamesOverlay?.classList.contains('show') ||
     aboutOverlay?.classList.contains('show') ||
+    document.getElementById('blogOverlay')?.classList.contains('show') ||
     privacyOverlay?.classList.contains('show') ||
     guardianOverlay?.classList.contains('show')
   );
@@ -540,6 +545,16 @@ function tryRouteToolIntent(text) {
       openGameSection(focus);
       return true;
     }
+    if (mode === 'weather') {
+      showStatus(typeof t === 'function' ? t('route.weather') : '날씨를 살펴볼게!', 2200);
+      handleWeatherIntent(text);
+      return true;
+    }
+    if (mode === 'maps') {
+      showStatus(typeof t === 'function' ? t('route.maps') : '지도를 찾아볼게!', 2200);
+      handleMapsIntent(text);
+      return true;
+    }
   }
 
   if (typeof handleContactInquiryReply === 'function' && handleContactInquiryReply(text)) return true;
@@ -571,4 +586,55 @@ function tryRouteToolIntent(text) {
   }
 
   return false;
+}
+
+function extractPlaceQuery(raw) {
+  let t = String(raw || '').trim();
+  if (!t) return '';
+  t = t
+    .replace(/(오늘|내일|지금|현재|please)/gi, ' ')
+    .replace(/(날씨|기온|온도|weather|météo|天気|天气)/gi, ' ')
+    .replace(/(지도|맵|위치|장소|어디|찾아|알려|보여|해줘|해 줘|좀|map|maps|geocode|地図|地图|carte)/gi, ' ')
+    .replace(/[?？!！.,]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return t;
+}
+
+async function handleWeatherIntent(userText) {
+  const q = extractPlaceQuery(userText);
+  try {
+    const url = q ? `/api/weather?q=${encodeURIComponent(q)}` : '/api/weather';
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
+    const place = data.place?.name || q || '여기';
+    const w = data.weather || {};
+    const shortPlace = String(place).split(',')[0];
+    const msg =
+      `${shortPlace} 날씨: ${w.weather_label || '-'}, ` +
+      `${w.temperature_c != null ? w.temperature_c + '°C' : '-'} ` +
+      `(최저 ${w.today_min ?? '-'}° / 최고 ${w.today_max ?? '-'}°), ` +
+      `습도 ${w.humidity ?? '-'}%, 바람 ${w.wind_kmh ?? '-'} km/h`;
+    addMessage(msg, 'bot');
+  } catch (e) {
+    addMessage(typeof t === 'function' ? t('weather.fail') : '날씨를 불러오지 못했어요.', 'bot');
+  }
+}
+
+async function handleMapsIntent(userText) {
+  const q = extractPlaceQuery(userText);
+  if (!q) {
+    addMessage(typeof t === 'function' ? t('maps.fail') : '장소를 찾지 못했어요. 예: 「서울역 지도」', 'bot');
+    return;
+  }
+  try {
+    const res = await fetch(`/api/maps/geocode?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'fail');
+    const p = data.place;
+    addMessage(`${p.name}\n위도 ${p.lat}, 경도 ${p.lon}\n지도: ${p.map_url}`, 'bot');
+  } catch (e) {
+    addMessage(typeof t === 'function' ? t('maps.fail') : '장소를 찾지 못했어요.', 'bot');
+  }
 }

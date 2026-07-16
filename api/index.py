@@ -18,6 +18,7 @@ from proxy_utils import (
 )
 from contact_mail import status_payload as contact_status_payload
 import privacy_store
+import blog_store
 
 load_local_env()
 
@@ -42,6 +43,20 @@ try:
 except Exception as e:
     print(f"[boot] contact routes skipped: {e}", flush=True)
 
+try:
+    from blog_routes import register_blog_routes
+
+    register_blog_routes(app)
+except Exception as e:
+    print(f"[boot] blog routes skipped: {e}", flush=True)
+
+try:
+    from external_routes import register_external_routes
+
+    register_external_routes(app)
+except Exception as e:
+    print(f"[boot] external routes skipped: {e}", flush=True)
+
 
 def _json_error(status: int, message: str):
     return Response(
@@ -63,6 +78,10 @@ def health():
         contact = contact_status_payload()
     except Exception as e:
         contact = {"ready": False, "error": str(e)}
+    try:
+        blog = blog_store.status_payload()
+    except Exception as e:
+        blog = {"configured": False, "ready": False, "error": str(e)}
     return {
         "ok": demo and has_key if demo else True,
         "demo_mode": demo,
@@ -72,6 +91,7 @@ def health():
         "tarot": TAROT_API_BASE,
         "privacy": privacy,
         "contact": contact,
+        "blog": blog,
     }
 
 

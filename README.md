@@ -348,6 +348,24 @@ flowchart TB
 
 > **Vercel 서버리스 주의**: SQLite 파일이 인스턴스 간 공유되지 않을 수 있습니다. 영구 저장이 필요하면 Render 등 디스크 있는 런타임을 권장합니다.
 
+### 6.6 블로그 CMS · 외부 API
+
+| 항목 | 설명 |
+|------|------|
+| DB | Neon Postgres (`DATABASE_URL`) |
+| 공개 | `GET /api/blog/posts`, `GET /api/blog/posts/:slug` |
+| 관리 | `/admin.html` + `ADMIN_PIN` (HMAC 토큰, `X-Admin-Token`) |
+| 홈 UI | `stage-blog` — 페이지당 3개 썸네일+제목, 좌우 페이지네이션 |
+| 날씨 | `GET /api/weather` → Open-Meteo (채팅: 「서울 날씨」) |
+| 지도 | `GET /api/maps/geocode` → Nominatim/OSM (채팅: 「서울역 지도」) |
+
+| 변수 | 설명 |
+|------|------|
+| `DATABASE_URL` | Neon 연결 문자열 |
+| `ADMIN_PIN` | 블로그 관리자 PIN |
+| `ADMIN_TOKEN_SECRET` | 토큰 서명용 (선택) |
+| `WEATHER_DEFAULT_Q` | 「날씨」만 말할 때 기본 도시 (기본: 서울) |
+
 ### 6.5 TRL 7 진입 전 남은 과제
 - 보호자·이용자 계정 체계 (현재는 익명 user_id + PIN)
 - 서버 감사 로그·운영 모니터링
@@ -379,6 +397,11 @@ flowchart TB
 | `PRIVACY_ENABLED` | 개인정보 API 활성화 | `1` |
 | `GUARDIAN_PIN` | 보호자 대시보드 PIN | — |
 | `PRIVACY_ENCRYPTION_KEY` | Fernet 암호화 키 (선택) | PIN 파생 |
+| `DATA_DIR` | SQLite 경로 | `./data` |
+| `DATABASE_URL` | Neon Postgres (블로그) | — |
+| `ADMIN_PIN` | 블로그 관리자 PIN | — |
+| `WEATHER_DEFAULT_Q` | 기본 날씨 도시 | `서울` |
+| `CONTACT_TO` / `RESEND_API_KEY` | 문의 메일 | — |
 | `DATA_DIR` | SQLite 저장 경로 | `./data` |
 
 ### 7.3 배포 후 확인 체크리스트
@@ -419,13 +442,19 @@ https://<your-domain>/?proxyBase=https://<worker-domain>
 
 ```
 chunjik/
-├── index.html              # SPA 전체 (UI + 로직)
+├── index.html              # SPA UI
+├── admin.html              # 블로그 관리자 (PIN)
 ├── character.js            # Lottie 애니메이션 데이터 (선택)
 ├── server.py               # 로컬 Flask 프록시 + 정적 서빙
 ├── proxy_utils.py          # 프록시 공통 로직
 ├── privacy_store.py        # 암호화 저장소 (SQLite)
 ├── privacy_routes.py       # 개인정보·보호자 API
+├── blog_store.py           # Neon 블로그 스토어
+├── blog_routes.py          # 블로그 공개·관리 API
+├── contact_mail.py / contact_routes.py
+├── external_routes.py      # 날씨·지도 프록시
 ├── api/index.py            # Vercel 서버리스 엔트리
+├── js/blog.js / js/admin.js
 ├── requirements.txt        # Python 의존성
 ├── .env.example            # 환경 변수 템플릿
 ├── Procfile                # PaaS 시작 명령

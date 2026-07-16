@@ -1,0 +1,128 @@
+:root {
+  --ink: #1a2330;
+  --muted: #5b6b7c;
+  --line: rgba(26, 35, 48, 0.12);
+  --accent: #3d6ea5;
+  --bg: #eef2f6;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(900px 400px at 10% -10%, rgba(61, 110, 165, 0.14), transparent 50%),
+    linear-gradient(180deg, #e4ebf2, var(--bg));
+  min-height: 100vh;
+}
+.admin-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 18px 60px;
+}
+.admin-head { margin-bottom: 22px; }
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 18px;
+}
+.admin-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.admin-card {
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.admin-card h1, .admin-card h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+input, textarea, select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+}
+button.ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+button.danger {
+  background: #b42318;
+}
+.admin-err {
+  color: #b42318;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.admin-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.4fr);
+  gap: 14px;
+}
+@media (max-width: 800px) {
+  .admin-layout { grid-template-columns: 1fr; }
+}
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.post-list button {
+  width: 100%;
+  text-align: left;
+  background: #f7f9fb;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.post-list .meta {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.admin-form-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}

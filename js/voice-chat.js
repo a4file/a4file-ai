@@ -284,6 +284,8 @@ Tools exist in this app and open automatically when the user asks clearly. Prefe
 - Social practice: 사회성 연습 / social practice
 - Sensory / meltdown / anxiety coping: 감각과민·행동 조절 / regulation
 - Routines, picture talk, mini-games: suggest those words or the + menu
+- Weather: say 날씨 / weather (e.g. 서울 날씨)
+- Maps / place lookup: say 지도 / map with a place name
 Only for institutional adoption / PoC / partnership / email contact forms: tell them to say adoption inquiry (도입 문의). Do NOT turn every chat into an intake form. Do not write mailto or URLs. Language switch: ask them to tap KO/EN/JA/ZH/FR or say switch language.` },
       { role: 'user', content: text }
     ],

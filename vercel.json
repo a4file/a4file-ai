@@ -7,6 +7,9 @@
     { "source": "/health", "destination": "/api/index" },
     { "source": "/api/privacy/:path*", "destination": "/api/index" },
     { "source": "/api/contact/:path*", "destination": "/api/index" },
+    { "source": "/api/blog/:path*", "destination": "/api/index" },
+    { "source": "/api/weather", "destination": "/api/index" },
+    { "source": "/api/maps/:path*", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/api/index" }
   ]
 }

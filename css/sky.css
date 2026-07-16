@@ -689,6 +689,31 @@
     color: #2a4365;
   }
   .about-card p:last-child { margin-bottom: 0; }
+
+  .blog-article {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .blog-article-thumb {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .blog-article h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  .blog-article-body {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
   .about-membership-btn {
     display: inline-flex;
     align-items: center;
