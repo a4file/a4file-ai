@@ -60,8 +60,6 @@ except Exception as e:
 
 
 @app.route("/")
-@app.route("/api")
-@app.route("/api/index")
 def index():
     return send_from_directory(".", "index.html")
 

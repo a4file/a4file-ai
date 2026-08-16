@@ -1,6 +1,10 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/lab", "destination": "/lab.html" },
+    { "source": "/careers", "destination": "/careers.html" },
+    { "source": "/favicon.ico", "destination": "/logo.png" },
+    { "source": "/favicon.png", "destination": "/logo.png" },
     { "source": "/v1/chat/completions", "destination": "/api/index" },
     { "source": "/v1/audio/transcriptions", "destination": "/api/index" },
     { "source": "/tarot/random", "destination": "/api/index" },

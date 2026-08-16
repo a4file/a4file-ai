@@ -188,8 +188,6 @@ def tarot_proxy():
 
 
 @app.route("/")
-@app.route("/api")
-@app.route("/api/index")
 def index():
     return send_from_directory(ROOT, "index.html")
 
