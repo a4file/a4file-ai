@@ -192,6 +192,16 @@ def index():
     return send_from_directory(ROOT, "index.html")
 
 
+@app.route("/lab")
+def lab_page():
+    return send_from_directory(ROOT, "lab.html")
+
+
+@app.route("/careers")
+def careers_page():
+    return send_from_directory(ROOT, "careers.html")
+
+
 @app.route("/<path:filename>")
 def static_files(filename):
     # Keep API routes from colliding with missing static 404s.

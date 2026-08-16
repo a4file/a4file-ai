@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAB 41 | AI41</title>
+<meta name="description" content="스카이 옆에 마흔한 개의 방. AI41 LAB.">
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="page-body">
+  <header class="page-top">
+    <a class="page-brand" href="/">
+      <img src="logo.png" width="36" height="36" alt="AI41">
+      <div>AI41<span>AI FOR ONE</span></div>
+    </a>
+    <nav class="page-nav">
+      <a href="/">홈</a>
+      <a class="active" href="/lab">LAB</a>
+      <a href="/careers">채용</a>
+    </nav>
+  </header>
+  <main class="page-main">
+    <p class="page-kicker">LAB · 41</p>
+    <h1>스카이 옆에, 마흔한 개의 방</h1>
+    <p class="page-lead">
+      AI41은 이름 그대로입니다. 한 사람을 위한 AI를 마흔한 가지로 열어 두는 실험실.
+      1번은 이미 스카이입니다. 비어 있는 번호는 홍보용 로드맵이 아니라, 아직 사람이 없는 방입니다.
+    </p>
+    <ol class="lab-grid" id="labGrid"></ol>
+  </main>
+  <footer class="page-foot">주식회사 AI41 · 문의 ai41@ai41.kr · 스카이는 치료·진단을 대체하지 않습니다.</footer>
+  <script>
+    const APPS = [
+      ["스카이", "안녕, 나는 스카이야. 말 걸어봐.", "지금 있어요", "/"],
+      ["사회성 연습", "낯설 때 연습할 수 있는 작은 대화.", "지금 있어요", "/"],
+      ["루틴", "오늘 할 일을 미리 정해 두면 마음이 덜 흔들려요.", "지금 있어요", "/"],
+      ["감정조절", "커지기 전에 멈춰 보는 화면.", "지금 있어요", "/"],
+      ["그림 말하기", "말보다 그림이 쉬울 때.", "지금 있어요", "/"],
+      ["미니게임", "쉬는 시간도 연습이 될 수 있어요.", "지금 있어요", "/"],
+      ["타로", "점술이 아니라, 오늘을 한 장으로 보는 놀이.", "지금 있어요", "/"],
+      ["보호자 보기", "동의한 범위만. 감시가 아니라 함께 보기.", "지금 있어요", "/"],
+      ["개인정보", "저장할지 말지는 본인이 정해요.", "지금 있어요", "/"],
+      ["다국어", "KO · EN · JA · ZH · FR. 처음부터 세계로.", "지금 있어요", "/"],
+      ["도입 문의", "학교·센터 얘기는 스카이에게 말하면 메일로 가요.", "지금 있어요", "/#stage-contact"],
+      ["뉴로크래프트", "3+1 팀이 데이터 검수와 창작을 맡는 일자리.", "만들고 있어요", "/#stage-products"],
+      ["데이터 검수", "AI가 놓친 자리를 사람이 닫아요.", "만들고 있어요", ""],
+      ["크리에이티브", "카피, 컷, 소리. 당사자 시선이 품질이에요.", "만들고 있어요", ""],
+      ["MCP 실험", "카카오 AI 생태계에서 도구를 붙여 보는 중.", "만들고 있어요", ""],
+      ["수어", "말이 어려운 날을 위한 확장. 아직 실험.", "만들고 있어요", ""],
+      ["오티즘엑스포", "스카이를 현장에서 보여 준 자리.", "지금 있어요", "/#stage-achievements"],
+      ["영상감독", "사장님이 자기 가게 영상을 끝까지 만들게.", "만들고 있어요", ""],
+      ["쇼케이스", "완성작만이 아니라 헤맨 과정도 남겨요.", "빈 자리", ""],
+      ["가이드북", "도구 설명이 아니라 한 편을 끝내는 순서.", "빈 자리", ""],
+      ["쉬운말", "공공 안내문을 다시 씁니다.", "빈 자리", ""],
+      ["자막 공방", "AI가 초안, 사람이 마침표.", "빈 자리", ""],
+      ["케어브릿지", "진술을 사실과 추정으로 나누고, 급하면 112.", "빈 자리", ""],
+      ["소식", "블로그. 이미 홈에 있어요.", "지금 있어요", "/#stage-blog"],
+      ["채용", "빈 자리 41개 중, 사람과 같이 채울 자리.", "지금 있어요", "/careers"],
+      ["연대 허브", "자조모임, 센터, 사회적기업과 같은 지도.", "지금 있어요", "/#stage-partners"],
+      ["PoC", "기관이 쓰기 전에 작게 검증.", "만들고 있어요", "/#stage-contact"],
+      ["워크숍", "한 번에 따라 하는 교육이 아니라 자기 과제를 끝냄.", "빈 자리", ""],
+      ["3+1 팀", "세 명의 실무와 한 명의 코치.", "만들고 있어요", ""],
+      ["저자극 UI", "반짝임, 자동재생, 급한 말투를 줄여요.", "지금 있어요", "/"],
+      ["음성 대화", "타이핑이 어려운 날의 입구.", "지금 있어요", "/"],
+      ["시연 서버", "현장에서 바로 보여 줄 수 있게.", "지금 있어요", "/"],
+      ["가족 온보딩", "보호자와 당사자의 속도를 다르게.", "빈 자리", ""],
+      ["학교 도입", "교실에서 스카이를 쓰는 최소 약속.", "빈 자리", ""],
+      ["센터 도입", "복지·상담 현장용 설정.", "빈 자리", ""],
+      ["고립 청년", "진단이 아니라 연결이 먼저인 자리. 아직 비어 있어요.", "빈 자리", ""],
+      ["법령 안내", "어려운 글을 한 번 더 쉽게.", "빈 자리", ""],
+      ["공고판", "회사 공고는 이 사이트에 남깁니다.", "빈 자리", ""],
+      ["LAB 노트", "실험 실패를 숨기지 않는 기록.", "빈 자리", ""],
+      ["For One", "한 사람에게 맞춰진 속도.", "지금 있어요", "/"],
+      ["For Everyone", "41번째 자리는 비워 둡니다. 같이 정해요.", "빈 자리", ""]
+    ];
+    const grid = document.getElementById("labGrid");
+    APPS.forEach(([name, line, st], i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<article class="lab-card"><span class="num">${String(i + 1).padStart(2, "0")}</span><strong>${name}</strong><p>${line}</p><span class="st">${st}</span></article>`;
+      grid.appendChild(li);
+    });
+  </script>
+</body>
+</html>

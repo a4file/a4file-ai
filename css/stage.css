@@ -199,7 +199,8 @@
       justify-content: flex-end;
       position: relative;
     }
-    .top-slim-nav button {
+    .top-slim-nav button,
+    .top-slim-nav a {
       border: none;
       background: transparent;
       color: var(--muted);
@@ -210,14 +211,17 @@
       border-radius: 999px;
       cursor: pointer;
       position: relative;
+      text-decoration: none;
       transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
     }
-    .top-slim-nav button:hover {
+    .top-slim-nav button:hover,
+    .top-slim-nav a:hover {
       background: rgba(26, 92, 170, 0.08);
       color: var(--accent-deep);
       transform: translateY(-1px);
     }
-    .top-slim-nav button.active {
+    .top-slim-nav button.active,
+    .top-slim-nav a.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-deep));
       color: #fff;
       box-shadow: 0 4px 14px rgba(61, 98, 143, 0.28);

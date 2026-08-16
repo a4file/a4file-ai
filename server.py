@@ -64,6 +64,16 @@ def index():
     return send_from_directory(".", "index.html")
 
 
+@app.route("/lab")
+def lab_page():
+    return send_from_directory(".", "lab.html")
+
+
+@app.route("/careers")
+def careers_page():
+    return send_from_directory(".", "careers.html")
+
+
 @app.route("/<path:filename>")
 def static_files(filename):
     return send_from_directory(".", filename)
