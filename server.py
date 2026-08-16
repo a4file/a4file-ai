@@ -60,6 +60,8 @@ except Exception as e:
 
 
 @app.route("/")
+@app.route("/api")
+@app.route("/api/index")
 def index():
     return send_from_directory(".", "index.html")
 
@@ -72,6 +74,12 @@ def lab_page():
 @app.route("/careers")
 def careers_page():
     return send_from_directory(".", "careers.html")
+
+
+@app.route("/favicon.ico")
+@app.route("/favicon.png")
+def favicon():
+    return send_from_directory(".", "logo.png", mimetype="image/png")
 
 
 @app.route("/<path:filename>")
