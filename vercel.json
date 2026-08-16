@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{*.html,logo.png,character.js,character.json,css/**,js/**,JPG/**}"
+    }
+  },
   "rewrites": [
     { "source": "/lab", "destination": "/lab.html" },
     { "source": "/careers", "destination": "/careers.html" },
@@ -13,7 +18,6 @@
     { "source": "/api/contact/:path*", "destination": "/api/index" },
     { "source": "/api/blog/:path*", "destination": "/api/index" },
     { "source": "/api/weather", "destination": "/api/index" },
-    { "source": "/api/maps/:path*", "destination": "/api/index" },
-    { "source": "/(.*)", "destination": "/api/index" }
+    { "source": "/api/maps/:path*", "destination": "/api/index" }
   ]
 }
