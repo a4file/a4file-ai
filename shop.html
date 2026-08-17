@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상점 | AI41</title>
+<meta name="description" content="AI41 티셔츠, 맨투맨, 텀블러. 한 사람을 위한 굿즈.">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
+</head>
+<body class="page-body">
+  <header class="page-top">
+    <a class="page-brand" href="/">
+      <img src="logo.png" width="36" height="36" alt="AI41">
+      <div>AI41<span>AI FOR ONE</span></div>
+    </a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="page-main">
+    <p class="page-kicker">Shop</p>
+    <h1>종이색 위의 AI41</h1>
+    <p class="page-lead">
+      티셔츠, 맨투맨, 텀블러, 가방. 결제는 아직 카드가 아니라 주문 문의입니다.
+      장바구니에 담은 뒤 메일로 보내 주세요. 제작은 모아서 합니다.
+    </p>
+    <ul class="shop-grid" id="shopGrid"></ul>
+    <aside class="cart-box" id="cartBox">
+      <h2>장바구니</h2>
+      <ul id="cartList"></ul>
+      <p class="cart-total" id="cartTotal">0원</p>
+      <label>회신 메일
+        <input id="cartMail" type="email" placeholder="you@example.com">
+      </label>
+      <label>배송 메모
+        <textarea id="cartMemo" rows="3" placeholder="사이즈, 수량 확인, 받을 곳"></textarea>
+      </label>
+      <button type="button" class="mail-btn" id="cartOrder">주문 문의 보내기</button>
+    </aside>
+  </main>
+  <footer class="page-foot">AI41 굿즈 · 문의 ai41@ai41.kr</footer>
+  <script src="js/nav.js"></script>
+  <script>
+    const PRODUCTS = [
+      { id: "tee", name: "AI41 티셔츠", price: 39000, img: "img/goods-tee.png", note: "크림 면. AI FOR ONE." },
+      { id: "sweat", name: "AI41 맨투맨", price: 69000, img: "img/goods-sweat.png", note: "더스티 블루. 겨울용." },
+      { id: "tumbler", name: "AI41 텀블러", price: 32000, img: "img/goods-tumbler.png", note: "매트 크림. 로고 각인." },
+      { id: "tote", name: "AI41 토트백", price: 28000, img: "img/goods-tote.png", note: "면가방. 작은 마크." }
+    ];
+    const KEY = "ai41.shop.cart";
+    const won = (n) => n.toLocaleString("ko-KR") + "원";
+    const load = () => JSON.parse(localStorage.getItem(KEY) || "{}");
+    const save = (c) => localStorage.setItem(KEY, JSON.stringify(c));
+
+    const grid = document.getElementById("shopGrid");
+    PRODUCTS.forEach((p) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<article class="shop-card">
+        <img src="${p.img}" alt="${p.name}" width="480" height="480">
+        <h2>${p.name}</h2>
+        <p>${p.note}</p>
+        <p class="price">${won(p.price)}</p>
+        <button type="button" class="mail-btn" data-id="${p.id}">담기</button>
+      </article>`;
+      grid.appendChild(li);
+    });
+
+    function renderCart() {
+      const cart = load();
+      const list = document.getElementById("cartList");
+      list.innerHTML = "";
+      let total = 0;
+      PRODUCTS.forEach((p) => {
+        const q = cart[p.id] || 0;
+        if (!q) return;
+        total += p.price * q;
+        const li = document.createElement("li");
+        li.innerHTML = `${p.name} × ${q} <button type="button" data-rm="${p.id}">빼기</button>`;
+        list.appendChild(li);
+      });
+      document.getElementById("cartTotal").textContent = won(total);
+    }
+
+    grid.addEventListener("click", (e) => {
+      const id = e.target.dataset.id;
+      if (!id) return;
+      const cart = load();
+      cart[id] = (cart[id] || 0) + 1;
+      save(cart);
+      renderCart();
+    });
+    document.getElementById("cartList").addEventListener("click", (e) => {
+      const id = e.target.dataset.rm;
+      if (!id) return;
+      const cart = load();
+      if (cart[id] > 1) cart[id] -= 1;
+      else delete cart[id];
+      save(cart);
+      renderCart();
+    });
+    document.getElementById("cartOrder").addEventListener("click", () => {
+      const cart = load();
+      const lines = PRODUCTS.filter((p) => cart[p.id]).map((p) => `${p.name} × ${cart[p.id]} = ${won(p.price * cart[p.id])}`);
+      if (!lines.length) return alert("담긴 것이 없습니다.");
+      const mail = document.getElementById("cartMail").value.trim();
+      const memo = document.getElementById("cartMemo").value.trim();
+      const body = encodeURIComponent(`회신: ${mail}\n\n${lines.join("\n")}\n합계 ${document.getElementById("cartTotal").textContent}\n\n${memo}`);
+      location.href = `mailto:ai41@ai41.kr?subject=${encodeURIComponent("[AI41 상점] 주문 문의")}&body=${body}`;
+    });
+    renderCart();
+  </script>
+</body>
+</html>

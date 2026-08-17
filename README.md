@@ -358,6 +358,7 @@ flowchart TB
 | 홈 UI | `stage-blog` — 페이지당 3개 썸네일+제목, 좌우 페이지네이션 |
 | 날씨 | `GET /api/weather` → Open-Meteo (채팅: 「서울 날씨」) |
 | 지도 | `GET /api/maps/geocode` → Nominatim/OSM (채팅: 「서울역 지도」) |
+| 검색 | `GET /api/search?q=&engine=google` → Google Custom Search JSON API |
 
 | 변수 | 설명 |
 |------|------|
@@ -365,6 +366,8 @@ flowchart TB
 | `ADMIN_PIN` | 블로그 관리자 PIN |
 | `ADMIN_TOKEN_SECRET` | 토큰 서명용 (선택) |
 | `WEATHER_DEFAULT_Q` | 「날씨」만 말할 때 기본 도시 (기본: 서울) |
+| `GOOGLE_CSE_CX` | Programmable Search 엔진 ID |
+| `GOOGLE_CSE_KEY` | Custom Search JSON API 키 (서버만, git 금지) |
 
 ### 6.5 TRL 7 진입 전 남은 과제
 - 보호자·이용자 계정 체계 (현재는 익명 user_id + PIN)

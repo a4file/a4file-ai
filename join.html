@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>구독 · 회원가입 | AI41</title>
+<meta name="description" content="월 구독 하나로 스카이, 견적, 좋은 집 찾기 등 AI41 웹 솔루션을 씁니다.">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
+</head>
+<body class="page-body">
+  <header class="page-top">
+    <a class="page-brand" href="/">
+      <img src="logo.png" width="36" height="36" alt="AI41">
+      <div>AI41<span>AI FOR ONE</span></div>
+    </a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="page-main">
+    <p class="page-kicker">Membership</p>
+    <h1>자주 오게 하려면, 문을 하나로</h1>
+    <p class="page-lead">
+      좋은 집 지도를 보러 왔다가, 스카이와 견적도 같이 쓰게 하려고 합니다.
+      카드 결제는 아직 준비 중입니다. 메일을 남기면 가입을 받아 두고, 월 구독 안내를 회신합니다.
+    </p>
+    <div class="plan-grid">
+      <article class="info-card">
+        <span class="tag">무료</span>
+        <h2>둘러보기</h2>
+        <p>지도, 경매·공매·모아주택 공식 창. 하루 다섯 번.</p>
+      </article>
+      <article class="info-card plan-card featured">
+        <span class="tag">월 9,900원</span>
+        <h2>웹 솔루션 전체</h2>
+        <p>스카이 도구, 견적 프로그램, 좋은 집 찾기, 계산 도구, LAB 가이드, 앞으로 여는 웹 솔루션.</p>
+      </article>
+      <article class="info-card">
+        <span class="tag">기관</span>
+        <h2>도입</h2>
+        <p>학교·센터·기업은 구독이 아니라 도입 문의입니다.</p>
+        <p><a href="/adopt">도입 페이지</a></p>
+      </article>
+    </div>
+    <form class="page-form" id="joinForm">
+      <label>메일
+        <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
+      </label>
+      <label>관심 동네
+        <input name="area" id="joinArea" placeholder="예: 송파구 거여동">
+      </label>
+      <label>신청
+        <select name="plan">
+          <option value="free">먼저 가입만</option>
+          <option value="month" selected>월 구독 신청 (9,900원)</option>
+        </select>
+      </label>
+      <p class="form-note">개인 연락처는 받지 않습니다. 회신은 이 메일로만 갑니다.</p>
+      <button type="submit" class="mail-btn">신청 보내기</button>
+      <p class="form-note" id="joinNote"></p>
+    </form>
+  </main>
+  <footer class="page-foot">주식회사 AI41 · ai41@ai41.kr</footer>
+  <script src="js/nav.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const area = params.get("area");
+    if (area) document.getElementById("joinArea").value = area;
+    document.getElementById("joinForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const note = document.getElementById("joinNote");
+      note.textContent = "보내는 중…";
+      try {
+        const res = await fetch("/api/house/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: fd.get("email"),
+            area: fd.get("area"),
+            plan: fd.get("plan"),
+          }),
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "실패");
+        localStorage.setItem("ai41.member.email", String(fd.get("email") || "").trim().toLowerCase());
+        note.textContent = data.note || "받아 두었습니다.";
+      } catch (err) {
+        note.textContent = err.message || "지금은 접수가 안 됩니다. ai41@ai41.kr 로 보내 주세요.";
+      }
+    });
+  </script>
+</body>
+</html>

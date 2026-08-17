@@ -57,6 +57,20 @@ try:
 except Exception as e:
     print(f"[boot] external routes skipped: {e}", flush=True)
 
+try:
+    from quote_routes import register_quote_routes
+
+    register_quote_routes(app)
+except Exception as e:
+    print(f"[boot] quote routes skipped: {e}", flush=True)
+
+try:
+    from house_routes import register_house_routes
+
+    register_house_routes(app)
+except Exception as e:
+    print(f"[boot] house routes skipped: {e}", flush=True)
+
 
 def _json_error(status: int, message: str):
     return Response(
@@ -205,6 +219,31 @@ def careers_page():
 @app.route("/story")
 def story_page():
     return send_from_directory(ROOT, "story.html")
+
+
+@app.route("/adopt")
+def adopt_page():
+    return send_from_directory(ROOT, "adopt.html")
+
+
+@app.route("/quote")
+def quote_page():
+    return send_from_directory(ROOT, "quote.html")
+
+
+@app.route("/shop")
+def shop_page():
+    return send_from_directory(ROOT, "shop.html")
+
+
+@app.route("/house")
+def house_page():
+    return send_from_directory(ROOT, "house.html")
+
+
+@app.route("/join")
+def join_page():
+    return send_from_directory(ROOT, "join.html")
 
 
 @app.route("/favicon.ico")

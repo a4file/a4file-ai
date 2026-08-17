@@ -176,6 +176,7 @@ function openPrivacySettings() {
   closeSocial();
   closeSupport();
   closeAbout();
+  closeSearch?.();
   closeGuardian();
   updatePrivacyPanel();
   privacyOverlay?.classList.add('show');
@@ -190,6 +191,7 @@ function openGuardianDashboard() {
   closeSocial();
   closeSupport();
   closeAbout();
+  closeSearch?.();
   closePrivacySettings();
   const token = localStorage.getItem(GUARDIAN_TOKEN_STORAGE_KEY);
   if (token) {

@@ -1,0 +1,95 @@
+/* 대주제–소주제 상단 메뉴 */
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.nav-group {
+  position: relative;
+}
+
+.nav-parent {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-parent::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: 0.55;
+}
+
+.nav-parent:hover,
+.nav-group.is-open .nav-parent,
+.nav-group.is-current .nav-parent {
+  background: rgba(26, 92, 170, 0.08);
+  color: var(--accent-deep);
+}
+
+.nav-sub {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 11.5rem;
+  padding: 6px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+}
+
+.nav-group.is-open .nav-sub,
+.nav-group:hover .nav-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-sub a,
+.nav-sub button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  width: 100%;
+}
+
+.nav-sub a:hover,
+.nav-sub button:hover,
+.nav-sub a.active,
+.nav-sub button.active {
+  background: rgba(26, 92, 170, 0.08);
+  color: var(--accent-deep);
+}
+
+@media (min-width: 960px) {
+  .top-slim-nav .nav-parent {
+    padding: 8px 14px;
+  }
+}

@@ -164,9 +164,12 @@ function scrollStageSection(id) {
   const scroller = document.getElementById('stageScroll');
   if (!el || !scroller) return;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  document.querySelectorAll('.top-slim-nav button').forEach((btn) => {
-    btn.classList.toggle('active', btn.getAttribute('data-stage-nav') === id);
-  });
+  if (typeof setActiveStageNav === 'function') setActiveStageNav(id);
+  else {
+    document.querySelectorAll('.top-slim-nav [data-stage-nav]').forEach((btn) => {
+      btn.classList.toggle('active', btn.getAttribute('data-stage-nav') === id);
+    });
+  }
 }
 
 function askSkyFromStage(text) {
@@ -183,6 +186,13 @@ document.querySelectorAll('[data-stage-nav]').forEach((btn) => {
     if (id) scrollStageSection(id);
   });
 });
+
+if (location.hash) {
+  const hashId = location.hash.slice(1);
+  if (document.getElementById(hashId)?.classList.contains('stage-section')) {
+    requestAnimationFrame(() => scrollStageSection(hashId));
+  }
+}
 
 document.querySelectorAll('[data-ask-sky]').forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -201,13 +211,16 @@ document.addEventListener('keydown', (e) => {
 (function initStageScrollSpy() {
   const scroller = document.getElementById('stageScroll');
   const sections = Array.from(document.querySelectorAll('.stage-section[id]'));
-  const navButtons = Array.from(document.querySelectorAll('.top-slim-nav button[data-stage-nav]'));
+  const navButtons = Array.from(document.querySelectorAll('.top-slim-nav [data-stage-nav]'));
   if (!scroller || !sections.length || !navButtons.length) return;
 
   const setActiveNav = (id) => {
-    navButtons.forEach((btn) => {
-      btn.classList.toggle('active', btn.getAttribute('data-stage-nav') === id);
-    });
+    if (typeof setActiveStageNav === 'function') setActiveStageNav(id);
+    else {
+      navButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-stage-nav') === id);
+      });
+    }
   };
 
   const observer = new IntersectionObserver((entries) => {
@@ -277,7 +290,7 @@ async function sendToKanana({ text, speakResponse = false }) {
   const body = {
     model: CHAT_MODEL,
     messages: [
-      { role: 'system', content: `You are Sky, AI companion by AI41 (AI FOR ONE) for neurodivergent people and families. CEO Seobokyung, CPO Hanseung Kwak; your name Sky comes from the CPO nickname. Support tool only — not diagnosis or treatment. Reply in ${getLangChatName()}, warm, 1-2 short sentences, no emojis/emoticons.
+      { role: 'system', content: `You are Sky, AI companion by AI41 (AI FOR ONE) for neurodivergent people and families. Your name Sky comes from a team nickname, not a person's legal name. Do not name team members. Support tool only — not diagnosis or treatment. Reply in ${getLangChatName()}, warm, 1-2 short sentences, no emojis/emoticons.
 
 Tools exist in this app and open automatically when the user asks clearly. Prefer guiding them to tools instead of long advice:
 - Tarot: say they can ask for tarot / 타로
@@ -286,6 +299,11 @@ Tools exist in this app and open automatically when the user asks clearly. Prefe
 - Routines, picture talk, mini-games: suggest those words or the + menu
 - Weather: say 날씨 / weather (e.g. 서울 날씨)
 - Maps / place lookup: say 지도 / map with a place name
+- Web search: 구글에서 ~ 검색 / 네이버에서 ~ 검색
+- About the company: AI41 소개. About this assistant: 스카이 소개. They are separate tools.
+- Quote: 견적 / 공수 / 과업 쪼개. A program (not you) calculates money. Tell them to name the task.
+- Homes: 경매 / 공매 / 모아주택 / 집 찾아. Opens /house. Membership: 구독.
+- Daily tools: 평수, 대출, 디데이, 환율, 미세먼지, 타이머, 긴급번호. Opens the calculator overlay. Emergency: 112 first, then 119 / 1388 / 1393. Do not describe methods.
 Only for institutional adoption / PoC / partnership / email contact forms: tell them to say adoption inquiry (도입 문의). Do NOT turn every chat into an intake form. Do not write mailto or URLs. Language switch: ask them to tap KO/EN/JA/ZH/FR or say switch language.` },
       { role: 'user', content: text }
     ],

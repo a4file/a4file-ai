@@ -1,17 +1,16 @@
 /* ============================================================
-   ℹ️ AI41 소개 오버레이
+   ℹ️ AI41 소개 / 스카이 소개 — 창을 따로 연다
 ============================================================ */
 function openAbout(section) {
-  showOnlyOverlay(aboutOverlay);
-  logPrivacyActivity('about_open', section || '');
-  const targetId = section === 'sky' ? 'aboutSky' : 'aboutAi41';
-  requestAnimationFrame(() => {
-    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  const el = section === 'sky' ? aboutSkyOverlay : aboutAi41Overlay;
+  showOnlyOverlay(el);
+  logPrivacyActivity('about_open', section === 'sky' ? 'sky' : 'ai41');
 }
 
 function closeAbout() {
-  aboutOverlay?.classList.remove('show');
+  aboutAi41Overlay?.classList.remove('show');
+  aboutSkyOverlay?.classList.remove('show');
 }
 
-aboutClose?.addEventListener('click', closeAbout);
+aboutAi41Close?.addEventListener('click', closeAbout);
+aboutSkyClose?.addEventListener('click', closeAbout);

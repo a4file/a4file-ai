@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
 </head>
 <body class="page-body">
   <header class="page-top">
@@ -18,11 +19,43 @@
       <img src="logo.png" width="36" height="36" alt="AI41">
       <div>AI41<span>AI FOR ONE</span></div>
     </a>
-    <nav class="page-nav">
-      <a href="/">홈</a>
-      <a href="/story">이야기</a>
-      <a class="active" href="/lab">LAB</a>
-      <a href="/careers">채용</a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
     </nav>
   </header>
   <main class="page-main">
@@ -35,6 +68,7 @@
     <ol class="lab-grid" id="labGrid"></ol>
   </main>
   <footer class="page-foot">주식회사 AI41 · 문의 ai41@ai41.kr · 스카이는 치료·진단을 대체하지 않습니다.</footer>
+  <script src="js/nav.js"></script>
   <script>
     const APPS = [
       ["스카이", "안녕, 나는 스카이야. 말 걸어봐.", "지금 있어요", "/"],
@@ -65,7 +99,7 @@
       ["연대 허브", "자조모임, 센터, 사회적기업과 같은 지도.", "지금 있어요", "/#stage-partners"],
       ["PoC", "기관이 쓰기 전에 작게 검증.", "만들고 있어요", "/#stage-contact"],
       ["워크숍", "한 번에 따라 하는 교육이 아니라 자기 과제를 끝냄.", "빈 자리", ""],
-      ["3+1 팀", "세 명의 실무와 한 명의 코치.", "만들고 있어요", ""],
+      ["2+1 팀", "실무 둘과 코치 하나. 한 달 기본 3,000만 원.", "만들고 있어요", "/quote"],
       ["저자극 UI", "반짝임, 자동재생, 급한 말투를 줄여요.", "지금 있어요", "/"],
       ["음성 대화", "타이핑이 어려운 날의 입구.", "지금 있어요", "/"],
       ["시연 서버", "현장에서 바로 보여 줄 수 있게.", "지금 있어요", "/"],
@@ -74,16 +108,18 @@
       ["센터 도입", "복지·상담 현장용 설정.", "빈 자리", ""],
       ["고립 청년", "진단이 아니라 연결이 먼저인 자리. 아직 비어 있어요.", "빈 자리", ""],
       ["법령 안내", "어려운 글을 한 번 더 쉽게.", "빈 자리", ""],
-      ["공고판", "회사 공고는 이 사이트에 남깁니다.", "빈 자리", ""],
+      ["좋은 집", "경매·공매·모아주택 부지를 한 지도에서.", "지금 있어요", "/house"],
+      ["계산 도구", "평수, 대출, 환율, 대기질, 디데이, 타이머, 긴급번호.", "지금 있어요", "/?open=utils"],
       ["LAB 노트", "실험 실패를 숨기지 않는 기록.", "빈 자리", ""],
       ["For One", "한 사람에게 맞춰진 속도.", "지금 있어요", "/"],
       ["For Everyone", "41번째 자리는 비워 둡니다. 같이 정해요.", "빈 자리", ""]
     ];
     const grid = document.getElementById("labGrid");
-    APPS.forEach(([name, line, st], i) => {
+    APPS.forEach(([name, line, st, href], i) => {
       const n = String(i + 1).padStart(2, "0");
       const li = document.createElement("li");
-      li.innerHTML = `<a class="lab-card" href="/story#app-${n}"><span class="num">${n}</span><strong>${name}</strong><p>${line}</p><span class="st">${st}</span></a>`;
+      const to = href || `/story#app-${n}`;
+      li.innerHTML = `<a class="lab-card" href="${to}"><span class="num">${n}</span><strong>${name}</strong><p>${line}</p><span class="st">${st}</span></a>`;
       grid.appendChild(li);
     });
   </script>

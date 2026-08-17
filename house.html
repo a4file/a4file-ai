@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>좋은 집 찾기 | AI41</title>
+<meta name="description" content="경매, 공매, 서울 모아주택 부지를 한 지도에서. 가입하면 AI41 웹 솔루션을 월 구독으로 씁니다.">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body class="page-body">
+  <header class="page-top">
+    <a class="page-brand" href="/">
+      <img src="logo.png" width="36" height="36" alt="AI41">
+      <div>AI41<span>AI FOR ONE</span></div>
+    </a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="page-main">
+    <p class="page-kicker">House finder</p>
+    <h1>머물 곳을, 한 지도에서</h1>
+    <p class="page-lead">
+      법원 경매, 온비드 공매, 서울 모아주택·모아타운 부지를 같은 화면에서 고릅니다.
+      사건 원문은 공식 사이트에 두고, 여기서는 동네를 반복해서 보게 만듭니다.
+      가입하면 이 지도와 스카이·견적·LAB을 월 구독 하나로 엽니다.
+    </p>
+    <div class="house-tabs" role="tablist">
+      <button type="button" class="house-tab active" data-layer="all">전체</button>
+      <button type="button" class="house-tab" data-layer="auction">경매</button>
+      <button type="button" class="house-tab" data-layer="onbid">공매</button>
+      <button type="button" class="house-tab" data-layer="moa">모아주택</button>
+    </div>
+    <form class="page-form" id="houseForm" style="max-width:none;grid-template-columns:1fr auto;align-items:end;">
+      <label>구·동
+        <input id="houseQ" name="q" placeholder="예: 송파구, 화곡동, 신림동" autocomplete="off">
+      </label>
+      <button type="submit" class="mail-btn">이 동네 보기</button>
+    </form>
+    <p class="house-hint" id="houseStatus"></p>
+    <div class="house-layout">
+      <div id="houseMap" class="house-map" role="img" aria-label="서울 집 찾기 지도"></div>
+      <aside>
+        <h2 class="page-kicker" style="margin-top:0">안내 지점</h2>
+        <div id="houseList"></div>
+        <div class="house-official" id="houseOfficial"></div>
+        <div class="house-gate" id="houseGate" hidden>
+          <p>자주 보려면 가입하세요. 월 구독이면 웹 솔루션을 전부 엽니다.</p>
+          <button type="button" class="mail-btn" id="houseWatch">가입하고 이 동네 저장</button>
+        </div>
+      </aside>
+    </div>
+    <section class="story-block">
+      <h2>왜 여기로 들어오나</h2>
+      <ul class="story-facts">
+        <li><b>경매</b> 법원 경매정보로 바로 엽니다. 감정가 원문은 법원이 갖고 있습니다.</li>
+        <li><b>공매</b> 온비드 공공자산 공매 창입니다.</li>
+        <li><b>모아주택</b> 서울 소규모 주택정비 사업지 안내. 초록 점이 입구입니다.</li>
+        <li><b>구독</b> 월 9,900원으로 스카이 도구, 견적, 이 지도, 이후 웹 솔루션.</li>
+      </ul>
+    </section>
+  </main>
+  <footer class="page-foot">투자 권유가 아닙니다. 원문은 법원·온비드·서울시. 문의 ai41@ai41.kr</footer>
+  <script src="js/nav.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/house-map.js"></script>
+</body>
+</html>

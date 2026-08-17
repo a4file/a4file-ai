@@ -1,4 +1,4 @@
-"""날씨(Open-Meteo) · 지도(Nominatim) 프록시."""
+"""날씨·대기질(Open-Meteo) · 지도(Nominatim) · 환율(Frankfurter) 프록시."""
 
 from __future__ import annotations
 
@@ -179,3 +179,168 @@ def register_external_routes(app):
             return _json_error(502, f"Maps upstream failed: {e}")
         except Exception as e:
             return _json_error(500, str(e))
+
+    @app.route("/api/search", methods=["GET", "OPTIONS"])
+    def web_search():
+        if request.method == "OPTIONS":
+            return Response(status=204)
+        q = (request.args.get("q") or "").strip()
+        engine = (request.args.get("engine") or "google").strip().lower()
+        if not q:
+            return _json_error(400, "q is required")
+        if engine == "naver":
+            return _json(
+                {
+                    "ok": True,
+                    "configured": False,
+                    "engine": "naver",
+                    "query": q,
+                    "items": [],
+                    "fallback_url": f"https://search.naver.com/search.naver?query={requests.utils.quote(q)}",
+                }
+            )
+        key = (os.environ.get("GOOGLE_CSE_KEY") or "").strip()
+        cx = (os.environ.get("GOOGLE_CSE_CX") or "342084dd1dfd24db3").strip()
+        fallback = f"https://www.google.com/search?q={requests.utils.quote(q)}"
+        if not key:
+            return _json(
+                {
+                    "ok": True,
+                    "configured": False,
+                    "engine": "google",
+                    "query": q,
+                    "items": [],
+                    "fallback_url": fallback,
+                }
+            )
+        try:
+            res = requests.get(
+                "https://www.googleapis.com/customsearch/v1",
+                params={"key": key, "cx": cx, "q": q, "num": 5, "hl": "ko", "safe": "active"},
+                headers={"User-Agent": USER_AGENT},
+                timeout=15,
+            )
+            data = res.json() if res.content else {}
+            if not res.ok:
+                msg = (data.get("error") or {}).get("message") or f"HTTP {res.status_code}"
+                return _json_error(502, msg)
+            items = []
+            for row in data.get("items") or []:
+                items.append(
+                    {
+                        "title": row.get("title") or "",
+                        "url": row.get("link") or "",
+                        "snippet": row.get("snippet") or "",
+                        "source": row.get("displayLink") or "",
+                    }
+                )
+            return _json(
+                {
+                    "ok": True,
+                    "configured": True,
+                    "engine": "google",
+                    "query": q,
+                    "items": items,
+                    "fallback_url": fallback,
+                }
+            )
+        except requests.RequestException as e:
+            return _json_error(502, f"Search upstream failed: {e}")
+        except Exception as e:
+            return _json_error(500, str(e))
+
+    @app.route("/api/fx", methods=["GET", "OPTIONS"])
+    def fx():
+        if request.method == "OPTIONS":
+            return Response(status=204)
+        src = (request.args.get("from") or "USD").strip().upper()
+        dst = (request.args.get("to") or "KRW").strip().upper()
+        try:
+            amount = float(request.args.get("amount") or 1)
+        except ValueError:
+            return _json_error(400, "amount")
+        key = f"fx:{src}:{dst}:{amount}"
+        cached = _cache_get(key)
+        if cached is not None:
+            return _json(cached)
+        try:
+            res = requests.get(
+                "https://api.frankfurter.app/latest",
+                params={"from": src, "to": dst, "amount": amount},
+                headers={"User-Agent": USER_AGENT},
+                timeout=12,
+            )
+            res.raise_for_status()
+            data = res.json()
+            rate = (data.get("rates") or {}).get(dst)
+            if rate is None:
+                return _json_error(404, "환율을 못 찾았어요")
+            out = {
+                "ok": True,
+                "from": src,
+                "to": dst,
+                "amount": amount,
+                "value": rate,
+                "date": data.get("date"),
+            }
+            _cache_set(key, out)
+            return _json(out)
+        except requests.RequestException as e:
+            return _json_error(502, f"FX upstream failed: {e}")
+
+    @app.route("/api/air", methods=["GET", "OPTIONS"])
+    def air():
+        if request.method == "OPTIONS":
+            return Response(status=204)
+        q = (request.args.get("q") or "").strip() or _default_weather_q()
+        try:
+            place = geocode(q)
+            if not place:
+                return _json_error(404, "장소를 찾지 못했어요")
+            key = f"air:{round(place['lat'], 3)}:{round(place['lon'], 3)}"
+            cached = _cache_get(key)
+            if cached is not None:
+                cached = dict(cached)
+                cached["place"] = place
+                return _json(cached)
+            res = requests.get(
+                "https://air-quality-api.open-meteo.com/v1/air-quality",
+                params={
+                    "latitude": place["lat"],
+                    "longitude": place["lon"],
+                    "current": "pm10,pm2_5,us_aqi",
+                    "timezone": "auto",
+                },
+                headers={"User-Agent": USER_AGENT},
+                timeout=12,
+            )
+            res.raise_for_status()
+            cur = (res.json().get("current") or {})
+            pm25 = cur.get("pm2_5")
+            out = {
+                "ok": True,
+                "place": place,
+                "pm25": pm25,
+                "pm10": cur.get("pm10"),
+                "label": _pm25_label(pm25),
+            }
+            _cache_set(key, out)
+            return _json(out)
+        except requests.RequestException as e:
+            return _json_error(502, f"Air upstream failed: {e}")
+        except Exception as e:
+            return _json_error(500, str(e))
+
+
+def _pm25_label(v):
+    try:
+        n = float(v)
+    except (TypeError, ValueError):
+        return "알 수 없음"
+    if n <= 15:
+        return "좋음"
+    if n <= 35:
+        return "보통"
+    if n <= 75:
+        return "나쁨"
+    return "매우 나쁨"

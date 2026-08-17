@@ -213,6 +213,8 @@ fabMenuHome?.addEventListener('click', (e) => {
   closeSocial();
   closeSupport();
   closeAbout();
+  closeSearch();
+  closeUtils();
   closePrivacySettings();
   closeGuardian();
   scrollStageSection?.('stage-home');
@@ -227,6 +229,26 @@ fabMenuAboutSky?.addEventListener('click', (e) => {
   e.stopPropagation();
   closeFabPlusMenu();
   openAbout('sky');
+});
+fabMenuSearch?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openSearch();
+});
+fabMenuHouse?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  location.href = '/house';
+});
+fabMenuQuote?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  location.href = '/quote';
+});
+fabMenuUtils?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeFabPlusMenu();
+  openUtils();
 });
 fabMenuTarot?.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -412,8 +434,19 @@ function detectToolIntent(raw) {
   if (/(감정\s*매칭|표정\s*매칭|emotion)/i.test(t)) return 'game-emotion';
   if (/(미니게임|뽁뽁이|원\s*그리기|게임|mini\s*games|ミニゲーム|小游戏)/i.test(t)) return 'games';
 
+  if (/(스카이\s*소개|너\s*누구|너는\s*누구|스카이\s*뭐야|스카이가\s*뭐|about\s*sky)/i.test(t)) return 'about-sky';
+  if (/(ai41\s*소개|회사\s*소개|에이아이포원|ai\s*for\s*one|이\s*회사\s*소개|about\s*ai41)/i.test(t)) return 'about-ai41';
+  if (/(네이버|naver)/i.test(t) && /(검색|찾아|search)/i.test(t)) return 'search-naver';
+  if (/(구글|google)/i.test(t) && /(검색|찾아|search)/i.test(t)) return 'search-google';
+  if (/(웹\s*검색|인터넷\s*검색|검색해\s*줘|검색해줘|검색하자)/.test(t)) return 'search';
+  if (typeof detectUtilsIntent === 'function') {
+    const util = detectUtilsIntent(t);
+    if (util) return util;
+  }
+  if (/(경매|공매|모아주택|모아타운|부동산|집\s*찾|좋은\s*집)/.test(t)) return 'house';
   if (/(날씨|기온|온도|weather|météo|天気|天气)/i.test(t)) return 'weather';
   if (/(지도|맵\s*보여|어디\s*야|어디야|위치\s*알려|장소\s*찾아|geocode|openstreetmap|\bmap\b|地図|地图|carte)/i.test(t)) return 'maps';
+  if (typeof detectQuoteIntent === 'function' && detectQuoteIntent(t)) return 'quote';
 
   return null;
 }
@@ -471,7 +504,10 @@ function closeAllToolOverlays() {
   regulationOverlay?.classList.remove('show');
   routineOverlay?.classList.remove('show');
   gamesOverlay?.classList.remove('show');
-  aboutOverlay?.classList.remove('show');
+  aboutAi41Overlay?.classList.remove('show');
+  aboutSkyOverlay?.classList.remove('show');
+  searchOverlay?.classList.remove('show');
+  utilsOverlay?.classList.remove('show');
   document.getElementById('blogOverlay')?.classList.remove('show');
   try { closePrivacySettings?.(); } catch (_) {}
   try { closeGuardian?.(); } catch (_) {}
@@ -485,7 +521,10 @@ function isAnyToolOverlayOpen() {
     regulationOverlay?.classList.contains('show') ||
     routineOverlay?.classList.contains('show') ||
     gamesOverlay?.classList.contains('show') ||
-    aboutOverlay?.classList.contains('show') ||
+    aboutAi41Overlay?.classList.contains('show') ||
+    aboutSkyOverlay?.classList.contains('show') ||
+    searchOverlay?.classList.contains('show') ||
+    utilsOverlay?.classList.contains('show') ||
     document.getElementById('blogOverlay')?.classList.contains('show') ||
     privacyOverlay?.classList.contains('show') ||
     guardianOverlay?.classList.contains('show')
@@ -545,6 +584,35 @@ function tryRouteToolIntent(text) {
       openGameSection(focus);
       return true;
     }
+    if (mode === 'about-ai41') {
+      showStatus(typeof t === 'function' ? t('route.aboutAi41') : 'AI41을 소개할게!', 2200);
+      openAbout('ai41');
+      return true;
+    }
+    if (mode === 'about-sky') {
+      showStatus(typeof t === 'function' ? t('route.aboutSky') : '스카이를 소개할게!', 2200);
+      openAbout('sky');
+      return true;
+    }
+    if (mode === 'search' || mode === 'search-google' || mode === 'search-naver') {
+      showStatus(typeof t === 'function' ? t('route.search') : '검색창을 열게!', 2200);
+      handleSearchIntent(mode, text);
+      return true;
+    }
+    if (mode === 'utils' || mode === 'area' || mode === 'loan' || mode === 'dday' || mode === 'fx' || mode === 'air' || mode === 'timer' || mode === 'emergency') {
+      showStatus(typeof t === 'function' ? t('route.utils') : '계산 도구를 열게!', 2200);
+      handleUtilsIntent(mode, text);
+      return true;
+    }
+    if (mode === 'house') {
+      showStatus(typeof t === 'function' ? t('route.house') : '좋은 집 지도로 갈게!', 2200);
+      const q = extractPlaceQuery(text)
+        .replace(/(경매|공매|모아주택|모아타운|부동산|집|좋은)/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      location.href = q ? `/house?q=${encodeURIComponent(q)}` : '/house';
+      return true;
+    }
     if (mode === 'weather') {
       showStatus(typeof t === 'function' ? t('route.weather') : '날씨를 살펴볼게!', 2200);
       handleWeatherIntent(text);
@@ -553,6 +621,11 @@ function tryRouteToolIntent(text) {
     if (mode === 'maps') {
       showStatus(typeof t === 'function' ? t('route.maps') : '지도를 찾아볼게!', 2200);
       handleMapsIntent(text);
+      return true;
+    }
+    if (mode === 'quote') {
+      showStatus(typeof t === 'function' ? t('route.quote') : '견적 프로그램으로 나눠 볼게!', 2200);
+      handleQuoteIntent(text);
       return true;
     }
   }

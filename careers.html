@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
 </head>
 <body class="page-body">
   <header class="page-top">
@@ -18,11 +19,43 @@
       <img src="logo.png" width="36" height="36" alt="AI41">
       <div>AI41<span>AI FOR ONE</span></div>
     </a>
-    <nav class="page-nav">
-      <a href="/">홈</a>
-      <a href="/story">이야기</a>
-      <a href="/lab">LAB</a>
-      <a class="active" href="/careers">채용</a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
     </nav>
   </header>
   <main class="page-main">
@@ -46,7 +79,7 @@
         <article>
           <h2>뉴로크래프트 코치</h2>
           <p class="job-meta">NeuroCraft · 계약 · 서울 송파구</p>
-          <p>3+1 팀에서 +1입니다. 데이터 검수와 크리에이티브가 기관 납품이 되게 돕습니다. 값싼 외주가 아닙니다.</p>
+          <p>2+1 팀에서 +1입니다. 데이터 검수와 크리에이티브가 기관 납품이 되게 돕습니다. 값싼 외주가 아닙니다.</p>
           <a class="mail-btn" href="mailto:ai41@ai41.kr?subject=%5BAI41%20지원%5D%20뉴로크래프트%20코치">메일로 지원</a>
         </article>
       </li>
@@ -77,5 +110,6 @@
     </ul>
   </main>
   <footer class="page-foot">주식회사 AI41 · 문의 ai41@ai41.kr</footer>
+  <script src="js/nav.js"></script>
 </body>
 </html>

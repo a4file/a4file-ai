@@ -19,3 +19,6 @@ initSafeClickGame();
 initEmotionGame();
 initPrivacySystem();
 initDemoMode();
+if (new URLSearchParams(location.search).get('open') === 'utils' && typeof openUtils === 'function') {
+  openUtils();
+}

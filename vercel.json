@@ -2,13 +2,18 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "includeFiles": "{*.html,logo.png,character.js,character.json,css/**,js/**,JPG/**}"
+      "includeFiles": "{*.html,logo.png,character.js,character.json,css/**,js/**,img/**,JPG/**}"
     }
   },
   "rewrites": [
     { "source": "/lab", "destination": "/lab.html" },
     { "source": "/careers", "destination": "/careers.html" },
     { "source": "/story", "destination": "/story.html" },
+    { "source": "/adopt", "destination": "/adopt.html" },
+    { "source": "/quote", "destination": "/quote.html" },
+    { "source": "/shop", "destination": "/shop.html" },
+    { "source": "/house", "destination": "/house.html" },
+    { "source": "/join", "destination": "/join.html" },
     { "source": "/favicon.ico", "destination": "/logo.png" },
     { "source": "/favicon.png", "destination": "/logo.png" },
     { "source": "/v1/chat/completions", "destination": "/api/index" },
@@ -19,6 +24,11 @@
     { "source": "/api/contact/:path*", "destination": "/api/index" },
     { "source": "/api/blog/:path*", "destination": "/api/index" },
     { "source": "/api/weather", "destination": "/api/index" },
-    { "source": "/api/maps/:path*", "destination": "/api/index" }
+    { "source": "/api/maps/:path*", "destination": "/api/index" },
+    { "source": "/api/quote/:path*", "destination": "/api/index" },
+    { "source": "/api/search", "destination": "/api/index" },
+    { "source": "/api/house/:path*", "destination": "/api/index" },
+    { "source": "/api/fx", "destination": "/api/index" },
+    { "source": "/api/air", "destination": "/api/index" }
   ]
 }

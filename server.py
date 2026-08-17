@@ -28,6 +28,8 @@ from privacy_routes import register_privacy_routes
 from contact_routes import register_contact_routes
 from blog_routes import register_blog_routes
 from external_routes import register_external_routes
+from quote_routes import register_quote_routes
+from house_routes import register_house_routes
 from contact_mail import status_payload as contact_status_payload
 import privacy_store
 import blog_store
@@ -57,6 +59,14 @@ try:
     register_external_routes(app)
 except Exception as e:
     print(f"[boot] external routes skipped: {e}", flush=True)
+try:
+    register_quote_routes(app)
+except Exception as e:
+    print(f"[boot] quote routes skipped: {e}", flush=True)
+try:
+    register_house_routes(app)
+except Exception as e:
+    print(f"[boot] house routes skipped: {e}", flush=True)
 
 
 @app.route("/")
@@ -77,6 +87,31 @@ def careers_page():
 @app.route("/story")
 def story_page():
     return send_from_directory(".", "story.html")
+
+
+@app.route("/adopt")
+def adopt_page():
+    return send_from_directory(".", "adopt.html")
+
+
+@app.route("/quote")
+def quote_page():
+    return send_from_directory(".", "quote.html")
+
+
+@app.route("/shop")
+def shop_page():
+    return send_from_directory(".", "shop.html")
+
+
+@app.route("/house")
+def house_page():
+    return send_from_directory(".", "house.html")
+
+
+@app.route("/join")
+def join_page():
+    return send_from_directory(".", "join.html")
 
 
 @app.route("/favicon.ico")

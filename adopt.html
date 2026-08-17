@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>솔루션 도입 문의 | AI41</title>
+<meta name="description" content="스카이·뉴로크래프트 도입 문의. 학교, 센터, 기업. AI41.">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/logo.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/nav.css">
+</head>
+<body class="page-body">
+  <header class="page-top">
+    <a class="page-brand" href="/">
+      <img src="logo.png" width="36" height="36" alt="AI41">
+      <div>AI41<span>AI FOR ONE</span></div>
+    </a>
+    <nav class="site-nav page-nav" aria-label="사이트 섹션">
+      <div class="nav-group" data-nav-group="company">
+        <button type="button" class="nav-parent" aria-expanded="false">회사</button>
+        <div class="nav-sub">
+          <a href="/">홈</a>
+          <a href="/#stage-mission">미션</a>
+          <a href="/story">이야기</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="products">
+        <button type="button" class="nav-parent" aria-expanded="false">제품</button>
+        <div class="nav-sub">
+          <a href="/#stage-products">스카이·뉴로크래프트</a>
+          <a href="/house">좋은 집</a>
+          <a href="/lab">LAB</a>
+          <a href="/shop">상점</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="impact">
+        <button type="button" class="nav-parent" aria-expanded="false">임팩트</button>
+        <div class="nav-sub">
+          <a href="/#stage-impact">임팩트</a>
+          <a href="/#stage-achievements">성과</a>
+          <a href="/#stage-partners">파트너</a>
+          <a href="/#stage-blog">소식</a>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="join">
+        <button type="button" class="nav-parent" aria-expanded="false">함께하기</button>
+        <div class="nav-sub">
+          <a href="/join">구독</a>
+          <a href="/adopt">도입</a>
+          <a href="/quote">견적</a>
+          <a href="/careers">채용</a>
+          <a href="/#stage-contact">문의</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="page-main">
+    <p class="page-kicker">Adopt</p>
+    <h1>솔루션을 같이 열어 볼까요</h1>
+    <p class="page-lead">
+      학교, 센터, 기업이 스카이나 뉴로크래프트를 시험해 보고 싶을 때 쓰는 칸입니다.
+      실적을 부풀리지 않습니다. 견적이 먼저면 <a href="/quote">견적 페이지</a>를 열고,
+      사람 얘기가 먼저면 아래를 적어 주세요. 도착지는 <a href="mailto:ai41@ai41.kr">ai41@ai41.kr</a>입니다.
+    </p>
+    <img class="story-photo" src="img/team-gathering.png" width="1080" height="810" alt="AI41 팀이 책상에 모여 이야기하는 모습">
+    <div class="split-grid">
+      <article class="info-card">
+        <span class="tag">SKY</span>
+        <h2>스카이</h2>
+        <p>저자극 AI 도우미. 대화, 루틴, 감정조절, 그림 말하기. 치료·진단이 아닙니다. 교실과 센터에서 먼저 작게 씁니다.</p>
+      </article>
+      <article class="info-card">
+        <span class="tag">NeuroCraft</span>
+        <h2>뉴로크래프트 2+1</h2>
+        <p>실무 두 명과 코치 한 명. 데이터 검수와 생성형 AI 창작. 한 달 기본 3,000만 원. 짧은 과업은 견적 페이지에서 나눕니다.</p>
+      </article>
+    </div>
+    <form class="page-form" id="adoptForm">
+      <label>구분
+        <select name="kind" required>
+          <option value="학교">학교</option>
+          <option value="센터">센터·복지</option>
+          <option value="기업">기업</option>
+          <option value="기타">기타</option>
+        </select>
+      </label>
+      <label>쓰고 싶은 것
+        <select name="product">
+          <option value="스카이">스카이</option>
+          <option value="뉴로크래프트">뉴로크래프트</option>
+          <option value="둘 다">둘 다</option>
+        </select>
+      </label>
+      <label>소속
+        <input name="affiliation" required placeholder="학교·센터·회사 이름">
+      </label>
+      <label>회신 메일
+        <input name="contact" type="email" required placeholder="you@example.com">
+      </label>
+      <label>하고 싶은 말
+        <textarea name="message" required minlength="4" rows="5" placeholder="쓸 사람 수, 기간, 하고 싶은 과업"></textarea>
+      </label>
+      <button type="submit" class="mail-btn">도입 문의 보내기</button>
+      <p class="form-note" id="adoptNote">보내면 서버가 준비된 날에는 메일로 갑니다. 안 되면 메일 앱이 열립니다.</p>
+    </form>
+  </main>
+  <footer class="page-foot">주식회사 AI41 · 문의 ai41@ai41.kr · 스카이는 치료·진단을 대체하지 않습니다.</footer>
+  <script src="js/nav.js"></script>
+  <script>
+    const form = document.getElementById("adoptForm");
+    const note = document.getElementById("adoptNote");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      const message = `[${data.product}] ${data.message}`;
+      try {
+        const res = await fetch("/api/contact/inquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kind: "도입-" + data.kind,
+            affiliation: data.affiliation,
+            contact: data.contact,
+            message
+          })
+        });
+        const json = await res.json();
+        if (json.ok) {
+          note.textContent = "보냈습니다. ai41@ai41.kr에서 답합니다.";
+          form.reset();
+          return;
+        }
+        throw new Error(json.error || "fail");
+      } catch (err) {
+        const body = encodeURIComponent(
+          `구분: ${data.kind}\n제품: ${data.product}\n소속: ${data.affiliation}\n연락: ${data.contact}\n\n${data.message}`
+        );
+        location.href = `mailto:ai41@ai41.kr?subject=${encodeURIComponent("[AI41 도입] " + data.affiliation)}&body=${body}`;
+      }
+    });
+  </script>
+</body>
+</html>
