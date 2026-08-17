@@ -8,8 +8,8 @@
 <link rel="icon" href="/favicon.png" type="image/png">
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/logo.png">
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/pages.css">
 </head>
 <body class="page-body">
@@ -20,6 +20,7 @@
     </a>
     <nav class="page-nav">
       <a href="/">홈</a>
+      <a href="/story">이야기</a>
       <a class="active" href="/lab">LAB</a>
       <a href="/careers">채용</a>
     </nav>
@@ -47,7 +48,7 @@
       ["개인정보", "저장할지 말지는 본인이 정해요.", "지금 있어요", "/"],
       ["다국어", "KO · EN · JA · ZH · FR. 처음부터 세계로.", "지금 있어요", "/"],
       ["도입 문의", "학교·센터 얘기는 스카이에게 말하면 메일로 가요.", "지금 있어요", "/#stage-contact"],
-      ["뉴로크래프트", "3+1 팀이 데이터 검수와 창작을 맡는 일자리.", "만들고 있어요", "/#stage-products"],
+      ["뉴로크래프트", "데이터 전문가로 키워 기업에 연결하고, 생성형 AI 창작자로 스케일업.", "만들고 있어요", "/#stage-products"],
       ["데이터 검수", "AI가 놓친 자리를 사람이 닫아요.", "만들고 있어요", ""],
       ["크리에이티브", "카피, 컷, 소리. 당사자 시선이 품질이에요.", "만들고 있어요", ""],
       ["MCP 실험", "카카오 AI 생태계에서 도구를 붙여 보는 중.", "만들고 있어요", ""],
@@ -80,8 +81,9 @@
     ];
     const grid = document.getElementById("labGrid");
     APPS.forEach(([name, line, st], i) => {
+      const n = String(i + 1).padStart(2, "0");
       const li = document.createElement("li");
-      li.innerHTML = `<article class="lab-card"><span class="num">${String(i + 1).padStart(2, "0")}</span><strong>${name}</strong><p>${line}</p><span class="st">${st}</span></article>`;
+      li.innerHTML = `<a class="lab-card" href="/story#app-${n}"><span class="num">${n}</span><strong>${name}</strong><p>${line}</p><span class="st">${st}</span></a>`;
       grid.appendChild(li);
     });
   </script>

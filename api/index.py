@@ -202,6 +202,11 @@ def careers_page():
     return send_from_directory(ROOT, "careers.html")
 
 
+@app.route("/story")
+def story_page():
+    return send_from_directory(ROOT, "story.html")
+
+
 @app.route("/favicon.ico")
 @app.route("/favicon.png")
 def favicon():

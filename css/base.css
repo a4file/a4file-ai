@@ -15,7 +15,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
   body {
-    font-family: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    font-family: var(--font);
     background: #f0f2f5;
     color: #1a1a1a;
     overflow: hidden;

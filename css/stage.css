@@ -152,7 +152,7 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-family: Fraunces, Georgia, serif;
+      font-family: var(--font);
       font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.03em;
@@ -166,7 +166,7 @@
       border-radius: 8px;
     }
     .top-slim-brand span {
-      font-family: 'Pretendard Variable', Pretendard, sans-serif;
+      font-family: var(--font);
       font-size: 12px;
       font-weight: 600;
       letter-spacing: 0.04em;
@@ -184,7 +184,7 @@
       background: linear-gradient(135deg, rgba(90,132,184,0.14), rgba(90,132,184,0.06));
       border: 1px solid rgba(90,132,184,0.3);
       color: var(--accent-deep);
-      font-family: 'Pretendard Variable', Pretendard, sans-serif;
+      font-family: var(--font);
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.01em;
@@ -261,9 +261,9 @@
       margin-bottom: 12px;
     }
     .stage-brand {
-      font-family: Fraunces, Georgia, serif;
+      font-family: var(--font);
       font-size: clamp(40px, 5vw, 56px);
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1.05;
       color: var(--ink);
@@ -303,6 +303,8 @@
     .stage-chip {
       background: var(--accent);
       color: #fff;
+      text-decoration: none;
+      display: inline-block;
     }
     .stage-chip:hover,
     .ask-sky-btn:hover {
@@ -326,7 +328,7 @@
     }
     .stage-hint strong { color: var(--accent-deep); }
     .stage-h2 {
-      font-family: Fraunces, Georgia, serif;
+      font-family: var(--font);
       font-size: 26px;
       font-weight: 700;
       letter-spacing: -0.03em;
@@ -440,7 +442,7 @@
     }
     .stat-card .num {
       display: block;
-      font-family: Fraunces, Georgia, serif;
+      font-family: var(--font);
       font-size: 28px;
       font-weight: 700;
       letter-spacing: -0.03em;
