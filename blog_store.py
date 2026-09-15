@@ -52,18 +52,6 @@ SEED_POSTS = [
         ),
         "thumbnail_url": "/logo.png",
     },
-    {
-        "title": "연대 허브와 파트너",
-        "slug": "partners-hub",
-        "summary": "함께 걷는 기관·커뮤니티.",
-        "body": (
-            "자폐인사랑협회, 민윤기치료센터, 한국피플퍼스트, 사회적기업진흥원, "
-            "유디임팩트, 뉴키즈인베스트먼트, 타임뱅크코리아, 소소한소통 등 "
-            "다양한 파트너와 연대합니다.\n\n"
-            "도입·PoC·파트너십 문의는 웹사이트에서 스카이에게 「도입 문의」라고 말해 주세요."
-        ),
-        "thumbnail_url": "/logo.png",
-    },
 ]
 
 
@@ -215,6 +203,7 @@ def _row_to_post(row: dict[str, Any] | None, *, include_body: bool = True) -> di
 
 
 def list_published(page: int = 1, limit: int = 3) -> dict[str, Any]:
+    # Older databases may still contain the retired partners seed post.
     if not ensure_ready():
         return {"items": [], "page": page, "limit": limit, "total": 0, "pages": 0}
     page = max(1, int(page or 1))
@@ -222,7 +211,7 @@ def list_published(page: int = 1, limit: int = 3) -> dict[str, Any]:
     offset = (page - 1) * limit
     with _conn() as conn:
         total_row = conn.execute(
-            "SELECT COUNT(*) AS n FROM posts WHERE status = 'published'"
+            "SELECT COUNT(*) AS n FROM posts WHERE status = 'published' AND slug <> 'partners-hub'"
         ).fetchone()
         total = int(total_row["n"]) if total_row else 0
         rows = conn.execute(
@@ -230,7 +219,7 @@ def list_published(page: int = 1, limit: int = 3) -> dict[str, Any]:
             SELECT id, title, slug, summary, thumbnail_url, status,
                    published_at, created_at, updated_at
             FROM posts
-            WHERE status = 'published'
+            WHERE status = 'published' AND slug <> 'partners-hub'
             ORDER BY published_at DESC NULLS LAST, created_at DESC
             LIMIT %s OFFSET %s
             """,
@@ -248,7 +237,7 @@ def get_published_by_slug(slug: str) -> dict[str, Any] | None:
         row = conn.execute(
             """
             SELECT * FROM posts
-            WHERE slug = %s AND status = 'published'
+            WHERE slug = %s AND status = 'published' AND slug <> 'partners-hub'
             """,
             (slug,),
         ).fetchone()

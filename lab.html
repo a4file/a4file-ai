@@ -42,7 +42,6 @@
         <div class="nav-sub">
           <a href="/#stage-impact">임팩트</a>
           <a href="/#stage-achievements">성과</a>
-          <a href="/#stage-partners">파트너</a>
           <a href="/#stage-blog">소식</a>
         </div>
       </div>
@@ -96,7 +95,7 @@
       ["케어브릿지", "진술을 사실과 추정으로 나누고, 급하면 112.", "빈 자리", ""],
       ["소식", "블로그. 이미 홈에 있어요.", "지금 있어요", "/#stage-blog"],
       ["채용", "빈 자리 41개 중, 사람과 같이 채울 자리.", "지금 있어요", "/careers"],
-      ["연대 허브", "자조모임, 센터, 사회적기업과 같은 지도.", "지금 있어요", "/#stage-partners"],
+      null, // Retired slot; preserve existing app numbers.
       ["PoC", "기관이 쓰기 전에 작게 검증.", "만들고 있어요", "/#stage-contact"],
       ["워크숍", "한 번에 따라 하는 교육이 아니라 자기 과제를 끝냄.", "빈 자리", ""],
       ["2+1 팀", "실무 둘과 코치 하나. 한 달 기본 3,000만 원.", "만들고 있어요", "/quote"],
@@ -115,7 +114,9 @@
       ["For Everyone", "41번째 자리는 비워 둡니다. 같이 정해요.", "빈 자리", ""]
     ];
     const grid = document.getElementById("labGrid");
-    APPS.forEach(([name, line, st, href], i) => {
+    APPS.forEach((app, i) => {
+      if (!app) return;
+      const [name, line, st, href] = app;
       const n = String(i + 1).padStart(2, "0");
       const li = document.createElement("li");
       const to = href || `/story#app-${n}`;
