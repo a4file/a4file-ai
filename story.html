@@ -42,7 +42,6 @@
         <div class="nav-sub">
           <a href="/#stage-impact">임팩트</a>
           <a href="/#stage-achievements">성과</a>
-          <a href="/#stage-partners">파트너</a>
           <a href="/#stage-blog">소식</a>
         </div>
       </div>
@@ -292,13 +291,7 @@
         desc: "사람을 대체하지 않을 사람을 찾습니다. 양식 없이 포트폴리오 링크면 됩니다.",
         how: "위 메뉴 ‘채용’ 또는 /careers로 갑니다. 자리마다 ‘메일로 지원’을 누르면 ai41@ai41.kr이 열립니다."
       },
-      {
-        name: "연대 허브",
-        st: "지금 있어요",
-        href: "/#stage-partners",
-        desc: "자조모임, 센터, 사회적기업과 같은 지도입니다. 우리가 그 단체를 대신하지는 않습니다.",
-        how: "홈을 파트너 칸까지 내립니다. 이름을 누르면 그 단체의 공개 페이지로 갑니다."
-      },
+      null, // Retired slot; preserve existing app numbers.
       {
         name: "PoC",
         st: "만들고 있어요",
@@ -408,6 +401,7 @@
 
     const box = document.getElementById("appGuide");
     APPS.forEach((app, i) => {
+      if (!app) return;
       const n = String(i + 1).padStart(2, "0");
       const open = app.href
         ? `<a class="mail-btn" href="${app.href}">열기</a>`
