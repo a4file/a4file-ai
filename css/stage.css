@@ -428,19 +428,14 @@
       color: var(--muted);
     }
     .achieve-grid,
-    .team-grid,
-    .partner-chip-row {
+    .team-grid {
       display: grid;
       gap: 10px;
     }
     .achieve-grid { grid-template-columns: 1fr 1fr; }
     .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .partner-chip-row {
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
     .achieve-card,
-    .team-card,
-    .partner-chip {
+    .team-card {
       background: rgba(255,255,255,0.82);
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -458,23 +453,6 @@
       font-size: 12px;
       line-height: 1.45;
       color: var(--muted);
-    }
-    .partner-chip {
-      display: grid;
-      place-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--ink);
-      text-align: center;
-      text-decoration: none;
-      padding: 12px 10px;
-      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.12s ease;
-    }
-    a.partner-chip:hover {
-      color: var(--accent-deep);
-      border-color: rgba(90, 132, 184, 0.45);
-      background: #fff;
-      transform: translateY(-1px);
     }
     .blog-strip {
       display: grid;
